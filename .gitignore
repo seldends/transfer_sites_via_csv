@@ -1,0 +1,15 @@
+/__pycache__
+/env
+/logs
+/pages
+/page_files
+/npa_files
+/source_files
+/new_files
+*.sql
+settings.py
+/.vscode
+/configs/db.yml
+test.py
+test_re.py
+/csv_files
