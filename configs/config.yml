@@ -3,12 +3,13 @@ szn74:
     new_name: szn
     db_type: pg_local
     db_name: szn74
-    classification: 16@egClassification
+    classification: 39@egClassification # prod
+    # classification: 16@egClassification # test
     news_title: szn74news
-    news_type: # TODO
-        102: 1 # Новости|194
-        103: 1 # СМИ о деятельности Главного управления|87
-        116: 1 # Новости центров занятости населения|2569
+    news_type:
+        102: 1  # Новости|194
+        103: 12 # СМИ о деятельности Главного управления|87
+        116: 21 # Новости центров занятости населения|2569
     banner_title: szn74banner
     npa_title: szn74
     npa_type: # TODO
@@ -31,3 +32,15 @@ szn74:
         # ! 123: # Протокол|1
         # ! 124: # Постановление Конституционного суда|1
 
+deti74:     # Уполномоченного по правам ребёнка в Челябинской области
+    old_name: chel.deti.eps74.ru
+    new_name: deti
+    db_type: pg_local
+    db_name: deti74
+    # classification: 94@egClassification # prod
+    classification: 16@egClassification # test
+    news_title: deti74news
+    news_type:
+        102: 1  # Новости|194
+    npa_title: deti74npa
+    npa_type:      # Закомментированы категории которые не будут перенесены

@@ -162,7 +162,7 @@ class Database:
                 AND "CreationDate" > '2018-01-01 00:00:00'
                 AND "Group_id" IN %s
                 ORDER BY id DESC
-                LIMIT 3
+                --LIMIT 3
                 '''
         news_list = self.select_rows(select_news_local, params)
         return news_list

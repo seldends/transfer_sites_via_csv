@@ -12,8 +12,8 @@ class News:
         self.a_title = row[2]
         self.a_date = row[9]
         self.a_image_index = row[7]
-        #self.a_body = str(row[4]).replace('<p style="text-align: justify;">&nbsp;</p>', '')
-        self.a_body = ''
+        # self.a_body = str(row[4]).replace('<p style="text-align: justify;">&nbsp;</p>', '')
+        self.a_body = str(row[4]).replace("\r", "").replace("\n", "")
         self.a_publ_date = row[5]
         self.a_resume = row[3]
         self.config = config
@@ -120,8 +120,13 @@ class File:
         self.file_relative_path = data["file_relative_path"]
         self.file = data["file"]
         if self.category == 'news':
-            self.new_link = "".join(("files/upload/", self.sitename, "/", "Файлы новостей", '/', self.file))
-            self.str_new_link = "".join(("files/upload/", self.sitename, "/", "Файлы новостей", '/', self.file, "@cmsFile.doc"))
+            # self.new_link = "".join(("files/upload/", self.sitename, "/", "Файлы новостей", '/', self.file))
+            # self.str_new_link = "".join(("files/upload/", self.sitename, "/", "Файлы новостей", '/', self.file, "@cmsFile.doc"))
+            self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
+            self.str_new_link = "".join(("/news_mediafiles/", self.sitename, "/", self.file, "@cmsFile.doc"))
+        if self.category == 'news2':
+            self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
+            self.str_new_link = "".join(("/news_mediafiles/", self.sitename, "/", self.file, "@cmsFile.doc"))
         elif self.category == 'mediafiles':
             folder_name = Path(self.file_relative_path).name
             self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", folder_name, "/", self.file))

@@ -9,12 +9,16 @@ from utils_db_local import Database
 def get_file_from_body(config, obj):
     old_sitename = config["old_name"]
     pattern_file_1 = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:dokumentydok\/[^\/]{{1,75}}|upload\/iblock\/[^\/]{{0,4}}|Upload\/files|Files\/DiskFile\/(?:|[0-9]{{4}}\/)[a-zA-Z]{{1,10}}|opendata|Storage\/Image\/PublicationItem\/Image\/src\/[0-9]{{1,5}})\/)([^>]{{1,450}}\.[a-zA-Z]{{3,5}})))\s?\"[^>]{{0,250}}>)'
+    pattern_file_2 = fr'(<img alt=\"[^\/]{{0,50}}\"(?:\sclass=\"[^\/]{{0,50}}\"|)\ssrc=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/((Upload\/images\/)([^>\/]{{1,450}}\.[a-zA-Z]{{3,5}})))\"[^>]{{0,550}}>)'
+    # pattern_file_2 = fr'(<img alt=\".{0,50}\" )'
     pattern_list = {
-        "news": pattern_file_1,         # паттерн 1
+        "news":     pattern_file_1,         # паттерн 1
+        "news2":    pattern_file_2,         # паттерн 2
     }
     files = []
     filenames = []
     for link_type, pattern in pattern_list.items():
+        # print(pattern)
         try:
             links = re.findall(pattern, obj.a_body)
             # Если есть совпадения
@@ -27,6 +31,7 @@ def get_file_from_body(config, obj):
                         "file_relative_path":   link[3],    # Папка файла.                      Пример:     Upload/files/
                         "file":                 link[4],    # Имя файла с расширением.          Пример:     Приказ МПР 496 от 111113 с изм 141217.rtf
                     }
+                    print(link)
                     file = File(config, data, link_type)
                     files.append(file)
                     filenames.append(file.encoded_filename)
@@ -69,7 +74,7 @@ def get_mediafile_from_table(config, db_local, news):
                             mediafiles_name.append(file.encoded_filename)
                             # TODO запись в атрибут медиафайлы объектов через запятую
                             if news.mediaFiles != '':
-                                news.mediaFiles = ','.join(news.mediaFiles, file.str_new_link)
+                                news.mediaFiles = ','.join((news.mediaFiles, file.str_new_link))
                             else:
                                 news.mediaFiles = file.str_new_link
                 except AttributeError as e:
@@ -180,14 +185,14 @@ def transfer_news(config):
 def main():
     # Список конфигураций сайтов
     sites = [
-        # "deti74",
+        "deti74",
         # "mindortrans74"
         # "mininform74"
         # "mincult74",
         # "forest74",
         # "chelarhiv74",
         # "ugzhi",
-        "szn74",
+        # "szn74",
         # "minstroy74",
         # "gk74",
         # "chelarhiv74",
