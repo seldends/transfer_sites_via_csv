@@ -9,7 +9,7 @@ from utils_db_local import Database
 def get_file_from_body(config, obj):
     old_sitename = config["old_name"]
     pattern_file_1 = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:dokumentydok\/[^\/]{{1,75}}|upload\/iblock\/[^\/]{{0,4}}|Upload\/files|Files\/DiskFile\/(?:|[0-9]{{4}}\/)[a-zA-Z]{{1,10}}|opendata|Storage\/Image\/PublicationItem\/Image\/src\/[0-9]{{1,5}})\/)([^>]{{1,450}}\.[a-zA-Z]{{3,5}})))\s?\"[^>]{{0,250}}>)'
-    pattern_file_2 = fr'(<img alt=\"[^\/]{{0,50}}\"(?:\sclass=\"[^\/]{{0,50}}\"|)\ssrc=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/((Upload\/images\/)([^>\/]{{1,450}}\.[a-zA-Z]{{3,5}})))\"[^>]{{0,550}}>)'
+    pattern_file_2 = fr'(<img alt=\"[^\/]{{0,50}}\"(?:\sclass=\"[^\/]{{0,50}}\"|)\ssrc=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:Upload\/images\/|Storage\/Image\/PublicationItem\/Article\/src\/[0-9]{{1,5}}\/))([^>\/]{{1,450}}\.[a-zA-Z]{{3,5}})))\"[^>]{{0,550}}>)'
     # pattern_file_2 = fr'(<img alt=\".{0,50}\" )'
     pattern_list = {
         "news":     pattern_file_1,         # паттерн 1

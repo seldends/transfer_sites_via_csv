@@ -121,13 +121,11 @@ class File:
         self.file_relative_path = data["file_relative_path"]
         self.file = data["file"]
         if self.category == 'news':
-            # self.new_link = "".join(("files/upload/", self.sitename, "/", "Файлы новостей", '/', self.file))
-            # self.str_new_link = "".join(("files/upload/", self.sitename, "/", "Файлы новостей", '/', self.file, "@cmsFile.doc"))
             self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
-            self.str_new_link = "".join(("/news_mediafiles/", self.sitename, "/", self.file, "@cmsFile.doc"))
+            self.str_new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
         if self.category == 'news2':
             self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
-            self.str_new_link = "".join(("/news_mediafiles/", self.sitename, "/", self.file, "@cmsFile.doc"))
+            self.str_new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
         elif self.category == 'mediafiles':
             folder_name = Path(self.file_relative_path).name
             self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", folder_name, "/", self.file))

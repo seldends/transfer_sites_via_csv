@@ -37,8 +37,8 @@ deti74:     # Уполномоченного по правам ребёнка в
     new_name: deti
     db_type: pg_local
     db_name: deti74
-    # classification: 94@egClassification # prod
-    classification: 16@egClassification # test
+    classification: 94@egClassification # prod
+    # classification: 16@egClassification # test
     news_title: deti74news
     news_type:
         102: 1  # Новости|194
