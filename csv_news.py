@@ -31,7 +31,6 @@ def get_file_from_body(config, obj):
                         "file_relative_path":   link[3],    # Папка файла.                      Пример:     Upload/files/
                         "file":                 link[4],    # Имя файла с расширением.          Пример:     Приказ МПР 496 от 111113 с изм 141217.rtf
                     }
-                    print(link)
                     file = File(config, data, link_type)
                     files.append(file)
                     filenames.append(file.encoded_filename)
@@ -151,6 +150,7 @@ def transfer_news(config):
                 'body': news.a_body,
                 'classification': news.a_classification,
                 'isPublish': news.isPublish,
+                'pubmain': news.pubmain,
                 "publ_date": news.a_publ_date.strftime("%d.%m.%Y %H:%M:%S"),
                 "date": news.a_date.strftime("%d.%m.%Y %H:%M:%S"),
                 'image_index': news.a_image_index,
@@ -159,9 +159,9 @@ def transfer_news(config):
         fieldnames = row.keys()
         query_list.append(row)
         # TODO сделать полное описание или разделение на отдельные списки
-        # news_files.extend(index_image_file)     # Основная картинка новости
-        # news_files.extend(files_from_text)      # Обычные файлы из новосте, сохраняются в
-        # news_files.extend(files_from_table)     # Медиавфайлы из таблицы 
+        news_files.extend(index_image_file)     # Основная картинка новости
+        news_files.extend(files_from_text)      # Обычные файлы из новосте, сохраняются в
+        news_files.extend(files_from_table)     # Медиавфайлы из таблицы 
 
     path_csv = get_csv_path(config, 'news')         # Получение пути для csv
     save_csv(path_csv, fieldnames, query_list)      # Сохранение словаря в csv

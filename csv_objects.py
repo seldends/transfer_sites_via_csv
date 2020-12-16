@@ -11,14 +11,15 @@ class News:
         self.old_id = row[0]
         self.a_title = row[2]
         self.a_date = row[9]
-        self.a_image_index = row[7]
+        self.a_image_index = str(row[7]).replace("^", "#")
         # self.a_body = str(row[4]).replace('<p style="text-align: justify;">&nbsp;</p>', '')
-        self.a_body = str(row[4]).replace("\r", "").replace("\n", "")
+        self.a_body = str(row[4]).replace("^", "#").replace("\r", "").replace("\n", "")
         self.a_publ_date = row[5]
         self.a_resume = row[3]
         self.config = config
         self.a_classification = config["classification"]
         self.isPublish = 'Да'
+        self.pubmain = 'Да'
         self.mediaFiles = ''
 
     def transform_body(self):
