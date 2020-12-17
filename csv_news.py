@@ -134,7 +134,7 @@ def transfer_news(config):
         params = {
             "old_id": row[0],
             "structure": config["news_type"][row[1]],
-            "title": row[1],
+            "title": row[2],
             "date": row[9],
             "image_index": str(row[7]).replace("^", "#"),
             "body": str(row[4]).replace("^", "#").replace("\r", "").replace("\n", ""),
@@ -169,9 +169,9 @@ def transfer_news(config):
         fieldnames = row.keys()
         query_list.append(row)
         # TODO сделать полное описание или разделение на отдельные списки
-        news_files.extend(index_image_file)     # Основная картинка новости
-        news_files.extend(files_from_text)      # Обычные файлы из новосте, сохраняются в
-        news_files.extend(files_from_table)     # Медиавфайлы из таблицы 
+        # news_files.extend(index_image_file)     # Основная картинка новости
+        # news_files.extend(files_from_text)      # Обычные файлы из новосте, сохраняются в
+        # news_files.extend(files_from_table)     # Медиавфайлы из таблицы 
 
     path_csv = get_csv_path(config, 'news')         # Получение пути для csv
     save_csv(path_csv, fieldnames, query_list)      # Сохранение словаря в csv
