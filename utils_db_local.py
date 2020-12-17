@@ -53,29 +53,6 @@ class Database:
                     sys.exit(1)
                 finally:
                     print('PostgreSQL Connection opened successfully.')
-            # TODO Создать класс для подключения через туннель
-            # TODO https://hackersandslackers.com/automate-ssh-scp-python-paramiko/
-            # elif self.dbtype == 'pg_sitex253':
-            #     tunnel = SSHTunnelForwarder(
-            #             (TUNNEL_HOST, 22),
-            #             ssh_username=TUNNEL_USER,
-            #             ssh_password=TUNNEL_PASSWORD,
-            #             remote_bind_address=('localhost', TUNNEL_PORT))
-
-            #     tunnel.start()
-            #     try:
-            #         self.conn = psycopg2.connect(
-            #             host=self.host,
-            #             user=self.username,
-            #             password=self.password,
-            #             port=self.port,
-            #             dbname=self.dbname
-            #         )
-            #     except psycopg2.DatabaseError as error:
-            #         print(f"Error while connecting to PostgreSQL: {error}")
-            #         sys.exit(1)
-            #     finally:
-            #         print('PostgreSQL Connection opened successfully.')
             elif self.dbtype == 'mariadb':
                 try:
                     self.conn = mariadb.connect(

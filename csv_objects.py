@@ -5,17 +5,17 @@ from utils import copy_file
 
 
 class News:
-    def __init__(self, row, config):
+    def __init__(self, params, config):
         self.folder_name = config["new_name"]
-        self.a_structure = config["news_type"][row[1]]
-        self.old_id = row[0]
-        self.a_title = row[2]
-        self.a_date = row[9]
-        self.a_image_index = str(row[7]).replace("^", "#")
+        self.a_structure = params["structure"]
+        self.old_id = params["old_id"]
+        self.a_title = params["title"]
+        self.a_date = params["date"]
+        self.a_image_index = params["image_index"]
         # self.a_body = str(row[4]).replace('<p style="text-align: justify;">&nbsp;</p>', '')
-        self.a_body = str(row[4]).replace("^", "#").replace("\r", "").replace("\n", "")
-        self.a_publ_date = row[5]
-        self.a_resume = row[3]
+        self.a_body = params["body"]
+        self.a_publ_date = params["publ_date"]
+        self.a_resume = params["resume"]
         self.config = config
         self.a_classification = config["classification"]
         self.isPublish = 'Да'

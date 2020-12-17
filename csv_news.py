@@ -131,7 +131,17 @@ def transfer_news(config):
     data = db_local.get_news_list(news_types)                 # Получение списка Новостей из старой таблицы
 
     for row in data:
-        news = News(row, config)
+        params = {
+            "old_id": row[0],
+            "structure": config["news_type"][row[1]],
+            "title": row[1],
+            "date": row[9],
+            "image_index": str(row[7]).replace("^", "#"),
+            "body": str(row[4]).replace("^", "#").replace("\r", "").replace("\n", ""),
+            "publ_date": row[5],
+            "resume": row[3]
+        }
+        news = News(params, config)
         news_list.append(news)
         # Получение медиафайлов из таблицы
         files_from_table, file_names_from_table, empty_news = get_mediafile_from_table(config, db_local, news)
@@ -185,14 +195,14 @@ def transfer_news(config):
 def main():
     # Список конфигураций сайтов
     sites = [
-        "deti74",
+        # "deti74",
         # "mindortrans74"
         # "mininform74"
         # "mincult74",
         # "forest74",
         # "chelarhiv74",
         # "ugzhi",
-        # "szn74",
+        "szn74",
         # "minstroy74",
         # "gk74",
         # "chelarhiv74",
