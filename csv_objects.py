@@ -26,11 +26,13 @@ class News:
     def update_body(self):
         # TODO сделать передачу имени в регулярку
         old_sitename = self.config["old_name"]
-        pattern_file_1 = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:dokumentydok\/[^\/]{{1,75}}|upload\/iblock\/[^\/]{{0,4}}|Upload\/files|Files\/DiskFile\/(?:|[0-9]{{4}}\/)[a-zA-Z]{{1,10}}|opendata|Storage\/Image\/PublicationItem\/Image\/src\/[0-9]{{1,5}})\/)([^>]{{1,450}}\.[a-zA-Z]{{3,5}})))\s?\"[^>]{{0,250}}>)'
-        pattern_file_2 = fr'(<img alt=\"[^\/]{{0,50}}\"(?:\sclass=\"[^\/]{{0,50}}\"|)\ssrc=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:Upload\/images\/|Storage\/Image\/PublicationItem\/Article\/src\/[0-9]{{1,5}}\/))([^>\/]{{1,450}}\.[a-zA-Z]{{3,5}})))\"[^>]{{0,550}}>)'
+        genum_pattern_file_1 = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:dokumentydok\/[^\/]{{1,75}}|upload\/iblock\/[^\/]{{0,4}}|Upload\/files|Files\/DiskFile\/(?:|[0-9]{{4}}\/)[a-zA-Z]{{1,10}}|opendata|Storage\/Image\/PublicationItem\/Image\/src\/[0-9]{{1,5}})\/)([^>]{{1,450}}\.[a-zA-Z]{{3,5}})))\s?\"[^>]{{0,250}}>)'
+        genum_pattern_file_2 = fr'(<img alt=\"[^\/]{{0,50}}\"(?:\sclass=\"[^\/]{{0,50}}\"|)\ssrc=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:Upload\/images\/|Storage\/Image\/PublicationItem\/Article\/src\/[0-9]{{1,5}}\/))([^>\/]{{1,450}}\.[a-zA-Z]{{3,5}})))\"[^>]{{0,550}}>)'
+        sinta_pattern_file_1 = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)\/((sites\/default\/files\/imceFiles\/user-[0-9]{1,4}\/)([^>]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
         pattern_list = {
-            "news":     pattern_file_1,         # паттерн 1
-            "news2":    pattern_file_2,         # паттерн 2
+            "genum_file_1":    genum_pattern_file_1,         # паттерн 1
+            "genum_file_2":    genum_pattern_file_2,         # паттерн 2
+            "sinta_file_1":    sinta_pattern_file_1,         # паттерн 2
         }
         files = []
         filenames = []
@@ -88,6 +90,23 @@ class News:
                         # print(link,self.a_body)
                         page_link = link[1]
                         self.a_body = str(self.a_body).replace(page_link, '')
+            # TODO сделать нормальную обработку
+            except Exception as e:
+                print(e, 'test')
+
+    def delete_links2(self):
+        # TODO сделать передачу имени в регулярку
+        old_sitename = self.config["old_name"]
+        pattern_page = r'(<a href=\"((http:\/\/(?:ruk\.|)pravmin74.ru)[^\"]{0,500})\"[^>]{0,100}>)'
+        pattern_list = {
+            "page_link":        pattern_page,           # паттерн для поиска ссылок на страницы
+        }
+        for link_type, pattern in pattern_list.items():
+            try:
+                links = re.findall(pattern, self.a_body)
+                if len(links) > 0:
+                    for link in links:
+                        print(link, self.a_body)
             # TODO сделать нормальную обработку
             except Exception as e:
                 print(e, 'test')

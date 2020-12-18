@@ -43,3 +43,14 @@ deti74:     # Уполномоченного по правам ребёнка в
     news_type:
         102: 1  # Новости|194
     npa_title: deti74npa
+
+pravmin74:     # Уполномоченного по правам ребёнка в Челябинской области
+    old_name: pravmin74
+    new_name: pravmin
+    db_type: mariadb
+    db_name: pravmin74_12_11
+    classification: 16@egClassification # prod
+    # classification: 16@egClassification # test
+    news_type:
+        104: 1  # Новости
+        105: 1  # Новости

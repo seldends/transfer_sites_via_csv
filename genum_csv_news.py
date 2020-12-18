@@ -1,7 +1,7 @@
 import re
 from utils import time_test, get_config, get_csv_path, save_csv
-from csv_objects import News, File, NewsFile, NewsIndexImgFile, NewsMediaFile
-from utils_db_local import Database
+from csv_objects import News
+from utils_db_local_pg import Database
 
 
 def get_index_file(config, news):
@@ -64,12 +64,10 @@ def transfer_news(config):
         news = News(params, config)
         news_list.append(news)
         # Получение медиафайлов из таблицы
-        #files_from_table, file_names_from_table, empty_news = get_mediafile_from_table(config, db_local, news)
         files_from_table, file_names_from_table, empty_news = news.get_mediafile_from_table(db_local)
         # Добавление проблемных новостей
         null_news.extend(empty_news)
         # Обратока ссылок на файлы
-        #files_from_text, filenames_from_text = get_file_from_body(config, news)
         files_from_text, filenames_from_text = news.update_body()
         # Обработка основного изображения
         index_image_file = get_index_file(config, news)
