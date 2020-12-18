@@ -6,17 +6,16 @@ from utils import copy_file
 
 class News:
     def __init__(self, params, config):
+        self.config = config
         self.folder_name = config["new_name"]
         self.a_structure = params["structure"]
         self.old_id = params["old_id"]
         self.a_title = params["title"]
         self.a_date = params["date"]
         self.a_image_index = params["image_index"]
-        # self.a_body = str(row[4]).replace('<p style="text-align: justify;">&nbsp;</p>', '')
         self.a_body = params["body"]
         self.a_publ_date = params["publ_date"]
         self.a_resume = params["resume"]
-        self.config = config
         self.a_classification = config["classification"]
         self.isPublish = 'Да'
         self.pubmain = 'Да'
@@ -112,33 +111,52 @@ class News:
                 print(e, 'test')
 
 
+# class File:
+#     def __init__(self, config, data, category):
+#         root = Path.cwd()
+#         self.sitename = config["new_name"]
+#         self.category = category
+#         self.file_full_path = data["file_full_path"]
+#         self.file_relative_path = data["file_relative_path"]
+#         self.file = data["file"]
+#         if self.category == 'news':
+#             self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
+#             self.str_new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
+#         if self.category == 'news2':
+#             self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
+#             self.str_new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
+#         elif self.category == 'mediafiles':
+#             folder_name = Path(self.file_relative_path).name
+#             self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", folder_name, "/", self.file))
+#             self.str_new_link = "".join(("/news_mediafiles/", self.sitename, "/", folder_name, "/", self.file, "@cmsFile.doc"))
+#         elif self.category == 'indeximage':
+#             folder_name = Path(self.file_relative_path).name
+#             self.new_link = "".join(("files/ogvspb/pictures/", self.sitename, "/", folder_name, "/", self.file))
+#             self.str_new_link = "".join(("/ogvspb/pictures/", self.sitename, "/", folder_name, "/", self.file, "@cmsFile.doc"))
+#         elif self.category == 'npafiles':
+#             self.str_new_link = "".join(("/norm_act/", self.sitename, "/", self.file, "@cmsFile.doc"))
+
+#         self.encoded_filename = urllib.parse.unquote(self.file)
+#         self.path_root_old_file = root / 'source_files' / self.sitename / self.file_relative_path / self.encoded_filename
+
+#     def copy_news_file(self):
+#         # Копирование файлов
+#         root = Path.cwd()
+#         self.path_root_new_file = root / 'new_files' / self.sitename / self.new_link
+#         self.path_root_new_folder = self.path_root_new_file.parent
+#         copy_file(self.path_root_old_file,  self.path_root_new_folder)
+
 class File:
-    def __init__(self, config, data, category):
+    def __init__(self, config, data):
         root = Path.cwd()
         self.sitename = config["new_name"]
-        self.category = category
         self.file_full_path = data["file_full_path"]
         self.file_relative_path = data["file_relative_path"]
         self.file = data["file"]
-        if self.category == 'news':
-            self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
-            self.str_new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
-        if self.category == 'news2':
-            self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
-            self.str_new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
-        elif self.category == 'mediafiles':
-            folder_name = Path(self.file_relative_path).name
-            self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", folder_name, "/", self.file))
-            self.str_new_link = "".join(("/news_mediafiles/", self.sitename, "/", folder_name, "/", self.file, "@cmsFile.doc"))
-        elif self.category == 'indeximage':
-            folder_name = Path(self.file_relative_path).name
-            self.new_link = "".join(("files/ogvspb/pictures/", self.sitename, "/", folder_name, "/", self.file))
-            self.str_new_link = "".join(("/ogvspb/pictures/", self.sitename, "/", folder_name, "/", self.file, "@cmsFile.doc"))
-        elif self.category == 'npafiles':
-            self.str_new_link = "".join(("/norm_act/", self.sitename, "/", self.file, "@cmsFile.doc"))
-
         self.encoded_filename = urllib.parse.unquote(self.file)
         self.path_root_old_file = root / 'source_files' / self.sitename / self.file_relative_path / self.encoded_filename
+        self.new_link = ""
+        self.str_new_link = ""
 
     def copy_news_file(self):
         # Копирование файлов
@@ -146,3 +164,39 @@ class File:
         self.path_root_new_file = root / 'new_files' / self.sitename / self.new_link
         self.path_root_new_folder = self.path_root_new_file.parent
         copy_file(self.path_root_old_file,  self.path_root_new_folder)
+
+
+class NewsIndexImgFile(File):
+    def __init__(self, config, data):
+        super().__init__(config, data)
+        folder_name = Path(self.file_relative_path).name
+        self.new_link = "".join(("files/ogvspb/pictures/", self.sitename, "/", folder_name, "/", self.file))
+        self.str_new_link = "".join(("/ogvspb/pictures/", self.sitename, "/", folder_name, "/", self.file, "@cmsFile.doc"))
+
+
+class NewsFile(File):
+    def __init__(self, config, data):
+        super().__init__(config, data)
+        # TODO проверить правильность ссылок
+        # TODO подумать могут ли быть в разлинчных директориях файлы с одинаковым именем
+        self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
+        self.str_new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
+
+
+class NewsMediaFile(File):
+    def __init__(self, config, data):
+        super().__init__(config, data)
+        # TODO проверить правильность ссылок
+        # TODO подумать могут ли быть в разлинчных директориях файлы с одинаковым именем
+        folder_name = Path(self.file_relative_path).name
+        self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", folder_name, "/", self.file))
+        self.str_new_link = "".join(("/news_mediafiles/", self.sitename, "/", folder_name, "/", self.file, "@cmsFile.doc"))
+
+
+class NpaFile(File):
+    def __init__(self, config, data):
+        super().__init__(config, data)
+        # TODO проверить правильность ссылок
+        # TODO подумать могут ли быть в разлинчных директориях файлы с одинаковым именем
+        self.new_link = "".join(("files/norm_act/", self.sitename, "/", self.file))
+        self.str_new_link = "".join(("/norm_act/", self.sitename, "/", self.file, "@cmsFile.doc"))

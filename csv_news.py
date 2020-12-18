@@ -1,6 +1,6 @@
 import re
 from utils import time_test, get_config, get_csv_path, save_csv
-from csv_objects import News, File
+from csv_objects import News, File, NewsFile, NewsIndexImgFile, NewsMediaFile
 from utils_db_local import Database
 
 
@@ -31,7 +31,7 @@ def get_file_from_body(config, obj):
                         "file_relative_path":   link[3],    # Папка файла.                      Пример:     Upload/files/
                         "file":                 link[4],    # Имя файла с расширением.          Пример:     Приказ МПР 496 от 111113 с изм 141217.rtf
                     }
-                    file = File(config, data, link_type)
+                    file = NewsFile(config, data)
                     files.append(file)
                     filenames.append(file.encoded_filename)
                     old_file_path = file.file_full_path
@@ -68,7 +68,7 @@ def get_mediafile_from_table(config, db_local, news):
                                 "file_relative_path":   link[1],    # Папка файла.                      Пример:     /PublicationItemImage/Image/src/178/
                                 "file":                 link[2],    # Имя файла с расширением.          Пример:     IMG_2038.JPG
                             }
-                            file = File(config, data, link_type)
+                            file = NewsMediaFile(config, data)
                             mediafiles.append(file)
                             mediafiles_name.append(file.encoded_filename)
                             # TODO запись в атрибут медиафайлы объектов через запятую
@@ -104,7 +104,7 @@ def get_index_file(config, news):
                         "file_relative_path":   link[1],    # Папка файла.                      Пример:     PublicationItem\Image\src\10836\
                         "file":                 link[2],    # Имя файла с расширением.          Пример:     images (24).jpg
                     }
-                    file = File(config, data, link_type)
+                    file = NewsIndexImgFile(config, data)
                     news.a_image_index = file.str_new_link
                     index_file.append(file)
         except AttributeError as e:
