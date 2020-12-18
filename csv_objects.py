@@ -35,7 +35,6 @@ class News:
             "sinta_file_1":    sinta_pattern_file_1,         # паттерн 2
         }
         files = []
-        filenames = []
         for link_type, pattern in pattern_list.items():
             try:
                 links = re.findall(pattern, self.a_body)
@@ -53,14 +52,13 @@ class News:
                         }
                         file = NewsFile(self.config, data)
                         files.append(file)
-                        filenames.append(file.encoded_filename)
                         # TODO разобраться
                         #self.a_body = str(self.a_body).replace(file.file_full_path, file.str_new_link)     # Замены ссылки
                         self.a_body = str(self.a_body).replace(file.file_full_path, file.new_link)
             # TODO сделать нормальную обработку
             except Exception as e:
                 print(e, 'test')
-        return files, filenames
+        return files
 
     def delete_links(self):
         # TODO сделать передачу имени в регулярку
@@ -120,7 +118,6 @@ class News:
         }
         newsfiles_list = db_local.get_news_files_list(self.old_id)
         mediafiles = []
-        mediafiles_name = []
         for mediafile in newsfiles_list:
             old_path = mediafile[0]
             # Проверка пустой ли путь у файлв Новостей (запись есть, но значение пустое, то добавлять в список пуcтых)
@@ -139,7 +136,6 @@ class News:
                                 }
                                 file = NewsMediaFile(self.config, data)
                                 mediafiles.append(file)
-                                mediafiles_name.append(file.encoded_filename)
                                 # TODO запись в атрибут медиафайлы объектов через запятую
                                 if self.mediaFiles != '':
                                     self.mediaFiles = ','.join((self.mediaFiles, file.str_new_link))
@@ -150,7 +146,7 @@ class News:
             else:
                 null_news.append(self.old_id)
                 print(f'Отсутствует имя файла ид старой новости : {self.old_id}')
-        return mediafiles, mediafiles_name, null_news
+        return mediafiles, null_news
 
     # def transform_body(self):
     #     old_sitename = self.config["old_name"]

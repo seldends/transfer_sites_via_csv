@@ -1,7 +1,8 @@
 import re
 from utils import time_test, get_config, get_csv_path, save_csv
-from csv_objects import News
-from utils_db_local_pg import Database
+from csv_objects import News, NewsIndexImgFile
+# from utils_db_local_pg import Database
+from utils_db_local import DatabasePg as Database
 
 
 def get_index_file(config, news):
@@ -64,15 +65,13 @@ def transfer_news(config):
         news = News(params, config)
         news_list.append(news)
         # Получение медиафайлов из таблицы
-        files_from_table, file_names_from_table, empty_news = news.get_mediafile_from_table(db_local)
+        files_from_table, empty_news = news.get_mediafile_from_table(db_local)
         # Добавление проблемных новостей
         null_news.extend(empty_news)
         # Обратока ссылок на файлы
-        files_from_text, filenames_from_text = news.update_body()
+        files_from_text = news.update_body()
         # Обработка основного изображения
         index_image_file = get_index_file(config, news)
-        # if files_from_text:
-            # print(f'{files_from_text}-{filenames_from_text}')
         row = {
                 'structure': news.a_structure,
                 'title': news.a_title,
@@ -91,7 +90,7 @@ def transfer_news(config):
         # TODO сделать полное описание или разделение на отдельные списки
         # news_files.extend(index_image_file)     # Основная картинка новости
         # news_files.extend(files_from_text)      # Обычные файлы из новосте, сохраняются в
-        # news_files.extend(files_from_table)     # Медиавфайлы из таблицы 
+        # news_files.extend(files_from_table)     # Медиафайлы из таблицы
 
     path_csv = get_csv_path(config, 'news')         # Получение пути для csv
     save_csv(path_csv, fieldnames, query_list)      # Сохранение словаря в csv

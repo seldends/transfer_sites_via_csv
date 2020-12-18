@@ -1,7 +1,8 @@
 import re
 from utils import time_test, get_config, get_csv_path, save_csv
 from csv_objects import News, File, NewsFile
-from utils_db_local_maria import Database
+#from utils_db_local_maria import Database
+from utils_db_local import DatabaseMaria as Database
 
 
 # TODO подумать как можно объединить общий функционал на функции обработки файлов
