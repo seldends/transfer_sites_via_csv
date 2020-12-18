@@ -21,130 +21,236 @@ class News:
         self.pubmain = 'Да'
         self.mediaFiles = ''
 
-    def transform_body(self):
+    # TODO подумать как можно объединить общий функционал на функции обработки файлов
+    # Получение файла Новостей из описания Новостей
+    def update_body(self):
+        # TODO сделать передачу имени в регулярку
         old_sitename = self.config["old_name"]
-        pattern_page = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(htmlpages\/(?:Show|CmsHtmlPageList)\/[^\"]{{1,75}}(?:\/[^\"]{{1,75}}\/[^\"]{{1,75}}|\/[^\"]{{1,75}}|)))\"[^>]{{0,250}}>)'
-        pattern_npa = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(LegalActs\/Show\/[^\/>]{{1,10}}))\"[^>]{{0,250}}>)'
-        pattern_single_page = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)(?:|\/|\/(?:InternetReception|LegalActs)))\"[^>]{{0,250}}>)'
-        pattern_id = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/Publications\/[a-zA-Z]{{1,15}}(?:\/Show\?id=[0-9]{{0,10}}|))\"[^>]{{0,250}}>)'
-
+        pattern_file_1 = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:dokumentydok\/[^\/]{{1,75}}|upload\/iblock\/[^\/]{{0,4}}|Upload\/files|Files\/DiskFile\/(?:|[0-9]{{4}}\/)[a-zA-Z]{{1,10}}|opendata|Storage\/Image\/PublicationItem\/Image\/src\/[0-9]{{1,5}})\/)([^>]{{1,450}}\.[a-zA-Z]{{3,5}})))\s?\"[^>]{{0,250}}>)'
+        pattern_file_2 = fr'(<img alt=\"[^\/]{{0,50}}\"(?:\sclass=\"[^\/]{{0,50}}\"|)\ssrc=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:Upload\/images\/|Storage\/Image\/PublicationItem\/Article\/src\/[0-9]{{1,5}}\/))([^>\/]{{1,450}}\.[a-zA-Z]{{3,5}})))\"[^>]{{0,550}}>)'
         pattern_list = {
-            "страницы":         pattern_page,           # паттерн для поиска ссылок на страницы
-            "НПА":              pattern_npa,            # паттерн для поиска ссылок на НПА
-            "приемная":         pattern_single_page,    # паттерн для поиска ссылок на приемнуюкорневые страницы
-            "страницы с id":    pattern_id,             # паттерн для поиска ссылок на страницы mainnew
+            "news":     pattern_file_1,         # паттерн 1
+            "news2":    pattern_file_2,         # паттерн 2
         }
-        for pattern in pattern_list:
+        files = []
+        filenames = []
+        for link_type, pattern in pattern_list.items():
             try:
-                match_list = re.findall(pattern, self.a_body)
-                if len(match_list) > 0:
-                    for element in match_list:
-                        # Если элемент строка - то заменять строку
-                        if type(element) == str:
-                            self.a_body = str(self.a_body).replace(element, '')
-                        # Если элемент кортеж - то заменять 2й элемент (путь до картинки)
-                        if type(element) == tuple:
-                            # print(element[1])
-                            self.a_body = str(self.a_body).replace(element[1], '')
-            except Exception as e:
-                print(e)
-    # TODO Разобраться
-    def make_mediafiles(self):
-        image_list = []
-        image_name_list = []
-        # fromid = self.a_ouid
-        description = ""
-        for pattern in self.pattern_list:
-            try:
-                pattern_image_list = re.findall(pattern, self.a_body)
+                links = re.findall(pattern, self.a_body)
+                # print(links, pattern)
                 # Если есть совпадения
-                if len(pattern_image_list) > 0:
-                    for temp_image in pattern_image_list:
-                        # Проверка если кортеж - то значит 2м объектом идет путь до картинки
-                        if type(temp_image) == tuple and temp_image[1] != 'www.':
-                            # if type(temp_image) == tuple:
-                            # print(type(temp_image))
-                            toid = str(temp_image[1])
-                            image = NewsFile(toid, description, fromid, self.folder_name)
-                            image_name_list.append(str(temp_image[1]).replace("/Upload/images/", "").replace("/Storage/Image/PublicationItem/Article/src/", ""))
-                            image_list.append(image)
+                if len(links) > 0:
+                    for link in links:
+                        # print(link)
+                        data = {
+                            "full_link":            link[0],    # Полная ссылка с a href и стилями. Пример:     <a href="http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx">
+                            "file_full_path":       link[1],    # Ссылка на файл.                   Пример:     http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
+                            "file_path":            link[2],    # Полный путь до файла.             Пример:     sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
+                            "file_relative_path":   link[3],    # Папка файла.                      Пример:     sites/default/files/imceFiles/user-333/
+                            "file":                 link[4],    # Имя файла с расширением.          Пример:     soglasie_rk_2020.docx
+                        }
+                        file = NewsFile(self.config, data)
+                        files.append(file)
+                        filenames.append(file.encoded_filename)
+                        # TODO разобраться
+                        self.a_body = str(self.a_body).replace(file.file_full_path, file.str_new_link)     # Замены ссылки
+                        self.a_body = str(self.a_body).replace(file.file_full_path, file.new_link)
+            # TODO сделать нормальную обработку
+            except Exception as e:
+                print(e, 'test')
+        return files, filenames
+
+    # TODO подумать как можно объединить общий функционал на функции обработки файлов
+    # Получение файла Новостей из описания Новостей
+    def get_file_from_body(config, obj):
+        old_sitename = config["old_name"]
+        pattern_file_1 = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:dokumentydok\/[^\/]{{1,75}}|upload\/iblock\/[^\/]{{0,4}}|Upload\/files|Files\/DiskFile\/(?:|[0-9]{{4}}\/)[a-zA-Z]{{1,10}}|opendata|Storage\/Image\/PublicationItem\/Image\/src\/[0-9]{{1,5}})\/)([^>]{{1,450}}\.[a-zA-Z]{{3,5}})))\s?\"[^>]{{0,250}}>)'
+        pattern_file_2 = fr'(<img alt=\"[^\/]{{0,50}}\"(?:\sclass=\"[^\/]{{0,50}}\"|)\ssrc=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:Upload\/images\/|Storage\/Image\/PublicationItem\/Article\/src\/[0-9]{{1,5}}\/))([^>\/]{{1,450}}\.[a-zA-Z]{{3,5}})))\"[^>]{{0,550}}>)'
+        # pattern_file_2 = fr'(<img alt=\".{0,50}\" )'
+        pattern_list = {
+            "news":     pattern_file_1,         # паттерн 1
+            "news2":    pattern_file_2,         # паттерн 2
+        }
+        files = []
+        filenames = []
+        for link_type, pattern in pattern_list.items():
+            # print(pattern)
+            try:
+                links = re.findall(pattern, obj.a_body)
+                # Если есть совпадения
+                if len(links) > 0:
+                    for link in links:
+                        data = {
+                            "full_link":            link[0],    # Полная ссылка с a href и стилями. Пример:     <a href="http://szn74.ru/Upload/files/Приказ МПР 496 от 111113 с изм 141217.rtf">
+                            "file_full_path":       link[1],    # Ссылка на файл.                   Пример:     http://szn74.ru/Upload/files/Приказ МПР 496 от 111113 с изм 141217.rtf
+                            "file_path":            link[2],    # Полный путь до файла.             Пример:     Upload/files/Приказ МПР 496 от 111113 с изм 141217.rtf
+                            "file_relative_path":   link[3],    # Папка файла.                      Пример:     Upload/files/
+                            "file":                 link[4],    # Имя файла с расширением.          Пример:     Приказ МПР 496 от 111113 с изм 141217.rtf
+                        }
+                        file = NewsFile(config, data)
+                        files.append(file)
+                        filenames.append(file.encoded_filename)
+                        old_file_path = file.file_full_path
+                        new_file_path = file.str_new_link
+                        obj.a_body = str(obj.a_body).replace(old_file_path, new_file_path)     # Замены ссылки
             except Exception as e:
                 print(e)
-        return image_list, image_name_list
+        return files, filenames
 
-    # TODO Разобраться
-    def get_news_data(self):
-        data = (
-            self.a_title, self.a_date, self.a_image_index, self.a_body,
-            self.a_publ_date, self.a_resume, self.a_structure
-        )
-        return data
-
-    # TODO Разобраться
     def delete_links(self):
-        old_sitename = self.config["old_name"] 
-        pattern_page = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(htmlpages\/(?:Show|CmsHtmlPageList)\/[^\"]{{1,75}}(?:\/[^\"]{{1,75}}\/[^\"]{{1,75}}|\/[^\"]{{1,75}}|)))\"[^>]{{0,250}}>)'
-        pattern_npa = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(LegalActs\/Show\/[^\/>]{{1,10}}))\"[^>]{{0,250}}>)'
-        pattern_single_page = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)(?:|\/|\/(?:InternetReception|LegalActs)))\"[^>]{{0,250}}>)'
-        pattern_id = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/Publications\/[a-zA-Z]{{1,15}}(?:\/Show\?id=[0-9]{{0,10}}|))\"[^>]{{0,250}}>)'
-
+        # TODO сделать передачу имени в регулярку
+        old_sitename = self.config["old_name"]
+        pattern_npa = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)(\/normativnye-pravovye-akty\/[^\/]{1,250}\/[^\/\"]{1,250}))\"[^>]{0,100}>)'
+        pattern_news = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)(\/novosti\/[^\/\"]{1,250}))\"[^>]{0,100}>)'
+        pattern_page = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)(\/[^\/\"]{1,100}))\"[^>]{0,100}>)'
         pattern_list = {
-            "страницы":         pattern_page,           # паттерн для поиска ссылок на страницы
-            "НПА":              pattern_npa,            # паттерн для поиска ссылок на НПА
-            "приемная":         pattern_single_page,    # паттерн для поиска ссылок на приемнуюкорневые страницы
-            "страницы с id":    pattern_id,             # паттерн для поиска ссылок на страницы mainnew
+            "npa_link":         pattern_npa,           # паттерн для поиска ссылок на страницы
+            "news_link":        pattern_news,           # паттерн для поиска ссылок на страницы
+            "page_link":        pattern_page,           # паттерн для поиска ссылок на страницы
         }
         for link_type, pattern in pattern_list.items():
             try:
-                if self.a_body:
-                    links = re.findall(pattern, self.a_body)
-                    # Если есть совпадения
-                    if len(links) > 0:
-                        # print(links)
-                        for link in links:
-                            full_link = link[0]         # Полная ссылка с a href и стилями. Пример:     <a href="http://forest74.ru/htmlpages/Show/activities/Protivodejstviekorrupcii">
-                            page_link = link[1]         # Ссылка                            Пример:     http://forest74.ru/htmlpages/Show/activities/Protivodejstviekorrupcii
-                            # relative_page_link = link[2]         # Относительная страница          Пример:     htmlpages/Show/activities/Protivodejstviekorrupcii
-                            # updated_text = str(self.self.a_body).replace(page_link, '').replace('<p><a href="">ТЕКСТ</a></p>', '').replace('None', '')      # Убирается путь до файла из ссылки
-                            # self.self.a_body = updated_text.replace('<p><a href="">ТЕКСТ</a></p>', '').replace('None', '')
+                links = re.findall(pattern, self.a_body)
+                if len(links) > 0:
+                    for link in links:
+                        # print(link,self.a_body)
+                        page_link = link[1]
+                        self.a_body = str(self.a_body).replace(page_link, '')
+            # TODO сделать нормальную обработку
             except Exception as e:
                 print(e, 'test')
 
+    # Получение медиафайлов из таблицы
+    def get_mediafile_from_table(self, db_local):
+        null_news = []
+        pattern_file_1 = r'(\/(PublicationItemImage\/Image\/src\/[0-9]{1,5}\/)([^>]{1,75}))'
+        pattern_list = {
+            "mediafiles": pattern_file_1,         # паттерн 1
+        }
+        newsfiles_list = db_local.get_news_files_list(self.old_id)
+        mediafiles = []
+        mediafiles_name = []
+        for mediafile in newsfiles_list:
+            old_path = mediafile[0]
+            # Проверка пустой ли путь у файлв Новостей (запись есть, но значение пустое, то добавлять в список пуcтых)
+            if old_path:
+                file_path = str(old_path).replace("\\", "/")
+                for link_type, pattern in pattern_list.items():
+                    try:
+                        links = re.findall(pattern, file_path)
+                        # Если есть совпадения
+                        if len(links) > 0:
+                            for link in links:
+                                data = {
+                                    "file_full_path":       link[0],    # Ссылка на файл.                   Пример:     /PublicationItemImage/Image/src/178/IMG_2038.JPG
+                                    "file_relative_path":   link[1],    # Папка файла.                      Пример:     /PublicationItemImage/Image/src/178/
+                                    "file":                 link[2],    # Имя файла с расширением.          Пример:     IMG_2038.JPG
+                                }
+                                file = NewsMediaFile(self.config, data)
+                                mediafiles.append(file)
+                                mediafiles_name.append(file.encoded_filename)
+                                # TODO запись в атрибут медиафайлы объектов через запятую
+                                if self.mediaFiles != '':
+                                    self.mediaFiles = ','.join((self.mediaFiles, file.str_new_link))
+                                else:
+                                    self.mediaFiles = file.str_new_link
+                    except AttributeError as e:
+                        print('Ошибка в создании файла Новостей', e)
+            else:
+                null_news.append(self.old_id)
+                print(f'Отсутствует имя файла ид старой новости : {self.old_id}')
+        return mediafiles, mediafiles_name, null_news
 
-# class File:
-#     def __init__(self, config, data, category):
-#         root = Path.cwd()
-#         self.sitename = config["new_name"]
-#         self.category = category
-#         self.file_full_path = data["file_full_path"]
-#         self.file_relative_path = data["file_relative_path"]
-#         self.file = data["file"]
-#         if self.category == 'news':
-#             self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
-#             self.str_new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
-#         if self.category == 'news2':
-#             self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
-#             self.str_new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
-#         elif self.category == 'mediafiles':
-#             folder_name = Path(self.file_relative_path).name
-#             self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", folder_name, "/", self.file))
-#             self.str_new_link = "".join(("/news_mediafiles/", self.sitename, "/", folder_name, "/", self.file, "@cmsFile.doc"))
-#         elif self.category == 'indeximage':
-#             folder_name = Path(self.file_relative_path).name
-#             self.new_link = "".join(("files/ogvspb/pictures/", self.sitename, "/", folder_name, "/", self.file))
-#             self.str_new_link = "".join(("/ogvspb/pictures/", self.sitename, "/", folder_name, "/", self.file, "@cmsFile.doc"))
-#         elif self.category == 'npafiles':
-#             self.str_new_link = "".join(("/norm_act/", self.sitename, "/", self.file, "@cmsFile.doc"))
+    # def transform_body(self):
+    #     old_sitename = self.config["old_name"]
+    #     pattern_page = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(htmlpages\/(?:Show|CmsHtmlPageList)\/[^\"]{{1,75}}(?:\/[^\"]{{1,75}}\/[^\"]{{1,75}}|\/[^\"]{{1,75}}|)))\"[^>]{{0,250}}>)'
+    #     pattern_npa = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(LegalActs\/Show\/[^\/>]{{1,10}}))\"[^>]{{0,250}}>)'
+    #     pattern_single_page = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)(?:|\/|\/(?:InternetReception|LegalActs)))\"[^>]{{0,250}}>)'
+    #     pattern_id = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/Publications\/[a-zA-Z]{{1,15}}(?:\/Show\?id=[0-9]{{0,10}}|))\"[^>]{{0,250}}>)'
 
-#         self.encoded_filename = urllib.parse.unquote(self.file)
-#         self.path_root_old_file = root / 'source_files' / self.sitename / self.file_relative_path / self.encoded_filename
+    #     pattern_list = {
+    #         "страницы":         pattern_page,           # паттерн для поиска ссылок на страницы
+    #         "НПА":              pattern_npa,            # паттерн для поиска ссылок на НПА
+    #         "приемная":         pattern_single_page,    # паттерн для поиска ссылок на приемнуюкорневые страницы
+    #         "страницы с id":    pattern_id,             # паттерн для поиска ссылок на страницы mainnew
+    #     }
+    #     for pattern in pattern_list:
+    #         try:
+    #             match_list = re.findall(pattern, self.a_body)
+    #             if len(match_list) > 0:
+    #                 for element in match_list:
+    #                     # Если элемент строка - то заменять строку
+    #                     if type(element) == str:
+    #                         self.a_body = str(self.a_body).replace(element, '')
+    #                     # Если элемент кортеж - то заменять 2й элемент (путь до картинки)
+    #                     if type(element) == tuple:
+    #                         # print(element[1])
+    #                         self.a_body = str(self.a_body).replace(element[1], '')
+    #         except Exception as e:
+    #             print(e)
 
-#     def copy_news_file(self):
-#         # Копирование файлов
-#         root = Path.cwd()
-#         self.path_root_new_file = root / 'new_files' / self.sitename / self.new_link
-#         self.path_root_new_folder = self.path_root_new_file.parent
-#         copy_file(self.path_root_old_file,  self.path_root_new_folder)
+    # # TODO Разобраться
+    # def make_mediafiles(self):
+    #     image_list = []
+    #     image_name_list = []
+    #     # fromid = self.a_ouid
+    #     description = ""
+    #     for pattern in self.pattern_list:
+    #         try:
+    #             pattern_image_list = re.findall(pattern, self.a_body)
+    #             # Если есть совпадения
+    #             if len(pattern_image_list) > 0:
+    #                 for temp_image in pattern_image_list:
+    #                     # Проверка если кортеж - то значит 2м объектом идет путь до картинки
+    #                     if type(temp_image) == tuple and temp_image[1] != 'www.':
+    #                         # if type(temp_image) == tuple:
+    #                         # print(type(temp_image))
+    #                         toid = str(temp_image[1])
+    #                         image = NewsFile(toid, description, fromid, self.folder_name)
+    #                         image_name_list.append(str(temp_image[1]).replace("/Upload/images/", "").replace("/Storage/Image/PublicationItem/Article/src/", ""))
+    #                         image_list.append(image)
+    #         except Exception as e:
+    #             print(e)
+    #     return image_list, image_name_list
+
+    # # TODO Разобраться
+    # def get_news_data(self):
+    #     data = (
+    #         self.a_title, self.a_date, self.a_image_index, self.a_body,
+    #         self.a_publ_date, self.a_resume, self.a_structure
+    #     )
+    #     return data
+
+    # # TODO Разобраться
+    # def delete_links(self):
+    #     old_sitename = self.config["old_name"] 
+    #     pattern_page = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(htmlpages\/(?:Show|CmsHtmlPageList)\/[^\"]{{1,75}}(?:\/[^\"]{{1,75}}\/[^\"]{{1,75}}|\/[^\"]{{1,75}}|)))\"[^>]{{0,250}}>)'
+    #     pattern_npa = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(LegalActs\/Show\/[^\/>]{{1,10}}))\"[^>]{{0,250}}>)'
+    #     pattern_single_page = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)(?:|\/|\/(?:InternetReception|LegalActs)))\"[^>]{{0,250}}>)'
+    #     pattern_id = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/Publications\/[a-zA-Z]{{1,15}}(?:\/Show\?id=[0-9]{{0,10}}|))\"[^>]{{0,250}}>)'
+
+    #     pattern_list = {
+    #         "страницы":         pattern_page,           # паттерн для поиска ссылок на страницы
+    #         "НПА":              pattern_npa,            # паттерн для поиска ссылок на НПА
+    #         "приемная":         pattern_single_page,    # паттерн для поиска ссылок на приемнуюкорневые страницы
+    #         "страницы с id":    pattern_id,             # паттерн для поиска ссылок на страницы mainnew
+    #     }
+    #     for link_type, pattern in pattern_list.items():
+    #         try:
+    #             if self.a_body:
+    #                 links = re.findall(pattern, self.a_body)
+    #                 # Если есть совпадения
+    #                 if len(links) > 0:
+    #                     # print(links)
+    #                     for link in links:
+    #                         full_link = link[0]         # Полная ссылка с a href и стилями. Пример:     <a href="http://forest74.ru/htmlpages/Show/activities/Protivodejstviekorrupcii">
+    #                         page_link = link[1]         # Ссылка                            Пример:     http://forest74.ru/htmlpages/Show/activities/Protivodejstviekorrupcii
+    #                         # relative_page_link = link[2]         # Относительная страница          Пример:     htmlpages/Show/activities/Protivodejstviekorrupcii
+    #                         # updated_text = str(self.self.a_body).replace(page_link, '').replace('<p><a href="">ТЕКСТ</a></p>', '').replace('None', '')      # Убирается путь до файла из ссылки
+    #                         # self.self.a_body = updated_text.replace('<p><a href="">ТЕКСТ</a></p>', '').replace('None', '')
+    #         except Exception as e:
+    #             print(e, 'test')
+
 
 class File:
     def __init__(self, config, data):
