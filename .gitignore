@@ -13,3 +13,4 @@ settings.py
 test.py
 test_re.py
 /csv_files
+transfer_news_minsoc.py
