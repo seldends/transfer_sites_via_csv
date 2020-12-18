@@ -148,65 +148,6 @@ class News:
                 print(f'Отсутствует имя файла ид старой новости : {self.old_id}')
         return mediafiles, null_news
 
-    # def transform_body(self):
-    #     old_sitename = self.config["old_name"]
-    #     pattern_page = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(htmlpages\/(?:Show|CmsHtmlPageList)\/[^\"]{{1,75}}(?:\/[^\"]{{1,75}}\/[^\"]{{1,75}}|\/[^\"]{{1,75}}|)))\"[^>]{{0,250}}>)'
-    #     pattern_npa = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(LegalActs\/Show\/[^\/>]{{1,10}}))\"[^>]{{0,250}}>)'
-    #     pattern_single_page = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)(?:|\/|\/(?:InternetReception|LegalActs)))\"[^>]{{0,250}}>)'
-    #     pattern_id = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/Publications\/[a-zA-Z]{{1,15}}(?:\/Show\?id=[0-9]{{0,10}}|))\"[^>]{{0,250}}>)'
-
-    #     pattern_list = {
-    #         "страницы":         pattern_page,           # паттерн для поиска ссылок на страницы
-    #         "НПА":              pattern_npa,            # паттерн для поиска ссылок на НПА
-    #         "приемная":         pattern_single_page,    # паттерн для поиска ссылок на приемнуюкорневые страницы
-    #         "страницы с id":    pattern_id,             # паттерн для поиска ссылок на страницы mainnew
-    #     }
-    #     for pattern in pattern_list:
-    #         try:
-    #             match_list = re.findall(pattern, self.a_body)
-    #             if len(match_list) > 0:
-    #                 for element in match_list:
-    #                     # Если элемент строка - то заменять строку
-    #                     if type(element) == str:
-    #                         self.a_body = str(self.a_body).replace(element, '')
-    #                     # Если элемент кортеж - то заменять 2й элемент (путь до картинки)
-    #                     if type(element) == tuple:
-    #                         # print(element[1])
-    #                         self.a_body = str(self.a_body).replace(element[1], '')
-    #         except Exception as e:
-    #             print(e)
-
-
-    # # TODO Разобраться
-    # def delete_links(self):
-    #     old_sitename = self.config["old_name"] 
-    #     pattern_page = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(htmlpages\/(?:Show|CmsHtmlPageList)\/[^\"]{{1,75}}(?:\/[^\"]{{1,75}}\/[^\"]{{1,75}}|\/[^\"]{{1,75}}|)))\"[^>]{{0,250}}>)'
-    #     pattern_npa = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(LegalActs\/Show\/[^\/>]{{1,10}}))\"[^>]{{0,250}}>)'
-    #     pattern_single_page = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)(?:|\/|\/(?:InternetReception|LegalActs)))\"[^>]{{0,250}}>)'
-    #     pattern_id = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/Publications\/[a-zA-Z]{{1,15}}(?:\/Show\?id=[0-9]{{0,10}}|))\"[^>]{{0,250}}>)'
-
-    #     pattern_list = {
-    #         "страницы":         pattern_page,           # паттерн для поиска ссылок на страницы
-    #         "НПА":              pattern_npa,            # паттерн для поиска ссылок на НПА
-    #         "приемная":         pattern_single_page,    # паттерн для поиска ссылок на приемнуюкорневые страницы
-    #         "страницы с id":    pattern_id,             # паттерн для поиска ссылок на страницы mainnew
-    #     }
-    #     for link_type, pattern in pattern_list.items():
-    #         try:
-    #             if self.a_body:
-    #                 links = re.findall(pattern, self.a_body)
-    #                 # Если есть совпадения
-    #                 if len(links) > 0:
-    #                     # print(links)
-    #                     for link in links:
-    #                         full_link = link[0]         # Полная ссылка с a href и стилями. Пример:     <a href="http://forest74.ru/htmlpages/Show/activities/Protivodejstviekorrupcii">
-    #                         page_link = link[1]         # Ссылка                            Пример:     http://forest74.ru/htmlpages/Show/activities/Protivodejstviekorrupcii
-    #                         # relative_page_link = link[2]         # Относительная страница          Пример:     htmlpages/Show/activities/Protivodejstviekorrupcii
-    #                         # updated_text = str(self.self.a_body).replace(page_link, '').replace('<p><a href="">ТЕКСТ</a></p>', '').replace('None', '')      # Убирается путь до файла из ссылки
-    #                         # self.self.a_body = updated_text.replace('<p><a href="">ТЕКСТ</a></p>', '').replace('None', '')
-    #         except Exception as e:
-    #             print(e, 'test')
-
 
 class File:
     def __init__(self, config, data):
