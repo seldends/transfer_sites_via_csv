@@ -54,3 +54,13 @@ pravmin74:     # Уполномоченного по правам ребёнка
     news_type:
         104: 1  # Новости
         105: 1  # Новости
+
+imchel74:     # Уполномоченного по правам ребёнка в Челябинской области
+    old_name: imchel
+    new_name: im
+    db_type: mariadb
+    db_name: imchel_10_12
+    classification: 16@egClassification # prod
+    # classification: 33@egClassification # test
+    news_type:
+        13: 1  # Новости

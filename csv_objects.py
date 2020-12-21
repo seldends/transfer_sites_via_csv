@@ -29,10 +29,14 @@ class News:
         genum_pattern_file_1 = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:dokumentydok\/[^\/]{{1,75}}|upload\/iblock\/[^\/]{{0,4}}|Upload\/files|Files\/DiskFile\/(?:|[0-9]{{4}}\/)[a-zA-Z]{{1,10}}|opendata|Storage\/Image\/PublicationItem\/Image\/src\/[0-9]{{1,5}})\/)([^>]{{1,450}}\.[a-zA-Z]{{3,5}})))\s?\"[^>]{{0,250}}>)'
         genum_pattern_file_2 = fr'(<img alt=\"[^\/]{{0,50}}\"(?:\sclass=\"[^\/]{{0,50}}\"|)\ssrc=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:Upload\/images\/|Storage\/Image\/PublicationItem\/Article\/src\/[0-9]{{1,5}}\/))([^>\/]{{1,450}}\.[a-zA-Z]{{3,5}})))\"[^>]{{0,550}}>)'
         sinta_pattern_file_1 = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)\/((sites\/default\/files\/imceFiles\/user-[0-9]{1,4}\/)([^>]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
+        bitrix_pattern_file_1 = r'(<img\s(?:width=\"[0-9]{1,4}\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)src=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:medialibrary\/[^\/]{1,5}\/|))([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
+        bitrix_pattern_file_2 = r'(<a\s(?:target=\"_blank\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)href=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:[^\/]{1,20}\/(?:[^\/]{1,5}\/|)|))([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
         pattern_list = {
             "genum_file_1":    genum_pattern_file_1,         # паттерн 1
             "genum_file_2":    genum_pattern_file_2,         # паттерн 2
             "sinta_file_1":    sinta_pattern_file_1,         # паттерн 2
+            "bitrix_file_1":   bitrix_pattern_file_1,         # паттерн 2
+            "bitrix_file_2":   bitrix_pattern_file_2,         # паттерн 2
         }
         files = []
         for link_type, pattern in pattern_list.items():
@@ -55,6 +59,10 @@ class News:
                         # TODO разобраться
                         #self.a_body = str(self.a_body).replace(file.file_full_path, file.str_new_link)     # Замены ссылки
                         self.a_body = str(self.a_body).replace(file.file_full_path, file.new_link)
+                        self.a_body = re.sub(r'[\n]{2,3}', r'', self.a_body)
+                        temp_a_resume = re.sub(r'(?:<|)(?:\/|)[a-z]{1,5}>', r'', str(self.a_resume))
+                        temp2_a_resume = re.sub(r'[\n]{2,3}', r'', temp_a_resume)
+                        self.a_resume = temp2_a_resume
             # TODO сделать нормальную обработку
             except Exception as e:
                 print(e, 'test')
@@ -70,6 +78,7 @@ class News:
         sinta_pattern_npa = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)(\/normativnye-pravovye-akty\/[^\/]{1,250}\/[^\/\"]{1,250}))\"[^>]{0,100}>)'
         sinta_pattern_news = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)(\/novosti\/[^\/\"]{1,250}))\"[^>]{0,100}>)'
         sinta_pattern_page = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)(\/[^\/\"]{1,100}))\"[^>]{0,100}>)'
+        bitrix_pattern_page = r'(<a\s(?:target=\"_blank\"\s|)href=\"((?:https?:\/\/imchel\.ru|)(?:\/?(?:[^\/\"]{1,50}\/|)(?:[^\/\"]{1,50}\/|)(?:[^\/\"]{1,250}|)\/?)|)\"[^>]{0,100}>)'
 
         pattern_list = {
             "genum_page":           genum_pattern_page,         # genum паттерн для поиска ссылок на страницы
@@ -79,6 +88,7 @@ class News:
             "sinta_npa":            sinta_pattern_npa,          # sinta паттерн для поиска ссылок на НПА
             "sinta_news":           sinta_pattern_news,         # sinta паттерн для поиска ссылок на новости
             "sinta_page":           sinta_pattern_page,         # sinta паттерн для поиска ссылок на страницы
+            "bitrix_page":  bitrix_pattern_page,
         }
         for link_type, pattern in pattern_list.items():
             try:

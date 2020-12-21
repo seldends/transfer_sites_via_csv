@@ -61,7 +61,7 @@ class Database:
         print("Изменения сохранены. Закрытие соединения")
 
 
-class DatabasePg(Database):
+class DatabaseGenum(Database):
     def connect(self):
         """Connect to a Postgres database."""
         if self.conn is None:
@@ -150,7 +150,7 @@ class DatabasePg(Database):
             return records
 
 
-class DatabaseMaria(Database):
+class DatabaseSinta(Database):
     def connect(self):
         if self.conn is None:
             if self.dbtype == 'mariadb':
@@ -226,6 +226,50 @@ class DatabaseMaria(Database):
                 '''
         newsfiles_list = self.select_rows(select_mediafiles_local, id)
         return newsfiles_list
+
+
+class DatabaseBitrix(Database):
+    def connect(self):
+        if self.conn is None:
+            if self.dbtype == 'mariadb':
+                try:
+                    self.conn = mariadb.connect(
+                        host=self.host,
+                        user=self.username,
+                        password=self.password,
+                        port=self.port,
+                        database=self.dbname
+                    )
+                except mariadb.Error as error:
+                    print(f"Error while connecting to MariaDB: {error}")
+                    sys.exit(1)
+                finally:
+                    print('MariaDB Connection opened successfully.')
+
+        # Функция для получения новостей
+    def get_news_list(self, params):
+        # MariaDB
+        select_news_local = '''
+            SELECT
+            ID as id,
+            IBLOCK_ID,
+            NAME as title,
+            DATE_CREATE as date_create,
+            PREVIEW_PICTURE as index_img,
+            DETAIL_TEXT as body,
+            TIMESTAMP_X as date_publ,
+            PREVIEW_TEXT as resume,
+            XML_ID
+            FROM imchel_10_12.b_iblock_element
+            WHERE DATE_CREATE > '2018-01-01 00:00:00'
+            AND IBLOCK_ID = 13
+            AND ACTIVE = 'Y'
+            order by ID DESC
+            ;
+            '''
+        # news_list = self.select_rows(select_news_local, params)
+        news_list = self.select_rows(select_news_local)
+        return news_list
 
 
 def main():
