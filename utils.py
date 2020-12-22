@@ -76,3 +76,20 @@ def copy_file(old_path, new_path):
         shutil.copy2(old_path, new_path)
     except IOError as e:
         print(f'{e} Нет файла "{old_path}" {new_path}')
+
+
+# TODO
+def save_file(path, data):
+    # with open(path, 'w', encoding='utf-8') as file:
+    with open(path, 'w') as file:
+        if data is not None:
+            # Ошибка возникает при попытке записи кодировки 1251 в utf-8 , и возникают ошибки из за того что в 1251 есть символлы, которых нет в utf-8
+            try:
+                file.write(data)
+            # Для обратоки этой ошибки нужно перекодировать 1251, заменив символы которых нет (по умолчанию будут заменяться на знак вопроса)
+            except UnicodeEncodeError as e:
+                temp_text = data.encode("cp1251", errors='replace')
+                encoded_text = temp_text.decode("cp1251")
+                # print(self.path)
+                file.write(encoded_text)
+                print(e, f'Исправлено {path}')

@@ -5,6 +5,7 @@ from os import fspath
 import urllib.parse
 import shutil
 from datetime import datetime
+from utils import save_file
 
 
 class Link:
@@ -203,6 +204,7 @@ class Page:
                     # print(e)
         return (path_titles)
 
+
     def save_page_title(self):
         page_name_txt = self.alias + '.txt'
         page_name_html = self.alias + '.html'
@@ -211,31 +213,8 @@ class Page:
         full_path = self.folder_path / page_path
         try:
             Path(full_path).mkdir(parents=True, exist_ok=True)
-            with open(full_path / page_name_txt, 'w') as file:
-                if self.article is not None:
-                    # Ошибка возникает при попытке записи кодировки 1251 в utf-8 , и возникают ошибки из за того что в 1251 есть символлы, которых нет в utf-8
-                    try:
-                        file.write(self.article)
-                    # Для обратоки этой ошибки нужно перекодировать 1251, заменив символы которых нет (по умолчанию будут заменяться на знак вопроса)
-                    except UnicodeEncodeError as e:
-                        temp_text = self.article.encode("cp1251", errors='replace')
-                        encoded_text = temp_text.decode("cp1251")
-                        # print(self.path)
-                        file.write(encoded_text)
-                        print(e, f'Исправлено {full_path / page_name_txt}')
-            # with open( full_path / page_name_html , 'w', encoding='utf-8') as file:
-            with open(full_path / page_name_html, 'w', encoding='cp1251') as file:
-                if self.article is not None:
-                    # Ошибка возникает при попытке записи кодировки 1251 в utf-8 , и возникают ошибки из за того что в 1251 есть символлы, которых нет в utf-8
-                    try:
-                        file.write(self.article)
-                    # Для обратоки этой ошибки нужно перекодировать 1251, заменив символы которых нет (по умолчанию будут заменяться на знак вопроса)
-                    except UnicodeEncodeError as e:
-                        temp_text = self.article.encode("cp1251", errors='replace')
-                        encoded_text = temp_text.decode("cp1251")
-                        # print(self.path)
-                        file.write(encoded_text)
-                        print(e, f'Исправлено {full_path / page_name_html}')
+            save_file(full_path / page_name_txt, self.article )
+            save_file(full_path / page_name_html, self.article )
         except OSError as e:
             print(e, self.path_from_titles)
             # print(f"{fspath(full_path)} len {len(fspath(full_path).encode('utf-8'))}")
