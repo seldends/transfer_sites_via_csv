@@ -28,6 +28,9 @@ class Text(Obj):
             section_title = split_windows[0]
         return section_title
 
+    def get_data(self):
+        return self.body
+
 
 class Page:
     def __init__(self, params, db_local, config):

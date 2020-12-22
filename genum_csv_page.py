@@ -19,7 +19,10 @@ def get_folder_path(config):
     return folder_path
 
 
-def save_all_page(config, db_local):
+def save_all_page(config):
+    db_type_local = config["db_type"]
+    db_name_local = config["db_name"]
+    db_local = Database(db_type_local, db_name_local)       # Объект подключения к бд со старыми данными
     pages_list = db_local.get_pages_list()
     pages = []
     folder_path = get_folder_path(config)
@@ -53,19 +56,19 @@ def read_pages(config):
         with open(path, mode='r+', encoding='cp1251', errors='replace') as file:
             text = Text(urllib.parse.unquote(file.read()), config, path_str)
             # Заменяются ссылки на новые, фозвращается список ссылок
-            files_from_text = text.update_body(PageFile)
-            # links = text.update_file_links()
+            links = text.update_body(PageFile)
+            # Заменяются сссылки на внутренние страницы на пустое значение
+            text.delete_links()
             # Копируются файлы
             # for link in links:
             #     link.copy_file(path_str)
-            # # Заменяются сссылки на внутренние страницы на пустое значение
-            # text.update_page_links()
-            # # Запись будет происходить в начало файла
-            # file.seek(0)
-            # # Запись обновленного текста
-            # file.write(text.get_data())
-            # # Для того чтобы отсечь часть со старой записью
-            # file.truncate()
+
+            # Запись будет происходить в начало файла
+            file.seek(0)
+            # Запись обновленного текста
+            file.write(text.body)
+            # Для того чтобы отсечь часть со старой записью
+            file.truncate()
 
 
 # Сохранение всех txt в один файл из папки сайта, чтобы по файлу искать необработанные ссылки
@@ -84,16 +87,6 @@ def collect_to_file(config):
 
 
 @time_test
-def transfer_page(config):
-    db_type_local = config["db_type"]
-    db_name_local = config["db_name"]
-    db_local = Database(db_type_local, db_name_local)       # Объект подключения к бд со старыми данными
-    # save_all_page(config, db_local)     # Сохранение страниц в файлы 
-    # collect_to_file()
-    read_pages(config)                  # Чтение страниц из файлов, замена ссылок и копирование файлов
-
-
-@time_test
 def main():
     # Указывается список конфигураций сайтов
     sites = [
@@ -103,7 +96,9 @@ def main():
         # Получение конфигурации
         config = get_config(site)
         # Перенос страниц
-        transfer_page(config)
+        save_all_page(config)     # Сохранение страниц в файлы 
+        # collect_to_file()
+        # read_pages(config)                  # Чтение страниц из файлов, замена ссылок и копирование файлов
 
 
 if __name__ == "__main__":

@@ -74,7 +74,7 @@ def make_structure_csv(config):
         number = 9999
         try:
             test_index = test_dirs.index(path.parent)
-            print(test_index)
+            # print(test_index)
             number = 10*(test_index+1)
         except ValueError as error:
             print(f'11 {error}, {test_dirs} {path.parent}')
