@@ -1,6 +1,6 @@
 import re
 from utils import time_test, get_config, get_csv_path, save_csv
-from csv_objects import News, NewsIndexImgFile
+from csv_objects import News, NewsIndexImgFile, NewsFile
 from utils_db_local import DatabaseGenum as Database
 
 
@@ -68,14 +68,14 @@ def transfer_news(config):
         # Добавление проблемных новостей
         null_news.extend(empty_news)
         # Обратока ссылок на файлы
-        files_from_text = news.update_body()
+        files_from_text = news.update_body(NewsFile)
         # Обработка основного изображения
         index_image_file = get_index_file(config, news)
         row = {
                 'structure': news.a_structure,
                 'title': news.a_title,
                 'resume': news.a_resume,
-                'body': news.a_body,
+                'body': news.body,
                 'classification': news.a_classification,
                 'isPublish': news.isPublish,
                 'pubmain': news.pubmain,

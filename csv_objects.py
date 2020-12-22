@@ -4,70 +4,16 @@ import urllib.parse
 from utils import copy_file
 
 
-class News:
-    def __init__(self, params, config):
+class Obj():
+    def __init__(self, config):
         self.config = config
         self.folder_name = config["new_name"]
-        self.a_structure = params["structure"]
-        self.old_id = params["old_id"]
-        self.a_title = params["title"]
-        self.a_date = params["date"]
-        self.a_image_index = params["image_index"]
-        self.a_body = params["body"]
-        self.a_publ_date = params["publ_date"]
-        self.a_resume = params["resume"]
-        self.a_classification = config["classification"]
-        self.isPublish = 'Да'
-        self.pubmain = 'Да'
-        self.mediaFiles = ''
+        self.old_sitename = config["old_name"]
+        self.body = ''
+        # TODO Подумать можно ли сделать лучше, нужен
+        self.section_title = ''
 
-    # TODO подумать как можно объединить общий функционал на функции обработки файлов
-    # Получение файла Новостей из описания Новостей
-    def update_body(self):
-        # TODO сделать передачу имени в регулярку
-        old_sitename = self.config["old_name"]
-        genum_pattern_file_1 = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:dokumentydok\/[^\/]{{1,75}}|upload\/iblock\/[^\/]{{0,4}}|Upload\/files|Files\/DiskFile\/(?:|[0-9]{{4}}\/)[a-zA-Z]{{1,10}}|opendata|Storage\/Image\/PublicationItem\/Image\/src\/[0-9]{{1,5}})\/)([^>]{{1,450}}\.[a-zA-Z]{{3,5}})))\s?\"[^>]{{0,250}}>)'
-        genum_pattern_file_2 = fr'(<img alt=\"[^\/]{{0,50}}\"(?:\sclass=\"[^\/]{{0,50}}\"|)\ssrc=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:Upload\/images\/|Storage\/Image\/PublicationItem\/Article\/src\/[0-9]{{1,5}}\/))([^>\/]{{1,450}}\.[a-zA-Z]{{3,5}})))\"[^>]{{0,550}}>)'
-        sinta_pattern_file_1 = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)\/((sites\/default\/files\/imceFiles\/user-[0-9]{1,4}\/)([^>]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
-        bitrix_pattern_file_1 = r'(<img\s(?:width=\"[0-9]{1,4}\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)src=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:medialibrary\/[^\/]{1,5}\/|))([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
-        bitrix_pattern_file_2 = r'(<a\s(?:target=\"_blank\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)href=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:[^\/]{1,20}\/(?:[^\/]{1,5}\/|)|))([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
-        pattern_list = {
-            "genum_file_1":    genum_pattern_file_1,         # паттерн 1
-            "genum_file_2":    genum_pattern_file_2,         # паттерн 2
-            "sinta_file_1":    sinta_pattern_file_1,         # паттерн 2
-            "bitrix_file_1":   bitrix_pattern_file_1,         # паттерн 2
-            "bitrix_file_2":   bitrix_pattern_file_2,         # паттерн 2
-        }
-        files = []
-        for link_type, pattern in pattern_list.items():
-            try:
-                links = re.findall(pattern, self.a_body)
-                # print(links, pattern)
-                # Если есть совпадения
-                if len(links) > 0:
-                    for link in links:
-                        # print(link)
-                        data = {
-                            "full_link":            link[0],    # Полная ссылка с a href и стилями. Пример:     <a href="http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx">
-                            "file_full_path":       link[1],    # Ссылка на файл.                   Пример:     http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
-                            "file_path":            link[2],    # Полный путь до файла.             Пример:     sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
-                            "file_relative_path":   link[3],    # Папка файла.                      Пример:     sites/default/files/imceFiles/user-333/
-                            "file":                 link[4],    # Имя файла с расширением.          Пример:     soglasie_rk_2020.docx
-                        }
-                        file = NewsFile(self.config, data)
-                        files.append(file)
-                        # TODO разобраться
-                        #self.a_body = str(self.a_body).replace(file.file_full_path, file.str_new_link)     # Замены ссылки
-                        self.a_body = str(self.a_body).replace(file.file_full_path, file.new_link)
-                        self.a_body = re.sub(r'[\n]{2,3}', r'', self.a_body)
-                        temp_a_resume = re.sub(r'(?:<|)(?:\/|)[a-z]{1,5}>', r'', str(self.a_resume))
-                        temp2_a_resume = re.sub(r'[\n]{2,3}', r'', temp_a_resume)
-                        self.a_resume = temp2_a_resume
-            # TODO сделать нормальную обработку
-            except Exception as e:
-                print(e, 'test')
-        return files
-
+    # Удалить ссылки в объекте
     def delete_links(self):
         # TODO сделать передачу имени в регулярку
         old_sitename = self.config["old_name"]
@@ -88,33 +34,99 @@ class News:
             "sinta_npa":            sinta_pattern_npa,          # sinta паттерн для поиска ссылок на НПА
             "sinta_news":           sinta_pattern_news,         # sinta паттерн для поиска ссылок на новости
             "sinta_page":           sinta_pattern_page,         # sinta паттерн для поиска ссылок на страницы
-            "bitrix_page":  bitrix_pattern_page,
+            "bitrix_page":          bitrix_pattern_page,
         }
         for link_type, pattern in pattern_list.items():
             try:
-                links = re.findall(pattern, self.a_body)
+                links = re.findall(pattern, self.body)
                 if len(links) > 0:
                     for link in links:
                         # print(link,self.a_body)
                         page_link = link[1]
-                        self.a_body = str(self.a_body).replace(page_link, '')
+                        self.body = str(self.body).replace(page_link, '')
             # TODO сделать нормальную обработку
             except Exception as e:
                 print(e, 'test')
 
+    # TODO подумать как можно объединить общий функционал на функции обработки файлов
+    # Получение файла Новостей из описания Новостей
+    def update_body(self, FileClass):
+        old_sitename = self.old_sitename
+        # TODO сделать передачу имени в регулярку
+        genum_pattern_file_1 = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:dokumentydok\/[^\/]{{1,75}}|upload\/iblock\/[^\/]{{0,4}}|Upload\/files|Files\/DiskFile\/(?:|[0-9]{{4}}\/)[a-zA-Z]{{1,10}}|opendata|Storage\/Image\/PublicationItem\/Image\/src\/[0-9]{{1,5}})\/)([^>]{{1,450}}\.[a-zA-Z]{{3,5}})))\s?\"[^>]{{0,250}}>)'
+        genum_pattern_file_2 = fr'(<(?:img|input)\s(?:(?:id|class|alt)=\"[^\"]{{0,50}}\"\s|)(?:class=\"[^\/]{{0,50}}\"\s|)src=\"((?:https?:\/\/(?:www\.|){old_sitename}|)\/(((?:Upload\/(?:files|images)\/|Storage\/Image\/PublicationItem\/(?:Article|Image)\/src\/[0-9]{{1,5}}\/))([^>\/]{{1,450}}\.[a-zA-Z]{{3,5}})))\"[^>]{{0,550}}>)'
+        genum_pattern_file_3 = r'(<a href=\"((?:http:\/\/(?:www\.|)szn74.ru|)\/((Files\/VideoFiles\/)([^>]{1,450}\.[a-zA-Z]{3,5})))\s?\"[^>]{0,250}>)'
+        sinta_pattern_file_1 = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)\/((sites\/default\/files\/imceFiles\/user-[0-9]{1,4}\/)([^>]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
+        bitrix_pattern_file_1 = r'(<img\s(?:width=\"[0-9]{1,4}\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)src=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:medialibrary\/[^\/]{1,5}\/|))([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
+        bitrix_pattern_file_2 = r'(<a\s(?:target=\"_blank\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)href=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:[^\/]{1,20}\/(?:[^\/]{1,5}\/|)|))([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
+        pattern_list = {
+            "genum_file_1":    genum_pattern_file_1,         # паттерн 1 файлы
+            "genum_file_2":    genum_pattern_file_2,         # паттерн 2 img
+            "genum_file_3":    genum_pattern_file_3,         # паттерн 2 видео
+            "sinta_file_1":    sinta_pattern_file_1,         # паттерн 2
+            "bitrix_file_1":   bitrix_pattern_file_1,         # паттерн 2
+            "bitrix_file_2":   bitrix_pattern_file_2,         # паттерн 2
+        }
+        files = []
+        for link_type, pattern in pattern_list.items():
+            try:
+                links = re.findall(pattern, self.body)
+                # print(links, pattern)
+                # Если есть совпадения
+                if len(links) > 0:
+                    for link in links:
+                        print(link)
+                        data = {
+                            "full_link":            link[0],    # Полная ссылка с a href и стилями. Пример:     <a href="http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx">
+                            "file_full_path":       link[1],    # Ссылка на файл.                   Пример:     http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
+                            "file_path":            link[2],    # Полный путь до файла.             Пример:     sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
+                            "file_relative_path":   link[3],    # Папка файла.                      Пример:     sites/default/files/imceFiles/user-333/
+                            "file":                 link[4],    # Имя файла с расширением.          Пример:     soglasie_rk_2020.docx
+                            "section_title":        self.section_title,
+                        }
+                        file = FileClass(self.config, data)
+                        files.append(file)
+                        # TODO разобраться
+                        # self.a_body = str(self.a_body).replace(file.file_full_path, file.str_new_link)     # Замены ссылки
+                        self.body = str(self.body).replace(file.file_full_path, file.new_link)
+                        # self.body = re.sub(r'[\n]{2,3}', r'', self.body)
+                        # temp_a_resume = re.sub(r'(?:<|)(?:\/|)[a-z]{1,5}>', r'', str(self.a_resume))
+                        # temp2_a_resume = re.sub(r'[\n]{2,3}', r'', temp_a_resume)
+                        # self.a_resume = temp2_a_resume
+            # TODO сделать нормальную обработку
+            except Exception as e:
+                print(e, 'test')
+        return files
+
+
+class News(Obj):
+    def __init__(self, params, config):
+        super().__init__(config)
+        self.body = params["body"]
+        self.a_structure = params["structure"]
+        self.old_id = params["old_id"]
+        self.a_title = params["title"]
+        self.a_date = params["date"]
+        self.a_image_index = params["image_index"]
+        self.a_publ_date = params["publ_date"]
+        self.a_resume = params["resume"]
+        self.a_classification = config["classification"]
+        self.isPublish = 'Да'
+        self.pubmain = 'Да'
+        self.mediaFiles = ''
+
     def delete_links2(self):
         # TODO сделать передачу имени в регулярку
-        old_sitename = self.config["old_name"]
         pattern_page = r'(<a href=\"((http:\/\/(?:ruk\.|)pravmin74.ru)[^\"]{0,500})\"[^>]{0,100}>)'
         pattern_list = {
             "page_link":        pattern_page,           # паттерн для поиска ссылок на страницы
         }
         for link_type, pattern in pattern_list.items():
             try:
-                links = re.findall(pattern, self.a_body)
+                links = re.findall(pattern, self.body)
                 if len(links) > 0:
                     for link in links:
-                        print(link, self.a_body)
+                        print(link, self.body)
             # TODO сделать нормальную обработку
             except Exception as e:
                 print(e, 'test')
@@ -166,6 +178,7 @@ class File:
         self.file_full_path = data["file_full_path"]
         self.file_relative_path = data["file_relative_path"]
         self.file = data["file"]
+        self.section_title = data["section_title"]
         self.encoded_filename = urllib.parse.unquote(self.file)
         self.path_root_old_file = root / 'source_files' / self.sitename / self.file_relative_path / self.encoded_filename
         self.new_link = ""
@@ -213,3 +226,10 @@ class NpaFile(File):
         # TODO подумать могут ли быть в разлинчных директориях файлы с одинаковым именем
         self.new_link = "".join(("files/norm_act/", self.sitename, "/", self.file))
         self.str_new_link = "".join(("/norm_act/", self.sitename, "/", self.file, "@cmsFile.doc"))
+
+
+class PageFile(File):
+    def __init__(self, config, data):
+        super().__init__(config, data)
+        self.new_link = "".join(("files/upload/", self.sitename, "/", self.section_title, '/', self.file))
+        self.str_new_link = "".join(("files/upload/", self.sitename, "/", self.section_title, '/', self.file))

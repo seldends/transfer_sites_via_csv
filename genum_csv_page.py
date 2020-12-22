@@ -1,10 +1,11 @@
 from pathlib import Path
 from utils import time_test, get_config
-from objects_page import Page, Text, Link
+from objects_page import Page, Text
 from os import fspath
 import urllib.parse
 from utils_db_local import DatabaseGenum as Database
 from datetime import datetime
+from csv_objects import PageFile
 
 
 def get_folder_path(config):
@@ -52,10 +53,11 @@ def read_pages(config):
         with open(path, mode='r+', encoding='cp1251', errors='replace') as file:
             text = Text(urllib.parse.unquote(file.read()), config, path_str)
             # Заменяются ссылки на новые, фозвращается список ссылок
-            links = text.update_file_links()
+            files_from_text = text.update_body(PageFile)
+            # links = text.update_file_links()
             # Копируются файлы
-            for link in links:
-                link.copy_file(path_str)
+            # for link in links:
+            #     link.copy_file(path_str)
             # # Заменяются сссылки на внутренние страницы на пустое значение
             # text.update_page_links()
             # # Запись будет происходить в начало файла
@@ -86,9 +88,9 @@ def transfer_page(config):
     db_type_local = config["db_type"]
     db_name_local = config["db_name"]
     db_local = Database(db_type_local, db_name_local)       # Объект подключения к бд со старыми данными
-    save_all_page(config, db_local)     # Сохранение страниц в файлы 
+    # save_all_page(config, db_local)     # Сохранение страниц в файлы 
     # collect_to_file()
-    # read_pages(config)                  # Чтение страниц из файлов, замена ссылок и копирование файлов
+    read_pages(config)                  # Чтение страниц из файлов, замена ссылок и копирование файлов
 
 
 @time_test
