@@ -246,6 +246,17 @@ class DatabaseBitrix(Database):
                 finally:
                     print('MariaDB Connection opened successfully.')
 
+    # def select_rows(self, query, *val):
+    #     """Run a SQL query to select rows from table."""
+    #     self.connect()
+    #     with self.conn.cursor() as cur:
+    #         if val:
+    #             cur.execute(query, val)
+    #         else:
+    #             cur.execute(query)
+    #         records = cur.fetchall()
+    #         cur.close()
+    #         return records
         # Функция для получения новостей
     def get_news_list(self, params):
         # MariaDB
@@ -270,6 +281,29 @@ class DatabaseBitrix(Database):
         # news_list = self.select_rows(select_news_local, params)
         news_list = self.select_rows(select_news_local)
         return news_list
+
+        # Функция для получения новостей
+    def get_npa_list(self, params):
+        # MariaDB
+        select_npa_local = '''
+            SELECT
+            ID as id,
+            IBLOCK_ID,
+            NAME as title,
+            DATE_CREATE as date_create,
+            DETAIL_TEXT as body,
+            TIMESTAMP_X as date_publ,
+            XML_ID
+            FROM imchel_10_12.b_iblock_element
+            WHERE ACTIVE = 'Y'
+            AND IBLOCK_ID = 100
+            -- and NAME like '%регламент предоставления государственной услуги "Предоставление%'
+            order by ID DESC
+            ;
+            '''
+        # news_list = self.select_rows(select_news_local, params)
+        npa_list = self.select_rows(select_npa_local)
+        return npa_list
 
 
 def main():

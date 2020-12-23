@@ -64,3 +64,49 @@ imchel74:     # Уполномоченного по правам ребёнка 
     # classification: 33@egClassification # test
     news_type:
         13: 1  # Новости
+    npa_type:
+        # # TODO госсужба     https://imchel.ru/privatization
+        # 12: 1   # TODO конкурсы и вакансии      https://imchel.ru/gosservice/contests/
+        # 20: 1     # TODO госсужба НПА             https://imchel.ru/gosservice/acts/
+        # # TODO Приватизация     https://imchel.ru/privatization
+        # 39: 1   # TODO программа приватизации   https://imchel.ru/privatization/programm/
+        # 42: 1   # TODO итоги                    https://imchel.ru/privatization/results/
+        # 43: 1   # TODO продажа имущества        https://imchel.ru/privatization/sale/
+        # # TODO Управление земельных отношений   https://imchel.ru/departments/land_relations/
+        # 76: 1   # TODO об управлении
+        # 78: 1   # TODO документы
+        # 34: 1   # TODO объявления
+        # # TODO Управление имущественных отношений       https://imchel.ru/departments/property_relations/
+        # 83: 1   # TODO объявления
+        # 84: 1   # TODO об управлении
+        # 37: 1   # TODO документы
+        # # TODO Управление кадастровой оценки            https://imchel.ru/departments/kadastr/
+        # 29: 1   # TODO документы
+        # # TODO Корпоративное управление                 https://imchel.ru/departments/organizational/
+        # 79: 1   # TODO объявления
+        # # TODO Управление правовое                      https://imchel.ru/departments/law/
+        # 88: 1   # TODO об управлении
+        # # TODO Организационно-контрольное управление    https://imchel.ru/departments/ogup/
+        # 92: 1   # TODO об управлении
+
+        # 94: 1   # TODO Результаты кадастровой оценки    https://imchel.ru/kadastr/results/
+        # 97: 1   # TODO Локальные акты Министерства в сфере противодействия коррупции    https://imchel.ru/gosservice/anticorrupt/npa/
+        # 101: 1  # TODO Аукционы         https://imchel.ru/rent/aukciony/
+        # 102: 1  # TODO Итоги            https://imchel.ru/rent/itogi/
+        # 131: 1  # TODO Результаты обработки перечня объектов, подлежащих государственной кадастровой оценке https://imchel.ru/kadastr/rezultaty-obrabotki/
+        # 151: 1  # TODO Отчеты                https://imchel.ru/regulirovanie-v-sfere-zakupok/metodicheskie-materialy/otchety/
+        # 152: 1  # TODO новое в сфере закупок? новости или нпа?   https://imchel.ru/regulirovanie-v-sfere-zakupok/novosti-v-sfere-zakupok/
+        # # TODO Регулирование в сфере закупок https://imchel.ru/regulirovanie-v-sfere-zakupok/
+        # 153: 1  # TODO федеральные акты      https://imchel.ru/regulirovanie-v-sfere-zakupok/normativno-pravovye-akty/federalnoe-zakonodatelstvo/
+        # 154: 1  # TODO региональные акты     https://imchel.ru/regulirovanie-v-sfere-zakupok/normativno-pravovye-akty/regionalnoe-zakonodatelstvo/
+        # 161: 1  # TODO форма документов      https://imchel.ru/regulirovanie-v-sfere-zakupok/metodicheskie-materialy/formy-dokumentov/
+
+        # TODO Порядок деятельности    https://imchel.ru/officials/
+        # ~100: 1  # TODOhttps://imchel.ru/officials/reglament/
+        # ~100: 1  # TODOhttps://imchel.ru/officials/reglament/
+        # ~100: 1  # TODOhttps://imchel.ru/officials/reglament/
+        # ~100: 1  # TODOhttps://imchel.ru/officials/reglament/
+        # ~100: 1  # TODOhttps://imchel.ru/officials/reglament/
+        # ~100: 1  # TODOhttps://imchel.ru/officials/reglament/
+        # ~100: 1  # TODOhttps://imchel.ru/officials/reglament/
+        100: 1  # TODO Нормативно-правовые акты Министерства    https://imchel.ru/officials/npa-ministerstva/

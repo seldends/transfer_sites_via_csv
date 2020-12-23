@@ -99,6 +99,59 @@ class Obj():
         return files
 
 
+class Npa(Obj):
+    def __init__(self, params, config):
+        super().__init__(config)
+        self.body = params["body"]
+        self.a_structure = params["structure"]
+        self.old_id = params["old_id"]
+        self.a_title = params["title"]
+        self.a_date = params["date"]
+        self.a_publ_date = params["publ_date"]
+        self.a_classification = config["classification"]
+        self.a_number = params["number"]
+        self.npaFiles = ''
+
+    # Получение медиафайлов из таблицы
+    def get_npafile_from_table(self, db_local):
+        null_news = []
+        pattern_file_1 = r'(\/(PublicationItemImage\/Image\/src\/[0-9]{1,5}\/)([^>]{1,75}))'
+        pattern_list = {
+            "npafiles": pattern_file_1,         # паттерн 1
+        }
+        newsfiles_list = db_local.get_news_files_list(self.old_id)
+        npafiles = []
+        for npafile in newsfiles_list:
+            old_path = npafile[0]
+            # Проверка пустой ли путь у файлв Новостей (запись есть, но значение пустое, то добавлять в список пуcтых)
+            if old_path:
+                file_path = str(old_path).replace("\\", "/")
+                for link_type, pattern in pattern_list.items():
+                    try:
+                        links = re.findall(pattern, file_path)
+                        # Если есть совпадения
+                        if len(links) > 0:
+                            for link in links:
+                                data = {
+                                    "file_full_path":       link[0],    # Ссылка на файл.                   Пример:     /PublicationItemImage/Image/src/178/IMG_2038.JPG
+                                    "file_relative_path":   link[1],    # Папка файла.                      Пример:     /PublicationItemImage/Image/src/178/
+                                    "file":                 link[2],    # Имя файла с расширением.          Пример:     IMG_2038.JPG
+                                }
+                                file = NpaFile(self.config, data)
+                                npafiles.append(file)
+                                # TODO запись в атрибут медиафайлы объектов через запятую
+                                if self.npafiles != '':
+                                    self.npafiles = ','.join((self.npafiles, file.str_new_link))
+                                else:
+                                    self.npafiles = file.str_new_link
+                    except AttributeError as e:
+                        print('Ошибка в создании файла Новостей', e)
+            else:
+                null_news.append(self.old_id)
+                print(f'Отсутствует имя файла ид старой новости : {self.old_id}')
+        return npafiles, null_news
+
+
 class News(Obj):
     def __init__(self, params, config):
         super().__init__(config)
