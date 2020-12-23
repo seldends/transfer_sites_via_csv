@@ -1,6 +1,6 @@
 import re
 from utils import time_test, get_config, get_csv_path, save_csv
-from csv_objects import Npa
+from csv_objects import Npa, NpaFile
 from utils_db_local import DatabaseBitrix as Database
 
 
@@ -37,8 +37,9 @@ def transfer_npa(config):
         # # files_from_table, empty_npa = npa.get_mediafile_from_table(db_local)
         # # Добавление проблемных НПА
         # # null_npa.extend(empty_npa)
-        # # Обратока ссылок на файлы
-        # files_from_text = npa.update_body()
+        # Обратока ссылок на файлы
+        files_from_text = npa.update_body(NpaFile)
+        print(files_from_text)
         # # Удаление ссылок на страницы
         # npa.delete_links()
         # # Обработка основного изображения

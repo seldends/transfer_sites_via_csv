@@ -58,7 +58,7 @@ class Obj():
         genum_pattern_file_3 = r'(<a href=\"((?:http:\/\/(?:www\.|)szn74.ru|)\/((Files\/VideoFiles\/)([^>]{1,450}\.[a-zA-Z]{3,5})))\s?\"[^>]{0,250}>)'
         sinta_pattern_file_1 = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)\/((sites\/default\/files\/imceFiles\/user-[0-9]{1,4}\/)([^>]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
         bitrix_pattern_file_1 = r'(<img\s(?:width=\"[0-9]{1,4}\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)src=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:medialibrary\/[^\/]{1,5}\/|))([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
-        bitrix_pattern_file_2 = r'(<a\s(?:target=\"_blank\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)href=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:[^\/]{1,20}\/(?:[^\/]{1,5}\/|)|))([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
+        bitrix_pattern_file_2 = r'(<a\s(?:target=\"_blank\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)href=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:[^\/]{1,20}\/(?:[^\/]{1,5}\/|)(?:[^\/]{1,50}\/|)|))([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
         pattern_list = {
             "genum_file_1":    genum_pattern_file_1,         # паттерн 1 файлы
             "genum_file_2":    genum_pattern_file_2,         # паттерн 2 img
