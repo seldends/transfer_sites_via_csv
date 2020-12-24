@@ -296,7 +296,7 @@ class DatabaseBitrix(Database):
             XML_ID
             FROM imchel_10_12.b_iblock_element
             WHERE ACTIVE = 'Y'
-            AND IBLOCK_ID = 100
+            AND IBLOCK_ID in (153, 154)
             -- and NAME like '%регламент предоставления государственной услуги "Предоставление%'
             order by ID DESC
             ;

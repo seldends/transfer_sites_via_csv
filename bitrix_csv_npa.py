@@ -38,38 +38,36 @@ def transfer_npa(config):
         # # Добавление проблемных НПА
         # # null_npa.extend(empty_npa)
         # Обратока ссылок на файлы
-        files_from_text = npa.update_body(NpaFile)
+        # files_from_text = npa.update_body(NpaFile)
+        files_from_text = npa.get_npafile_from_body(NpaFile)
         print(files_from_text)
         # # Удаление ссылок на страницы
-        # npa.delete_links()
+        npa.delete_links()
         # # Обработка основного изображения
         # # index_image_file = get_index_file(config, npa)
-        # row = {
-        #         'structure': npa.a_structure,
-        #         'title': npa.a_title,
-        #         'resume': re.sub(r'[\n]{2,3}', r'', npa.a_resume),
-        #         'body': re.sub(r'[\n]{2,3}', r'', npa.a_body),
-        #         'classification': npa.a_classification,
-        #         'isPublish': npa.isPublish,
-        #         'pubmain': npa.pubmain,
-        #         "publ_date": npa.a_publ_date.strftime("%d.%m.%Y %H:%M:%S"),
-        #         "date": npa.a_date.strftime("%d.%m.%Y %H:%M:%S"),
-        #         # 'image_index': npa.a_image_index,
-        #         # 'mediaFiles': npa.mediaFiles
-        #     }
-        # fieldnames = row.keys()
-        # query_list.append(row)
+        row = {
+                'structure': npa.a_structure,
+                'title': npa.a_title,
+                'text': re.sub(r'[\n]{2,3}', r'', npa.body),
+                'classification': npa.a_classification,
+                "publ_date": npa.a_publ_date.strftime("%d.%m.%Y %H:%M:%S"),
+                "date": npa.a_date.strftime("%d.%m.%Y %H:%M:%S"),
+                "number": npa.a_number,
+                'npaFiles': npa.npaFiles,
+            }
+        fieldnames = row.keys()
+        query_list.append(row)
         # # TODO сделать полное описание или разделение на отдельные списки
         # # npa_files.extend(index_image_file)     # Основная картинка новости
-        # npa_files.extend(files_from_text)      # Обычные файлы из новосте, сохраняются в
+        npa_files.extend(files_from_text)      # Обычные файлы из новосте, сохраняются в
         # # npa_files.extend(files_from_table)     # Медиафайлы из таблицы
 
-    # path_csv = get_csv_path(config, 'npa')         # Получение пути для csv
-    # save_csv(path_csv, fieldnames, query_list)      # Сохранение словаря в csv
+    path_csv = get_csv_path(config, 'npa')         # Получение пути для csv
+    save_csv(path_csv, fieldnames, query_list)      # Сохранение словаря в csv
 
     # Копирование файлов
-    # for file in npa_files:
-    #     file.copy_npa_file()
+    for file in npa_files:
+        file.copy_file()
     # TODO
     # npa.delete_links()         # Удаление ссылок на страницы
     # Удаление содержимого описания НПА

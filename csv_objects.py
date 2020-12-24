@@ -24,7 +24,7 @@ class Obj():
         sinta_pattern_npa = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)(\/normativnye-pravovye-akty\/[^\/]{1,250}\/[^\/\"]{1,250}))\"[^>]{0,100}>)'
         sinta_pattern_news = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)(\/novosti\/[^\/\"]{1,250}))\"[^>]{0,100}>)'
         sinta_pattern_page = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)(\/[^\/\"]{1,100}))\"[^>]{0,100}>)'
-        bitrix_pattern_page = r'(<a\s(?:target=\"_blank\"\s|)href=\"((?:https?:\/\/imchel\.ru|)(?:\/?(?:[^\/\"]{1,50}\/|)(?:[^\/\"]{1,50}\/|)(?:[^\/\"]{1,250}|)\/?)|)\"[^>]{0,100}>)'
+        bitrix_pattern_page = r'(<a\s(?:(?:class|alt|target|id)=\"[^\"]{1,50}\"\s|){0,5}href=\"((?:https?:\/\/(?:www\.|)imchel\.ru|)(?:\/?(?:[^\/\"]{1,50}\/|)(?:[^\/\"]{1,50}\/|)(?:[^\/\"]{1,250}|)\/?)|)\"[^>]{0,100}>)'
 
         pattern_list = {
             "genum_page":           genum_pattern_page,         # genum паттерн для поиска ссылок на страницы
@@ -58,7 +58,7 @@ class Obj():
         genum_pattern_file_3 = r'(<a href=\"((?:http:\/\/(?:www\.|)szn74.ru|)\/((Files\/VideoFiles\/)([^>]{1,450}\.[a-zA-Z]{3,5})))\s?\"[^>]{0,250}>)'
         sinta_pattern_file_1 = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)\/((sites\/default\/files\/imceFiles\/user-[0-9]{1,4}\/)([^>]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
         bitrix_pattern_file_1 = r'(<img\s(?:width=\"[0-9]{1,4}\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)src=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:medialibrary\/[^\/]{1,5}\/|))([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
-        bitrix_pattern_file_2 = r'(<a\s(?:target=\"_blank\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)href=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:[^\/]{1,20}\/(?:[^\/]{1,5}\/|)(?:[^\/]{1,50}\/|)|))([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
+        bitrix_pattern_file_2 = r'(<a\s(?:(?:class|alt|target|id)=\"[^\"]{1,50}\"\s|){0,5}href=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
         pattern_list = {
             "genum_file_1":    genum_pattern_file_1,         # паттерн 1 файлы
             "genum_file_2":    genum_pattern_file_2,         # паттерн 2 img
@@ -111,6 +111,55 @@ class Npa(Obj):
         self.a_classification = config["classification"]
         self.a_number = params["number"]
         self.npaFiles = ''
+
+    def get_npafile_from_body(self, FileClass):
+        old_sitename = self.old_sitename
+        # TODO сделать передачу имени в регулярку
+        genum_pattern_file_1 = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:dokumentydok\/[^\/]{{1,75}}|upload\/iblock\/[^\/]{{0,4}}|Upload\/files|Files\/DiskFile\/(?:|[0-9]{{4}}\/)[a-zA-Z]{{1,10}}|opendata|Storage\/Image\/PublicationItem\/Image\/src\/[0-9]{{1,5}})\/)([^>]{{1,450}}\.[a-zA-Z]{{3,5}})))\s?\"[^>]{{0,250}}>)'
+        genum_pattern_file_2 = fr'(<(?:img|input)\s(?:(?:id|class|alt)=\"[^\"]{{0,50}}\"\s|)(?:class=\"[^\/]{{0,50}}\"\s|)src=\"((?:https?:\/\/(?:www\.|){old_sitename}|)\/(((?:Upload\/(?:files|images)\/|Storage\/Image\/PublicationItem\/(?:Article|Image)\/src\/[0-9]{{1,5}}\/))([^>\/]{{1,450}}\.[a-zA-Z]{{3,5}})))\"[^>]{{0,550}}>)'
+        genum_pattern_file_3 = r'(<a href=\"((?:http:\/\/(?:www\.|)szn74.ru|)\/((Files\/VideoFiles\/)([^>]{1,450}\.[a-zA-Z]{3,5})))\s?\"[^>]{0,250}>)'
+        sinta_pattern_file_1 = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)\/((sites\/default\/files\/imceFiles\/user-[0-9]{1,4}\/)([^>]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
+        bitrix_pattern_file_1 = r'(<img\s(?:width=\"[0-9]{1,4}\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)src=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:medialibrary\/[^\/]{1,5}\/|))([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
+        bitrix_pattern_file_2 = r'(<a\s(?:(?:class|alt|target|id)=\"[^\"]{1,50}\"\s|){0,5}href=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
+        bitrix_pattern_file_3 = r'(<a\s(?:(?:class|alt|target|id)=\"[^\"]{1,50}\"\s|){0,5}href=\"((?:http:\/\/imchel\.ru|)\/(?:bitrix\/redirect\.php\?event1=download&amp;event2=update&amp;event3=[^\/\"]{1,100};goto=\/|)((upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
+        pattern_list = {
+            "genum_file_1":    genum_pattern_file_1,         # паттерн 1 файлы
+            "genum_file_2":    genum_pattern_file_2,         # паттерн 2 img
+            "genum_file_3":    genum_pattern_file_3,         # паттерн 2 видео
+            "sinta_file_1":    sinta_pattern_file_1,         # паттерн 2
+            "bitrix_file_1":   bitrix_pattern_file_1,         # паттерн 2
+            "bitrix_file_2":   bitrix_pattern_file_2,         # паттерн 2
+            "bitrix_file_3":   bitrix_pattern_file_3,         # паттерн 2
+        }
+        files = []
+        for link_type, pattern in pattern_list.items():
+            try:
+                links = re.findall(pattern, self.body)
+                # print(links, pattern)
+                # Если есть совпадения
+                if len(links) > 0:
+                    for link in links:
+                        print(link)
+                        data = {
+                            "full_link":            link[0],    # Полная ссылка с a href и стилями. Пример:     <a href="http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx">
+                            "file_full_path":       link[1],    # Ссылка на файл.                   Пример:     http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
+                            "file_path":            link[2],    # Полный путь до файла.             Пример:     sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
+                            "file_relative_path":   link[3],    # Папка файла.                      Пример:     sites/default/files/imceFiles/user-333/
+                            "file":                 link[4],    # Имя файла с расширением.          Пример:     soglasie_rk_2020.docx
+                            "section_title":        self.section_title,
+                        }
+                        file = FileClass(self.config, data)
+                        files.append(file)
+                        # TODO разобраться
+                        if self.npaFiles != '':
+                            self.npaFiles = ','.join((self.npaFiles, file.str_new_link))
+                        else:
+                            self.npaFiles = file.str_new_link
+                        self.body = str(self.body).replace(file.file_full_path, '')
+            # TODO сделать нормальную обработку
+            except Exception as e:
+                print(e, 'test')
+        return files
 
     # Получение медиафайлов из таблицы
     def get_npafile_from_table(self, db_local):
@@ -229,15 +278,14 @@ class File:
         root = Path.cwd()
         self.sitename = config["new_name"]
         self.file_full_path = data["file_full_path"]
-        self.file_relative_path = data["file_relative_path"]
-        self.file = data["file"]
+        self.file_relative_path = urllib.parse.unquote(data["file_relative_path"])
+        self.file = urllib.parse.unquote(data["file"])
         self.section_title = data["section_title"]
-        self.encoded_filename = urllib.parse.unquote(self.file)
-        self.path_root_old_file = root / 'source_files' / self.sitename / self.file_relative_path / self.encoded_filename
+        self.path_root_old_file = root / 'source_files' / self.sitename / self.file_relative_path / self.file
         self.new_link = ""
         self.str_new_link = ""
 
-    def copy_news_file(self):
+    def copy_file(self):
         # Копирование файлов
         root = Path.cwd()
         self.path_root_new_file = root / 'new_files' / self.sitename / self.new_link
