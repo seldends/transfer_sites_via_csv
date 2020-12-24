@@ -192,10 +192,10 @@ class Npa(Obj):
                                 file = NpaFile(self.config, data)
                                 npafiles.append(file)
                                 # TODO запись в атрибут медиафайлы объектов через запятую
-                                if self.npafiles != '':
-                                    self.npafiles = ','.join((self.npafiles, file.str_new_link))
+                                if self.npaFiles != '':
+                                    self.npaFiles = ','.join((self.npaFiles, file.str_new_link))
                                 else:
-                                    self.npafiles = file.str_new_link
+                                    self.npaFiles = file.str_new_link
                     except AttributeError as e:
                         print('Ошибка в создании файла Новостей', e)
             else:

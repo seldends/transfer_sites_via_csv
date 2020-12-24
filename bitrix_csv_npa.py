@@ -35,12 +35,13 @@ def transfer_npa(config):
         npa_list.append(npa)
         # # Получение медиафайлов из таблицы
         files_from_table, empty_npa = npa.get_npafile_from_table(db_local)
-        # # Добавление проблемных НПА
-        # # null_npa.extend(empty_npa)
-        # Обратока ссылок на файлы
-        # files_from_text = npa.update_body(NpaFile)
+        # Добавление проблемных НПА
+        null_npa.extend(empty_npa)
+        # Замена ссылок и записывание в атрибут файлы НПА
         files_from_text = npa.get_npafile_from_body(NpaFile)
-        print(files_from_text)
+        # Замена ссылок на файлы
+        # files_from_text = npa.update_body(NpaFile)
+
         # # Удаление ссылок на страницы
         npa.delete_links()
         # # Обработка основного изображения
@@ -58,20 +59,17 @@ def transfer_npa(config):
         fieldnames = row.keys()
         query_list.append(row)
         # TODO сделать полное описание или разделение на отдельные списки
-        # npa_files.extend(index_image_file)     # Основная картинка новости
-        npa_files.extend(files_from_text)      # Обычные файлы из новосте, сохраняются в
-        npa_files.extend(files_from_table)     # Медиафайлы из таблицы
+        npa_files.extend(files_from_text)      # Файлы из текста описания НПА
+        npa_files.extend(files_from_table)     # Файлы из таблицы файлов, связанные с текущим НПА
 
     path_csv = get_csv_path(config, 'npa')         # Получение пути для csv
     save_csv(path_csv, fieldnames, query_list)      # Сохранение словаря в csv
 
     # Копирование файлов
     for file in npa_files:
+        print(file.new_link)
         file.copy_file()
     # TODO
-    # npa.delete_links()         # Удаление ссылок на страницы
-    # Удаление содержимого описания НПА
-    # npa.transform_text()
     print(f'Количество пустых НПА : {len(null_npa)}')
     print(f'Количество НПА : {len(npa_list)}')
     print(f'Количество файлов НПА из таблицы : {len(files_from_table)}')
