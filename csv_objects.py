@@ -163,14 +163,16 @@ class Npa(Obj):
 
     # Получение медиафайлов из таблицы
     def get_npafile_from_table(self, db_local):
-        null_news = []
-        pattern_file_1 = r'(\/(PublicationItemImage\/Image\/src\/[0-9]{1,5}\/)([^>]{1,75}))'
+        null_npa = []
+        pattern_file_genum = r'(\/(PublicationItemImage\/Image\/src\/[0-9]{1,5}\/)([^>]{1,75}))'
+        pattern_file_bitrix = r'(\/?(upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z]{3,5}))'
         pattern_list = {
-            "npafiles": pattern_file_1,         # паттерн 1
+            "npafiles_genum":   pattern_file_genum,         # паттерн 1
+            "npafiles_bitrix":  pattern_file_bitrix,         # паттерн 1
         }
-        newsfiles_list = db_local.get_news_files_list(self.old_id)
+        npafiles_list = db_local.get_npa_files_list(self.old_id)
         npafiles = []
-        for npafile in newsfiles_list:
+        for npafile in npafiles_list:
             old_path = npafile[0]
             # Проверка пустой ли путь у файлв Новостей (запись есть, но значение пустое, то добавлять в список пуcтых)
             if old_path:
@@ -183,8 +185,9 @@ class Npa(Obj):
                             for link in links:
                                 data = {
                                     "file_full_path":       link[0],    # Ссылка на файл.                   Пример:     /PublicationItemImage/Image/src/178/IMG_2038.JPG
-                                    "file_relative_path":   link[1],    # Папка файла.                      Пример:     /PublicationItemImage/Image/src/178/
+                                    "file_relative_path":   link[1],    # Папка файла.                      Пример:     PublicationItemImage/Image/src/178/
                                     "file":                 link[2],    # Имя файла с расширением.          Пример:     IMG_2038.JPG
+                                    "section_title":        '',    # Имя файла с расширением.          Пример:     IMG_2038.JPG
                                 }
                                 file = NpaFile(self.config, data)
                                 npafiles.append(file)
@@ -196,9 +199,9 @@ class Npa(Obj):
                     except AttributeError as e:
                         print('Ошибка в создании файла Новостей', e)
             else:
-                null_news.append(self.old_id)
+                null_npa.append(self.old_id)
                 print(f'Отсутствует имя файла ид старой новости : {self.old_id}')
-        return npafiles, null_news
+        return npafiles, null_npa
 
 
 class News(Obj):

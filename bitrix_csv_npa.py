@@ -34,7 +34,7 @@ def transfer_npa(config):
         npa = Npa(params, config)
         npa_list.append(npa)
         # # Получение медиафайлов из таблицы
-        # # files_from_table, empty_npa = npa.get_mediafile_from_table(db_local)
+        files_from_table, empty_npa = npa.get_npafile_from_table(db_local)
         # # Добавление проблемных НПА
         # # null_npa.extend(empty_npa)
         # Обратока ссылок на файлы
@@ -57,10 +57,10 @@ def transfer_npa(config):
             }
         fieldnames = row.keys()
         query_list.append(row)
-        # # TODO сделать полное описание или разделение на отдельные списки
-        # # npa_files.extend(index_image_file)     # Основная картинка новости
+        # TODO сделать полное описание или разделение на отдельные списки
+        # npa_files.extend(index_image_file)     # Основная картинка новости
         npa_files.extend(files_from_text)      # Обычные файлы из новосте, сохраняются в
-        # # npa_files.extend(files_from_table)     # Медиафайлы из таблицы
+        npa_files.extend(files_from_table)     # Медиафайлы из таблицы
 
     path_csv = get_csv_path(config, 'npa')         # Получение пути для csv
     save_csv(path_csv, fieldnames, query_list)      # Сохранение словаря в csv

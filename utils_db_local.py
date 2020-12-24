@@ -305,6 +305,18 @@ class DatabaseBitrix(Database):
         npa_list = self.select_rows(select_npa_local)
         return npa_list
 
+        # Функция для получения ouid нпа
+    def get_npa_files_list(self, id):
+        select_npafiles_local = '''
+            SELECT CONCAT('upload/',b_file.SUBDIR, '/', b_file.FILE_NAME) as file_path
+            FROM imchel_10_12.b_file
+            LEFT JOIN imchel_10_12.b_iblock_element_property
+            ON b_iblock_element_property.VALUE = imchel_10_12.b_file.ID
+            WHERE b_iblock_element_property.IBLOCK_ELEMENT_ID=%s;
+            '''
+        npafiles_list = self.select_rows(select_npafiles_local, id)
+        return npafiles_list
+
 
 def main():
     pass
