@@ -23,18 +23,18 @@ def transfer_auction(config):
     data = db_local.get_auction_list(auction_types)                 # Получение списка НПА из старой таблицы
     for row in data:
         params = {
-            "old_id": row[0],
-            "structure": config["auction_type"][row[1]],
-            "title": row[2],
-            "date": row[3],
-            "body": str(row[4]).replace("^", "#").replace("\r", "").replace("\n", "").replace('<p style="text-align: justify;"></p>', '').replace('<p style="text-align: justify;">	 &nbsp;</p>', '').replace('<p style="text-align: justify;">	<br></p>', '').replace('<p style="text-align: justify;"> <b>', '<p style="text-align: justify;">').replace('<p style="text-align: center;"></p>', '').replace('<p style="text-align: center;"><b></b></p>', '').replace('<p style="text-align: center;"><b></b>', ''),
-            "publ_date": row[5],
-            "linkTorg": '',
-            "linkMap": '',
-            "linkUTP": '',
-            "numberUTP": '',
-            "expirationDate": row[5],
-            "tradingDate": row[5],
+            "old_id":           row[0],
+            "structure":        config["auction_type"][row[1]],
+            "title":            row[2],
+            "date":             row[3],
+            "body":             str(row[4]).replace("^", "#").replace("\r", "").replace("\n", "").replace('<p style="text-align: justify;"></p>', '').replace('<p style="text-align: justify;">	 &nbsp;</p>', '').replace('<p style="text-align: justify;">	<br></p>', '').replace('<p style="text-align: justify;"> <b>', '<p style="text-align: justify;">').replace('<p style="text-align: center;"></p>', '').replace('<p style="text-align: center;"><b></b></p>', '').replace('<p style="text-align: center;"><b></b>', ''),
+            "publ_date":        row[5],
+            "linkTorg":         '',
+            "linkMap":          '',
+            "linkUTP":          '',
+            "numberUTP":        '',
+            "expirationDate":   row[5],
+            "tradingDate":      row[5],
         }
         auction = Auction(params, config)
         auction_list.append(auction)
@@ -54,18 +54,18 @@ def transfer_auction(config):
         # # Обработка основного изображения
         # # index_image_file = get_index_file(config, auction)
         row = {
-                'category': auction.structure,
-                'title': auction.title,
-                "publ_date": auction.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
-                "expirationDate": auction.date_expiration.strftime("%d.%m.%Y %H:%M:%S"),
-                "tradingDate": auction.date_trading.strftime("%d.%m.%Y %H:%M:%S"),
-                'text': re.sub(r'[\n]{2,3}', r'', auction.body),
-                "linkTorg": auction.linkTorg,
-                "linkMap": auction.linkMap,
-                "linkUTP": auction.linkUTP,
-                "numberUTP": auction.numberUTP,
-                'classification': auction.classification,
-                'auctionFiles': auction.auctionFiles,
+                'category':         auction.structure,
+                'title':            auction.title,
+                "publ_date":        auction.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
+                "expirationDate":   auction.date_expiration.strftime("%d.%m.%Y %H:%M:%S"),
+                "tradingDate":      auction.date_trading.strftime("%d.%m.%Y %H:%M:%S"),
+                'text':             re.sub(r'[\n]{2,3}', r'', auction.body),
+                "linkTorg":         auction.linkTorg,
+                "linkMap":          auction.linkMap,
+                "linkUTP":          auction.linkUTP,
+                "numberUTP":        auction.numberUTP,
+                'classification':   auction.classification,
+                'auctionFiles':     auction.objFiles,
             }
         fieldnames = row.keys()
         query_list.append(row)

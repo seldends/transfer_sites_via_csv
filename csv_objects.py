@@ -9,10 +9,13 @@ class Obj():
         self.config = config
         self.folder_name = config["new_name"]
         self.old_sitename = config["old_name"]
+        self.classification = config["classification"]
         self.body = params["body"]
         self.structure = params["structure"]
         self.old_id = params["old_id"]
         self.title = params["title"]
+        self.date_publication = params["publ_date"]
+        self.objFiles = ''
         # TODO Подумать можно ли сделать лучше, нужен
         self.section_title = ''
 
@@ -96,11 +99,9 @@ class Obj():
 class Npa(Obj):
     def __init__(self, params, config):
         super().__init__(params, config)
-        self.a_date = params["date"]
-        self.a_publ_date = params["publ_date"]
-        self.a_classification = config["classification"]
-        self.a_number = params["number"]
-        self.npaFiles = ''
+        self.date = params["date"]
+        self.number = params["number"]
+        
 
     def get_npafile_from_body(self, FileClass):
         old_sitename = self.old_sitename
@@ -138,10 +139,10 @@ class Npa(Obj):
                     file = FileClass(self.config, data)
                     files.append(file)
                     # TODO разобраться
-                    if self.npaFiles != '':
-                        self.npaFiles = ','.join((self.npaFiles, file.str_new_link))
+                    if self.objFiles != '':
+                        self.objFiles = ','.join((self.objFiles, file.str_new_link))
                     else:
-                        self.npaFiles = file.str_new_link
+                        self.objFiles = file.str_new_link
                     self.body = str(self.body).replace(file.file_full_path, '')
         return files
 
@@ -176,10 +177,10 @@ class Npa(Obj):
                                 file = NpaFile(self.config, data)
                                 npafiles.append(file)
                                 # TODO запись в атрибут медиафайлы объектов через запятую
-                                if self.npaFiles != '':
-                                    self.npaFiles = ','.join((self.npaFiles, file.str_new_link))
+                                if self.objFiles != '':
+                                    self.objFiles = ','.join((self.objFiles, file.str_new_link))
                                 else:
-                                    self.npaFiles = file.str_new_link
+                                    self.objFiles = file.str_new_link
                     except AttributeError as e:
                         print('Ошибка в создании файла Новостей', e)
             else:
@@ -191,15 +192,13 @@ class Npa(Obj):
 class Auction(Obj):
     def __init__(self, params, config):
         super().__init__(params, config)
-        self.date_publication = params["publ_date"]
         self.date_expiration = params["expirationDate"]
         self.date_trading = params["tradingDate"]
         self.linkTorg = params["linkTorg"]
         self.linkMap = params["linkMap"]
         self.linkUTP = params["linkUTP"]
         self.numberUTP = params["numberUTP"]
-        self.classification = config["classification"]
-        self.auctionFiles = ''
+        self.objFiles = ''
 
     def get_auctionfile_from_body(self, FileClass):
         old_sitename = self.old_sitename
@@ -229,10 +228,10 @@ class Auction(Obj):
                     file = FileClass(self.config, data)
                     files.append(file)
                     # TODO разобраться
-                    if self.auctionFiles != '':
-                        self.auctionFiles = ','.join((self.auctionFiles, file.str_new_link))
+                    if self.objFiles != '':
+                        self.objFiles = ','.join((self.objFiles, file.str_new_link))
                     else:
-                        self.auctionFiles = file.str_new_link
+                        self.objFiles = file.str_new_link
                     self.body = str(self.body).replace(file.file_full_path, '')
         return files
 
@@ -288,10 +287,10 @@ class Auction(Obj):
                                 file = AuctionFile(self.config, data)
                                 auctionfiles.append(file)
                                 # TODO запись в атрибут медиафайлы объектов через запятую
-                                if self.auctionFiles != '':
-                                    self.auctionFiles = ','.join((self.auctionFiles, file.str_new_link))
+                                if self.objFiles != '':
+                                    self.objFiles = ','.join((self.objFiles, file.str_new_link))
                                 else:
-                                    self.auctionFiles = file.str_new_link
+                                    self.objFiles = file.str_new_link
                     except AttributeError as e:
                         print('Ошибка в создании файла Новостей', e)
             else:
@@ -303,14 +302,11 @@ class Auction(Obj):
 class News(Obj):
     def __init__(self, params, config):
         super().__init__(params, config)
-        self.a_date = params["date"]
-        self.a_image_index = params["image_index"]
-        self.a_publ_date = params["publ_date"]
-        self.a_resume = params["resume"]
-        self.a_classification = config["classification"]
+        self.date = params["date"]
+        self.image_index = params["image_index"]
+        self.resume = params["resume"]
         self.isPublish = 'Да'
         self.pubmain = 'Да'
-        self.mediaFiles = ''
 
     def delete_links2(self):
         # TODO сделать передачу имени в регулярку
@@ -356,10 +352,10 @@ class News(Obj):
                                 file = NewsMediaFile(self.config, data)
                                 mediafiles.append(file)
                                 # TODO запись в атрибут медиафайлы объектов через запятую
-                                if self.mediaFiles != '':
-                                    self.mediaFiles = ','.join((self.mediaFiles, file.str_new_link))
+                                if self.objFiles != '':
+                                    self.objFiles = ','.join((self.objFiles, file.str_new_link))
                                 else:
-                                    self.mediaFiles = file.str_new_link
+                                    self.objFiles = file.str_new_link
                     except AttributeError as e:
                         print('Ошибка в создании файла Новостей', e)
             else:

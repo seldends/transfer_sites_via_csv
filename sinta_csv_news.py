@@ -72,10 +72,10 @@ def get_mediafile_from_table(config, db_local, news):
                             mediafiles.append(file)
                             mediafiles_name.append(file.encoded_filename)
                             # TODO запись в атрибут медиафайлы объектов через запятую
-                            if news.mediaFiles != '':
-                                news.mediaFiles = ','.join((news.mediaFiles, file.str_new_link))
+                            if news.objFiles != '':
+                                news.objFiles = ','.join((news.objFiles, file.str_new_link))
                             else:
-                                news.mediaFiles = file.str_new_link
+                                news.objFiles = file.str_new_link
                 except AttributeError as e:
                     print('Ошибка в создании файла Новостей', e)
         else:
@@ -133,14 +133,14 @@ def transfer_news(config):
     for row in data:
         # print(row)
         params = {
-            "old_id": row[0],
-            "structure": config["news_type"][row[1]],
-            "title": row[2],
-            "body": str(row[3]).replace("^", "#").replace("\r", "").replace("\n", ""),
-            "resume": row[4],
-            "date": row[5],
-            "publ_date": row[6],
-            "image_index": str(row[7]).replace("^", "#"),
+            "old_id":       row[0],
+            "structure":    config["news_type"][row[1]],
+            "title":        row[2],
+            "body":         str(row[3]).replace("^", "#").replace("\r", "").replace("\n", ""),
+            "resume":       row[4],
+            "date":         row[5],
+            "publ_date":    row[6],
+            "image_index":  str(row[7]).replace("^", "#"),
         }
         news = News(params, config)
         # print(news.a_image_index)
@@ -161,15 +161,15 @@ def transfer_news(config):
         # row = {
         #         'structure': news.structure,
         #         'title': news.title,
-        #         'resume': news.a_resume,
-        #         'body': news.a_body,
-        #         'classification': news.a_classification,
+        #         'resume': news.resume,
+        #         'body': news.body,
+        #         'classification': news.classification,
         #         'isPublish': news.isPublish,
         #         'pubmain': news.pubmain,
-        #         "publ_date": news.a_publ_date.strftime("%d.%m.%Y %H:%M:%S"),
-        #         "date": news.a_date.strftime("%d.%m.%Y %H:%M:%S"),
-        #         'image_index': news.a_image_index,
-        #         'mediaFiles': news.mediaFiles
+        #         "publ_date": news.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
+        #         "date": news.date.strftime("%d.%m.%Y %H:%M:%S"),
+        #         'image_index': news.image_index,
+        #         'mediaFiles': news.objFiles
         #     }
         # fieldnames = row.keys()
         # query_list.append(row)

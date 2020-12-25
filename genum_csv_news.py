@@ -52,14 +52,14 @@ def transfer_news(config):
 
     for row in data:
         params = {
-            "old_id": row[0],
-            "structure": config["news_type"][row[1]],
-            "title": row[2],
-            "date": row[9],
-            "image_index": str(row[7]).replace("^", "#"),
-            "body": str(row[4]).replace("^", "#").replace("\r", "").replace("\n", ""),
-            "publ_date": row[5],
-            "resume": row[3]
+            "old_id":       row[0],
+            "structure":    config["news_type"][row[1]],
+            "title":        row[2],
+            "date":         row[9],
+            "image_index":  str(row[7]).replace("^", "#"),
+            "body":         str(row[4]).replace("^", "#").replace("\r", "").replace("\n", ""),
+            "publ_date":    row[5],
+            "resume":       row[3]
         }
         news = News(params, config)
         news_list.append(news)
@@ -72,17 +72,17 @@ def transfer_news(config):
         # Обработка основного изображения
         index_image_file = get_index_file(config, news)
         row = {
-                'structure': news.structure,
-                'title': news.title,
-                'resume': news.a_resume,
-                'body': news.body,
-                'classification': news.a_classification,
-                'isPublish': news.isPublish,
-                'pubmain': news.pubmain,
-                "publ_date": news.a_publ_date.strftime("%d.%m.%Y %H:%M:%S"),
-                "date": news.a_date.strftime("%d.%m.%Y %H:%M:%S"),
-                'image_index': news.a_image_index,
-                'mediaFiles': news.mediaFiles
+                'structure':        news.structure,
+                'title':            news.title,
+                'resume':           news.resume,
+                'body':             news.body,
+                'classification':   news.classification,
+                'isPublish':        news.isPublish,
+                'pubmain':          news.pubmain,
+                "publ_date":        news.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
+                "date":             news.date.strftime("%d.%m.%Y %H:%M:%S"),
+                'image_index':      news.image_index,
+                'mediaFiles':       news.objFiles
             }
         fieldnames = row.keys()
         query_list.append(row)

@@ -1,6 +1,6 @@
 import re
 from utils import time_test, get_config, get_csv_path, save_csv
-from csv_objects import News, NewsIndexImgFile
+from csv_objects import News, NewsIndexImgFile, NewsFile
 from utils_db_local import DatabaseBitrix as Database
 
 
@@ -23,14 +23,14 @@ def transfer_news(config):
     data = db_local.get_news_list(news_types)                 # Получение списка Новостей из старой таблицы
     for row in data:
         params = {
-            "old_id": row[0],
-            "structure": config["news_type"][row[1]],
-            "title": row[2],
-            "date": row[3],
-            "image_index": str(row[4]).replace("^", "#"),
-            "body": str(row[5]).replace("^", "#").replace("\r", "").replace("\n", "").replace('<p style="text-align: justify;"></p>', '').replace('<p style="text-align: justify;">	 &nbsp;</p>', '').replace('<p style="text-align: justify;">	<br></p>', '').replace('<p style="text-align: justify;"> <b>', '<p style="text-align: justify;">'),
-            "publ_date": row[6],
-            "resume": str(row[7]).replace('<p style="text-align: justify;">', '').replace('<p>','').replace('<br>','').replace('p>','').replace('br>','').replace('<div>','').replace('div>','')
+            "old_id":       row[0],
+            "structure":    config["news_type"][row[1]],
+            "title":        row[2],
+            "date":         row[3],
+            "image_index":  str(row[4]).replace("^", "#"),
+            "body":         str(row[5]).replace("^", "#").replace("\r", "").replace("\n", "").replace('<p style="text-align: justify;"></p>', '').replace('<p style="text-align: justify;">	 &nbsp;</p>', '').replace('<p style="text-align: justify;">	<br></p>', '').replace('<p style="text-align: justify;"> <b>', '<p style="text-align: justify;">'),
+            "publ_date":    row[6],
+            "resume":       str(row[7]).replace('<p style="text-align: justify;">', '').replace('<p>','').replace('<br>','').replace('p>','').replace('br>','').replace('<div>','').replace('div>','')
         }
         news = News(params, config)
         news_list.append(news)
@@ -39,23 +39,23 @@ def transfer_news(config):
         # Добавление проблемных новостей
         # null_news.extend(empty_news)
         # Обратока ссылок на файлы
-        files_from_text = news.update_body()
+        files_from_text = news.update_body(NewsFile)
         # Удаление ссылок на страницы
         news.delete_links()
         # Обработка основного изображения
         # index_image_file = get_index_file(config, news)
         row = {
-                'structure': news.structure,
-                'title': news.title,
-                'resume': re.sub(r'[\n]{2,3}', r'', news.a_resume),
-                'body': re.sub(r'[\n]{2,3}', r'', news.a_body),
-                'classification': news.a_classification,
-                'isPublish': news.isPublish,
-                'pubmain': news.pubmain,
-                "publ_date": news.a_publ_date.strftime("%d.%m.%Y %H:%M:%S"),
-                "date": news.a_date.strftime("%d.%m.%Y %H:%M:%S"),
-                # 'image_index': news.a_image_index,
-                # 'mediaFiles': news.mediaFiles
+                'structure':        news.structure,
+                'title':            news.title,
+                'resume':           re.sub(r'[\n]{2,3}', r'', news.resume),
+                'body':             re.sub(r'[\n]{2,3}', r'', news.body),
+                'classification':   news.classification,
+                'isPublish':        news.isPublish,
+                'pubmain':          news.pubmain,
+                "publ_date":        news.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
+                "date":             news.date.strftime("%d.%m.%Y %H:%M:%S"),
+                # 'image_index':     news.a_image_index,
+                # 'mediaFiles':      news.objFiles
             }
         fieldnames = row.keys()
         query_list.append(row)

@@ -246,17 +246,6 @@ class DatabaseBitrix(Database):
                 finally:
                     print('MariaDB Connection opened successfully.')
 
-    # def select_rows(self, query, *val):
-    #     """Run a SQL query to select rows from table."""
-    #     self.connect()
-    #     with self.conn.cursor() as cur:
-    #         if val:
-    #             cur.execute(query, val)
-    #         else:
-    #             cur.execute(query)
-    #         records = cur.fetchall()
-    #         cur.close()
-    #         return records
         # Функция для получения новостей
     def get_news_list(self, params):
         # MariaDB

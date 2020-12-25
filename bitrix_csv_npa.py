@@ -47,14 +47,14 @@ def transfer_npa(config):
         # # Обработка основного изображения
         # # index_image_file = get_index_file(config, npa)
         row = {
-                'structure': npa.structure,
-                'title': npa.title,
-                'text': re.sub(r'[\n]{2,3}', r'', npa.body),
-                'classification': npa.a_classification,
-                "publ_date": npa.a_publ_date.strftime("%d.%m.%Y %H:%M:%S"),
-                "date": npa.a_date.strftime("%d.%m.%Y %H:%M:%S"),
-                "number": npa.a_number,
-                'npaFiles': npa.npaFiles,
+                'structure':        npa.structure,
+                'title':            npa.title,
+                'text':             re.sub(r'[\n]{2,3}', r'', npa.body),
+                'classification':   npa.classification,
+                "publ_date":        npa.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
+                "date":             npa.date.strftime("%d.%m.%Y %H:%M:%S"),
+                "number":           npa.number,
+                'npaFiles':         npa.objFiles,
             }
         fieldnames = row.keys()
         query_list.append(row)
