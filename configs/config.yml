@@ -69,7 +69,7 @@ imchel74:     # Уполномоченного по правам ребёнка 
         # 12: 1   # TODO конкурсы и вакансии      https://imchel.ru/gosservice/contests/
         # 20: 1     # TODO госсужба НПА             https://imchel.ru/gosservice/acts/
         # # TODO Приватизация     https://imchel.ru/privatization
-        # 39: 1   # TODO программа приватизации   https://imchel.ru/privatization/programm/
+        # 39: 41   # программа приватизации   https://imchel.ru/privatization/programm/
         # 42: 1   # TODO итоги                    https://imchel.ru/privatization/results/
         # 43: 1   # TODO продажа имущества        https://imchel.ru/privatization/sale/
         # # TODO Управление земельных отношений   https://imchel.ru/departments/land_relations/
@@ -90,24 +90,21 @@ imchel74:     # Уполномоченного по правам ребёнка 
         # 92: 1   # TODO об управлении
 
         # 94: 1   # TODO Результаты кадастровой оценки    https://imchel.ru/kadastr/results/
-        # 97: 1   # TODO Локальные акты Министерства в сфере противодействия коррупции    https://imchel.ru/gosservice/anticorrupt/npa/
+        
         # 101: 1  # TODO Аукционы         https://imchel.ru/rent/aukciony/
         # 102: 1  # TODO Итоги            https://imchel.ru/rent/itogi/
         # 131: 1  # TODO Результаты обработки перечня объектов, подлежащих государственной кадастровой оценке https://imchel.ru/kadastr/rezultaty-obrabotki/
         # 151: 1  # TODO Отчеты                https://imchel.ru/regulirovanie-v-sfere-zakupok/metodicheskie-materialy/otchety/
         # 152: 1  # TODO новое в сфере закупок? новости или нпа?   https://imchel.ru/regulirovanie-v-sfere-zakupok/novosti-v-sfere-zakupok/
         # TODO Порядок деятельности    https://imchel.ru/officials/
-        # ~100: 1  # TODOhttps://imchel.ru/officials/reglament/
-        # ~100: 1  # TODOhttps://imchel.ru/officials/reglament/
-        # ~100: 1  # TODOhttps://imchel.ru/officials/reglament/
-        # ~100: 1  # TODOhttps://imchel.ru/officials/reglament/
-        # ~100: 1  # TODOhttps://imchel.ru/officials/reglament/
-        # ~100: 1  # TODOhttps://imchel.ru/officials/reglament/
-        # ~100: 1  # TODOhttps://imchel.ru/officials/reglament/
-
+        # ~100: 1  # TODO https://imchel.ru/officials/reglament/
+        # 97: 23   # Локальные акты Министерства в сфере противодействия коррупции    https://imchel.ru/gosservice/anticorrupt/npa/
         # # TODO Регулирование в сфере закупок https://imchel.ru/regulirovanie-v-sfere-zakupok/
-        153: 39  # TODO федеральные акты      https://imchel.ru/regulirovanie-v-sfere-zakupok/normativno-pravovye-akty/federalnoe-zakonodatelstvo/
-        154: 40  # TODO региональные акты     https://imchel.ru/regulirovanie-v-sfere-zakupok/normativno-pravovye-akty/regionalnoe-zakonodatelstvo/
+        # 153: 39  # федеральные акты      https://imchel.ru/regulirovanie-v-sfere-zakupok/normativno-pravovye-akty/federalnoe-zakonodatelstvo/
+        # 154: 40  # региональные акты     https://imchel.ru/regulirovanie-v-sfere-zakupok/normativno-pravovye-akty/regionalnoe-zakonodatelstvo/
+        # 100: 11  # Нормативно-правовые акты Министерства    https://imchel.ru/officials/npa-ministerstva/
         # 161: 1  # TODO форма документов      https://imchel.ru/regulirovanie-v-sfere-zakupok/metodicheskie-materialy/formy-dokumentov/
-        # 100: 11  # TODO Нормативно-правовые акты Министерства    https://imchel.ru/officials/npa-ministerstva/
+
+        # 145: 39  # TODO Федеральное законодательство https://imchel.ru/regulatory/federalnoe/         https://im.gov74.ru/im/regulatory/federalnoe.htm
+        # 146: 40  # TODO Региональное законодательство https://imchel.ru/regulatory/regionalnoe/       https://im.gov74.ru/im/regulatory/regionalnoe.htm
         # Программы приватизации перенести
