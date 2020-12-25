@@ -28,13 +28,13 @@ def save_all_page(config):
     folder_path = get_folder_path(config)
     for row in pages_list:
         params = {
-            "old_id": row[0],
-            "parent_id": row[1],
-            "title": row[2],
-            "article": row[3],
-            "alias": str(row[4]).strip(),
-            "path": str(row[5]).strip(),
-            "level": row[6],
+            "old_id":       row[0],
+            "parent_id":    row[1],
+            "title":        row[2],
+            "article":      row[3],
+            "alias":        str(row[4]).strip(),
+            "path":         str(row[5]).strip(),
+            "level":        row[6],
             "folder_path": folder_path,
         }
 
