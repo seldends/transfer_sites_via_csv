@@ -204,6 +204,134 @@ class Npa(Obj):
         return npafiles, null_npa
 
 
+class Auction(Obj):
+    def __init__(self, params, config):
+        super().__init__(config)
+        self.old_id = params["old_id"]
+        self.body = params["body"]
+        self.structure = params["structure"]
+        self.title = params["title"]
+        self.date_publication = params["publ_date"]
+        self.date_expiration = params["expirationDate"]
+        self.date_trading = params["tradingDate"]
+        self.linkTorg = params["linkTorg"]
+        self.linkMap = params["linkMap"]
+        self.linkUTP = params["linkUTP"]
+        self.numberUTP = params["numberUTP"]
+        self.classification = config["classification"]
+        self.auctionFiles = ''
+
+    def get_auctionfile_from_body(self, FileClass):
+        old_sitename = self.old_sitename
+        # TODO сделать передачу имени в регулярку
+        bitrix_pattern_file_1 = r'(<img\s(?:width=\"[0-9]{1,4}\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)src=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:medialibrary\/[^\/]{1,5}\/|))([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
+        bitrix_pattern_file_2 = r'(<a\s(?:(?:class|alt|target|id)=\"[^\"]{1,50}\"\s|){0,5}href=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
+        bitrix_pattern_file_3 = r'(<a\s(?:(?:class|alt|target|id)=\"[^\"]{1,50}\"\s|){0,5}href=\"((?:http:\/\/imchel\.ru|)\/(?:bitrix\/redirect\.php\?event1=download&amp;event2=update&amp;event3=[^\/\"]{1,100};goto=\/|)((upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
+        pattern_list = {
+            "bitrix_file_1":   bitrix_pattern_file_1,         # паттерн 1
+            "bitrix_file_2":   bitrix_pattern_file_2,         # паттерн 2
+            "bitrix_file_3":   bitrix_pattern_file_3,         # паттерн 3
+        }
+        files = []
+        for link_type, pattern in pattern_list.items():
+            try:
+                links = re.findall(pattern, self.body)
+                # print(links, pattern)
+                # Если есть совпадения
+                if len(links) > 0:
+                    for link in links:
+                        print(link)
+                        data = {
+                            "full_link":            link[0],    # Полная ссылка с a href и стилями. Пример:     <a href="http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx">
+                            "file_full_path":       link[1],    # Ссылка на файл.                   Пример:     http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
+                            "file_path":            link[2],    # Полный путь до файла.             Пример:     sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
+                            "file_relative_path":   link[3],    # Папка файла.                      Пример:     sites/default/files/imceFiles/user-333/
+                            "file":                 link[4],    # Имя файла с расширением.          Пример:     soglasie_rk_2020.docx
+                            "section_title":        self.section_title,
+                        }
+                        file = FileClass(self.config, data)
+                        files.append(file)
+                        # TODO разобраться
+                        if self.auctionFiles != '':
+                            self.auctionFiles = ','.join((self.auctionFiles, file.str_new_link))
+                        else:
+                            self.auctionFiles = file.str_new_link
+                        self.body = str(self.body).replace(file.file_full_path, '')
+            # TODO сделать нормальную обработку
+            except Exception as e:
+                print(e, 'test')
+        return files
+
+    def bitrix_get_utp_from_body(self):
+        old_sitename = self.old_sitename
+        # TODO сделать передачу имени в регулярку
+        bitrix_pattern_file_1 = r'(<a\s(?:(?:class|alt|target|id)=\"[^\"]{1,50}\"\s|){0,5}href=\"(http:\/\/utp\.sberbank-ast\.ru\/AP\/NBT\/PurchaseView\/[0-9]{1,3}\/[0-9]{1,3}\/[0-9]{1,3}\/[0-9]{1,10})\"[^>]{0,550}>([^<]{1,50})<\/a>)'
+        pattern_list = {
+            "bitrix_file_1":   bitrix_pattern_file_1,         # паттерн 2
+        }
+        files = []
+        for link_type, pattern in pattern_list.items():
+            try:
+                links = re.findall(pattern, self.body)
+                if len(links) > 0:
+                    for link in links:
+                        print(link)
+                        data = {
+                            "full_link":        link[0],    # Полная ссылка с a href и стилями. Пример:     <a target="_blank" href="http://utp.sberbank-ast.ru/AP/NBT/PurchaseView/9/0/0/680364">SBR012-2012020056</a>
+                            "link_utp":         link[1],    # Ссылка на файл.                   Пример:     http://utp.sberbank-ast.ru/AP/NBT/PurchaseView/9/0/0/680364
+                            "number_utp":       link[2],    # Полный путь до файла.             Пример:     SBR012-2012020056
+                        }
+                        self.linkUTP = data["link_utp"]
+                        self.numberUTP = data["number_utp"]
+                        # TODO разобраться
+                        self.body = str(self.body).replace(data["full_link"], '').replace("Номер извещения на универсальной торговой площадке", '')
+            # TODO сделать нормальную обработку
+            except Exception as e:
+                print(e, 'test')
+        return files
+
+    # Получение медиафайлов из таблицы
+    def get_auctionfile_from_table(self, db_local):
+        null_auction = []
+        # pattern_file_genum = r'(\/(PublicationItemImage\/Image\/src\/[0-9]{1,5}\/)([^>]{1,75}))'
+        pattern_file_bitrix = r'(\/?(upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z]{3,5}))'
+        pattern_list = {
+            # "auctionfiles_genum":   pattern_file_genum,         # паттерн 1
+            "auctionfiles_bitrix":  pattern_file_bitrix,         # паттерн 1
+        }
+        auctionfiles_list = db_local.get_auction_files_list(self.old_id)
+        auctionfiles = []
+        for auctionfile in auctionfiles_list:
+            old_path = auctionfile[0]
+            # Проверка пустой ли путь у файлв Новостей (запись есть, но значение пустое, то добавлять в список пуcтых)
+            if old_path:
+                file_path = str(old_path).replace("\\", "/")
+                for link_type, pattern in pattern_list.items():
+                    try:
+                        links = re.findall(pattern, file_path)
+                        # Если есть совпадения
+                        if len(links) > 0:
+                            for link in links:
+                                data = {
+                                    "file_full_path":       link[0],    # Ссылка на файл.                   Пример:     /PublicationItemImage/Image/src/178/IMG_2038.JPG
+                                    "file_relative_path":   link[1],    # Папка файла.                      Пример:     PublicationItemImage/Image/src/178/
+                                    "file":                 link[2],    # Имя файла с расширением.          Пример:     IMG_2038.JPG
+                                    "section_title":        '',    # Имя файла с расширением.          Пример:     IMG_2038.JPG
+                                }
+                                file = AuctionFile(self.config, data)
+                                auctionfiles.append(file)
+                                # TODO запись в атрибут медиафайлы объектов через запятую
+                                if self.auctionFiles != '':
+                                    self.auctionFiles = ','.join((self.auctionFiles, file.str_new_link))
+                                else:
+                                    self.auctionFiles = file.str_new_link
+                    except AttributeError as e:
+                        print('Ошибка в создании файла Новостей', e)
+            else:
+                null_auction.append(self.old_id)
+                print(f'Отсутствует имя файла ид старой новости : {self.old_id}')
+        return auctionfiles, null_auction
+
 class News(Obj):
     def __init__(self, params, config):
         super().__init__(config)
@@ -331,6 +459,13 @@ class NpaFile(File):
         self.new_link = "".join(("files/norm_act/", self.sitename, "/", self.file))
         self.str_new_link = "".join(("/norm_act/", self.sitename, "/", self.file, "@cmsFile.doc"))
 
+class AuctionFile(File):
+    def __init__(self, config, data):
+        super().__init__(config, data)
+        # TODO проверить правильность ссылок
+        # TODO подумать могут ли быть в разлинчных директориях файлы с одинаковым именем
+        self.new_link = "".join(("files/auctions/", self.sitename, "/", self.file))
+        self.str_new_link = "".join(("/auctions/", self.sitename, "/", self.file, "@cmsFile.doc"))
 
 class PageFile(File):
     def __init__(self, config, data):

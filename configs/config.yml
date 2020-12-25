@@ -64,6 +64,9 @@ imchel74:     # Уполномоченного по правам ребёнка 
     classification: 33@egClassification # prod
     news_type:
         13: 1  # Новости
+    auction_type:
+        43: 2@auctionCategory  # Аукционы имущество
+        42: 9@auctionCategory  # Итоги
     npa_type:
         # # TODO госсужба     https://imchel.ru/privatization
         # 12: 1   # TODO конкурсы и вакансии      https://imchel.ru/gosservice/contests/
