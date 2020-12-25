@@ -72,8 +72,8 @@ def transfer_news(config):
         # Обработка основного изображения
         index_image_file = get_index_file(config, news)
         row = {
-                'structure': news.a_structure,
-                'title': news.a_title,
+                'structure': news.structure,
+                'title': news.title,
                 'resume': news.a_resume,
                 'body': news.body,
                 'classification': news.a_classification,

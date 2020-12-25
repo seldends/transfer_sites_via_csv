@@ -45,8 +45,8 @@ def transfer_news(config):
         # Обработка основного изображения
         # index_image_file = get_index_file(config, news)
         row = {
-                'structure': news.a_structure,
-                'title': news.a_title,
+                'structure': news.structure,
+                'title': news.title,
                 'resume': re.sub(r'[\n]{2,3}', r'', news.a_resume),
                 'body': re.sub(r'[\n]{2,3}', r'', news.a_body),
                 'classification': news.a_classification,
@@ -70,10 +70,6 @@ def transfer_news(config):
     # Копирование файлов
     # for file in news_files:
     #     file.copy_news_file()
-    # TODO
-    # news.delete_links()         # Удаление ссылок на страницы
-    # Удаление содержимого описания Новостей
-    # news.transform_text()
     print(f'Количество пустых Новостей : {len(null_news)}')
     print(f'Количество Новостей : {len(news_list)}')
     print(f'Количество файлов Новостей из таблицы : {len(files_from_table)}')

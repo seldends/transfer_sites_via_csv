@@ -159,8 +159,8 @@ def transfer_news(config):
         # if files_from_text:
             # print(f'{files_from_text}-{filenames_from_text}')
         # row = {
-        #         'structure': news.a_structure,
-        #         'title': news.a_title,
+        #         'structure': news.structure,
+        #         'title': news.title,
         #         'resume': news.a_resume,
         #         'body': news.a_body,
         #         'classification': news.a_classification,

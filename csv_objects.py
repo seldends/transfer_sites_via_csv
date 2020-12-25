@@ -5,11 +5,14 @@ from utils import copy_file
 
 
 class Obj():
-    def __init__(self, config):
+    def __init__(self, params, config):
         self.config = config
         self.folder_name = config["new_name"]
         self.old_sitename = config["old_name"]
-        self.body = ''
+        self.body = params["body"]
+        self.structure = params["structure"]
+        self.old_id = params["old_id"]
+        self.title = params["title"]
         # TODO Подумать можно ли сделать лучше, нужен
         self.section_title = ''
 
@@ -37,16 +40,12 @@ class Obj():
             "bitrix_page":          bitrix_pattern_page,
         }
         for link_type, pattern in pattern_list.items():
-            try:
-                links = re.findall(pattern, self.body)
-                if len(links) > 0:
-                    for link in links:
-                        # print(link,self.a_body)
-                        page_link = link[1]
-                        self.body = str(self.body).replace(page_link, '')
-            # TODO сделать нормальную обработку
-            except Exception as e:
-                print(e, 'test')
+            links = re.findall(pattern, self.body)
+            if len(links) > 0:
+                for link in links:
+                    # print(link,self.a_body)
+                    page_link = link[1]
+                    self.body = str(self.body).replace(page_link, '')
 
     # TODO подумать как можно объединить общий функционал на функции обработки файлов
     # Получение файла Новостей из описания Новостей
@@ -69,43 +68,34 @@ class Obj():
         }
         files = []
         for link_type, pattern in pattern_list.items():
-            try:
-                links = re.findall(pattern, self.body)
-                # print(links, pattern)
-                # Если есть совпадения
-                if len(links) > 0:
-                    for link in links:
-                        print(link)
-                        data = {
-                            "full_link":            link[0],    # Полная ссылка с a href и стилями. Пример:     <a href="http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx">
-                            "file_full_path":       link[1],    # Ссылка на файл.                   Пример:     http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
-                            "file_path":            link[2],    # Полный путь до файла.             Пример:     sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
-                            "file_relative_path":   link[3],    # Папка файла.                      Пример:     sites/default/files/imceFiles/user-333/
-                            "file":                 link[4],    # Имя файла с расширением.          Пример:     soglasie_rk_2020.docx
-                            "section_title":        self.section_title,
-                        }
-                        file = FileClass(self.config, data)
-                        files.append(file)
-                        # TODO разобраться
-                        # self.a_body = str(self.a_body).replace(file.file_full_path, file.str_new_link)     # Замены ссылки
-                        self.body = str(self.body).replace(file.file_full_path, file.new_link)
-                        # self.body = re.sub(r'[\n]{2,3}', r'', self.body)
-                        # temp_a_resume = re.sub(r'(?:<|)(?:\/|)[a-z]{1,5}>', r'', str(self.a_resume))
-                        # temp2_a_resume = re.sub(r'[\n]{2,3}', r'', temp_a_resume)
-                        # self.a_resume = temp2_a_resume
-            # TODO сделать нормальную обработку
-            except Exception as e:
-                print(e, 'test')
+            links = re.findall(pattern, self.body)
+            # Если есть совпадения
+            if len(links) > 0:
+                for link in links:
+                    print(link)
+                    data = {
+                        "full_link":            link[0],    # Полная ссылка с a href и стилями. Пример:     <a href="http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx">
+                        "file_full_path":       link[1],    # Ссылка на файл.                   Пример:     http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
+                        "file_path":            link[2],    # Полный путь до файла.             Пример:     sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
+                        "file_relative_path":   link[3],    # Папка файла.                      Пример:     sites/default/files/imceFiles/user-333/
+                        "file":                 link[4],    # Имя файла с расширением.          Пример:     soglasie_rk_2020.docx
+                        "section_title":        self.section_title,
+                    }
+                    file = FileClass(self.config, data)
+                    files.append(file)
+                    # TODO разобраться
+                    # self.a_body = str(self.a_body).replace(file.file_full_path, file.str_new_link)     # Замены ссылки
+                    self.body = str(self.body).replace(file.file_full_path, file.new_link)
+                    # self.body = re.sub(r'[\n]{2,3}', r'', self.body)
+                    # temp_a_resume = re.sub(r'(?:<|)(?:\/|)[a-z]{1,5}>', r'', str(self.a_resume))
+                    # temp2_a_resume = re.sub(r'[\n]{2,3}', r'', temp_a_resume)
+                    # self.a_resume = temp2_a_resume
         return files
 
 
 class Npa(Obj):
     def __init__(self, params, config):
-        super().__init__(config)
-        self.body = params["body"]
-        self.a_structure = params["structure"]
-        self.old_id = params["old_id"]
-        self.a_title = params["title"]
+        super().__init__(params, config)
         self.a_date = params["date"]
         self.a_publ_date = params["publ_date"]
         self.a_classification = config["classification"]
@@ -123,42 +113,36 @@ class Npa(Obj):
         bitrix_pattern_file_2 = r'(<a\s(?:(?:class|alt|target|id)=\"[^\"]{1,50}\"\s|){0,5}href=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
         bitrix_pattern_file_3 = r'(<a\s(?:(?:class|alt|target|id)=\"[^\"]{1,50}\"\s|){0,5}href=\"((?:http:\/\/imchel\.ru|)\/(?:bitrix\/redirect\.php\?event1=download&amp;event2=update&amp;event3=[^\/\"]{1,100};goto=\/|)((upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
         pattern_list = {
-            "genum_file_1":    genum_pattern_file_1,         # паттерн 1 файлы
-            "genum_file_2":    genum_pattern_file_2,         # паттерн 2 img
-            "genum_file_3":    genum_pattern_file_3,         # паттерн 2 видео
-            "sinta_file_1":    sinta_pattern_file_1,         # паттерн 2
-            "bitrix_file_1":   bitrix_pattern_file_1,         # паттерн 2
-            "bitrix_file_2":   bitrix_pattern_file_2,         # паттерн 2
-            "bitrix_file_3":   bitrix_pattern_file_3,         # паттерн 2
+            "genum_file_1":    genum_pattern_file_1,        # паттерн 1 файлы
+            "genum_file_2":    genum_pattern_file_2,        # паттерн 2 img
+            "genum_file_3":    genum_pattern_file_3,        # паттерн 3 видео
+            "sinta_file_1":    sinta_pattern_file_1,        # паттерн 1
+            "bitrix_file_1":   bitrix_pattern_file_1,       # паттерн 1 картинки
+            "bitrix_file_2":   bitrix_pattern_file_2,       # паттерн 2 файлы
+            "bitrix_file_3":   bitrix_pattern_file_3,       # паттерн 3 поломанные ссылки
         }
         files = []
         for link_type, pattern in pattern_list.items():
-            try:
-                links = re.findall(pattern, self.body)
-                # print(links, pattern)
-                # Если есть совпадения
-                if len(links) > 0:
-                    for link in links:
-                        print(link)
-                        data = {
-                            "full_link":            link[0],    # Полная ссылка с a href и стилями. Пример:     <a href="http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx">
-                            "file_full_path":       link[1],    # Ссылка на файл.                   Пример:     http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
-                            "file_path":            link[2],    # Полный путь до файла.             Пример:     sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
-                            "file_relative_path":   link[3],    # Папка файла.                      Пример:     sites/default/files/imceFiles/user-333/
-                            "file":                 link[4],    # Имя файла с расширением.          Пример:     soglasie_rk_2020.docx
-                            "section_title":        self.section_title,
-                        }
-                        file = FileClass(self.config, data)
-                        files.append(file)
-                        # TODO разобраться
-                        if self.npaFiles != '':
-                            self.npaFiles = ','.join((self.npaFiles, file.str_new_link))
-                        else:
-                            self.npaFiles = file.str_new_link
-                        self.body = str(self.body).replace(file.file_full_path, '')
-            # TODO сделать нормальную обработку
-            except Exception as e:
-                print(e, 'test')
+            links = re.findall(pattern, self.body)
+            if len(links) > 0:
+                for link in links:
+                    print(link)
+                    data = {
+                        "full_link":            link[0],    # Полная ссылка с a href и стилями. Пример:     <a href="http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx">
+                        "file_full_path":       link[1],    # Ссылка на файл.                   Пример:     http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
+                        "file_path":            link[2],    # Полный путь до файла.             Пример:     sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
+                        "file_relative_path":   link[3],    # Папка файла.                      Пример:     sites/default/files/imceFiles/user-333/
+                        "file":                 link[4],    # Имя файла с расширением.          Пример:     soglasie_rk_2020.docx
+                        "section_title":        self.section_title,
+                    }
+                    file = FileClass(self.config, data)
+                    files.append(file)
+                    # TODO разобраться
+                    if self.npaFiles != '':
+                        self.npaFiles = ','.join((self.npaFiles, file.str_new_link))
+                    else:
+                        self.npaFiles = file.str_new_link
+                    self.body = str(self.body).replace(file.file_full_path, '')
         return files
 
     # Получение медиафайлов из таблицы
@@ -206,11 +190,7 @@ class Npa(Obj):
 
 class Auction(Obj):
     def __init__(self, params, config):
-        super().__init__(config)
-        self.old_id = params["old_id"]
-        self.body = params["body"]
-        self.structure = params["structure"]
-        self.title = params["title"]
+        super().__init__(params, config)
         self.date_publication = params["publ_date"]
         self.date_expiration = params["expirationDate"]
         self.date_trading = params["tradingDate"]
@@ -234,34 +214,29 @@ class Auction(Obj):
         }
         files = []
         for link_type, pattern in pattern_list.items():
-            try:
-                links = re.findall(pattern, self.body)
-                # print(links, pattern)
-                # Если есть совпадения
-                if len(links) > 0:
-                    for link in links:
-                        print(link)
-                        data = {
-                            "full_link":            link[0],    # Полная ссылка с a href и стилями. Пример:     <a href="http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx">
-                            "file_full_path":       link[1],    # Ссылка на файл.                   Пример:     http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
-                            "file_path":            link[2],    # Полный путь до файла.             Пример:     sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
-                            "file_relative_path":   link[3],    # Папка файла.                      Пример:     sites/default/files/imceFiles/user-333/
-                            "file":                 link[4],    # Имя файла с расширением.          Пример:     soglasie_rk_2020.docx
-                            "section_title":        self.section_title,
-                        }
-                        file = FileClass(self.config, data)
-                        files.append(file)
-                        # TODO разобраться
-                        if self.auctionFiles != '':
-                            self.auctionFiles = ','.join((self.auctionFiles, file.str_new_link))
-                        else:
-                            self.auctionFiles = file.str_new_link
-                        self.body = str(self.body).replace(file.file_full_path, '')
-            # TODO сделать нормальную обработку
-            except Exception as e:
-                print(e, 'test')
+            links = re.findall(pattern, self.body)
+            if len(links) > 0:
+                for link in links:
+                    print(link)
+                    data = {
+                        "full_link":            link[0],    # Полная ссылка с a href и стилями. Пример:     <a href="http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx">
+                        "file_full_path":       link[1],    # Ссылка на файл.                   Пример:     http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
+                        "file_path":            link[2],    # Полный путь до файла.             Пример:     sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
+                        "file_relative_path":   link[3],    # Папка файла.                      Пример:     sites/default/files/imceFiles/user-333/
+                        "file":                 link[4],    # Имя файла с расширением.          Пример:     soglasie_rk_2020.docx
+                        "section_title":        self.section_title,
+                    }
+                    file = FileClass(self.config, data)
+                    files.append(file)
+                    # TODO разобраться
+                    if self.auctionFiles != '':
+                        self.auctionFiles = ','.join((self.auctionFiles, file.str_new_link))
+                    else:
+                        self.auctionFiles = file.str_new_link
+                    self.body = str(self.body).replace(file.file_full_path, '')
         return files
 
+    # Bitrix получение атрибутов ссылки и номер универсальной торговой площадки
     def bitrix_get_utp_from_body(self):
         old_sitename = self.old_sitename
         # TODO сделать передачу имени в регулярку
@@ -269,26 +244,18 @@ class Auction(Obj):
         pattern_list = {
             "bitrix_file_1":   bitrix_pattern_file_1,         # паттерн 2
         }
-        files = []
         for link_type, pattern in pattern_list.items():
-            try:
-                links = re.findall(pattern, self.body)
-                if len(links) > 0:
-                    for link in links:
-                        print(link)
-                        data = {
-                            "full_link":        link[0],    # Полная ссылка с a href и стилями. Пример:     <a target="_blank" href="http://utp.sberbank-ast.ru/AP/NBT/PurchaseView/9/0/0/680364">SBR012-2012020056</a>
-                            "link_utp":         link[1],    # Ссылка на файл.                   Пример:     http://utp.sberbank-ast.ru/AP/NBT/PurchaseView/9/0/0/680364
-                            "number_utp":       link[2],    # Полный путь до файла.             Пример:     SBR012-2012020056
-                        }
-                        self.linkUTP = data["link_utp"]
-                        self.numberUTP = data["number_utp"]
-                        # TODO разобраться
-                        self.body = str(self.body).replace(data["full_link"], '').replace("Номер извещения на универсальной торговой площадке", '')
-            # TODO сделать нормальную обработку
-            except Exception as e:
-                print(e, 'test')
-        return files
+            links = re.findall(pattern, self.body)
+            if len(links) > 0:
+                for link in links:
+                    data = {
+                        "full_link":        link[0],    # Полная ссылка с a href и стилями. Пример:     <a target="_blank" href="http://utp.sberbank-ast.ru/AP/NBT/PurchaseView/9/0/0/680364">SBR012-2012020056</a>
+                        "link_utp":         link[1],    # Ссылка на файл.                   Пример:     http://utp.sberbank-ast.ru/AP/NBT/PurchaseView/9/0/0/680364
+                        "number_utp":       link[2],    # Полный путь до файла.             Пример:     SBR012-2012020056
+                    }
+                    self.linkUTP = data["link_utp"]
+                    self.numberUTP = data["number_utp"]
+                    self.body = str(self.body).replace(data["full_link"], '').replace("Номер извещения на универсальной торговой площадке", '')
 
     # Получение медиафайлов из таблицы
     def get_auctionfile_from_table(self, db_local):
@@ -296,8 +263,8 @@ class Auction(Obj):
         # pattern_file_genum = r'(\/(PublicationItemImage\/Image\/src\/[0-9]{1,5}\/)([^>]{1,75}))'
         pattern_file_bitrix = r'(\/?(upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z]{3,5}))'
         pattern_list = {
-            # "auctionfiles_genum":   pattern_file_genum,         # паттерн 1
-            "auctionfiles_bitrix":  pattern_file_bitrix,         # паттерн 1
+            # "auctionfiles_genum":   pattern_file_genum,         # паттерн файлы
+            "auctionfiles_bitrix":  pattern_file_bitrix,         # паттерн файлы
         }
         auctionfiles_list = db_local.get_auction_files_list(self.old_id)
         auctionfiles = []
@@ -316,7 +283,7 @@ class Auction(Obj):
                                     "file_full_path":       link[0],    # Ссылка на файл.                   Пример:     /PublicationItemImage/Image/src/178/IMG_2038.JPG
                                     "file_relative_path":   link[1],    # Папка файла.                      Пример:     PublicationItemImage/Image/src/178/
                                     "file":                 link[2],    # Имя файла с расширением.          Пример:     IMG_2038.JPG
-                                    "section_title":        '',    # Имя файла с расширением.          Пример:     IMG_2038.JPG
+                                    "section_title":        '',         # Раздел страницы.                  Пример:     Деятельность
                                 }
                                 file = AuctionFile(self.config, data)
                                 auctionfiles.append(file)
@@ -332,13 +299,10 @@ class Auction(Obj):
                 print(f'Отсутствует имя файла ид старой новости : {self.old_id}')
         return auctionfiles, null_auction
 
+
 class News(Obj):
     def __init__(self, params, config):
-        super().__init__(config)
-        self.body = params["body"]
-        self.a_structure = params["structure"]
-        self.old_id = params["old_id"]
-        self.a_title = params["title"]
+        super().__init__(params, config)
         self.a_date = params["date"]
         self.a_image_index = params["image_index"]
         self.a_publ_date = params["publ_date"]
