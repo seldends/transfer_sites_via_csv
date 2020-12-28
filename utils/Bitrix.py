@@ -60,7 +60,7 @@ class DatabaseBitrix(Database):
             XML_ID
             FROM imchel_10_12.b_iblock_element
             WHERE ACTIVE = 'Y'
-            AND IBLOCK_ID in (146)
+            AND IBLOCK_ID in (20)
             -- and NAME like '%регламент предоставления государственной услуги "Предоставление%'
             order by ID DESC
             ;
@@ -114,3 +114,36 @@ class DatabaseBitrix(Database):
             '''
         auctionfiles_list = self.select_rows(select_auctionfiles_local, id)
         return auctionfiles_list
+
+    def get_vacancy_list(self, params):
+        # MariaDB
+        select_vacancy_local = '''
+            SELECT
+            ID as id,
+            IBLOCK_ID,
+            NAME as title,
+            DATE_CREATE as date_create,
+            DETAIL_TEXT as body,
+            TIMESTAMP_X as date_publ,
+            XML_ID
+            FROM imchel_10_12.b_iblock_element
+            WHERE ACTIVE = 'Y'
+            AND IBLOCK_ID in (12)
+            order by ID DESC
+            ;
+            '''
+        # news_list = self.select_rows(select_news_local, params)
+        vacancy_list = self.select_rows(select_vacancy_local)
+        return vacancy_list
+
+        # Функция для получения ouid нпа
+    def get_vacancy_files_list(self, id):
+        select_vacancyfiles_local = '''
+            SELECT CONCAT('upload/',b_file.SUBDIR, '/', b_file.FILE_NAME) as file_path
+            FROM imchel_10_12.b_file
+            LEFT JOIN imchel_10_12.b_iblock_element_property
+            ON b_iblock_element_property.VALUE = imchel_10_12.b_file.ID
+            WHERE b_iblock_element_property.IBLOCK_ELEMENT_ID=%s;
+            '''
+        vacancyfiles_list = self.select_rows(select_vacancyfiles_local, id)
+        return vacancyfiles_list

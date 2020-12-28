@@ -59,6 +59,14 @@ class NpaFile(File):
         self.str_new_link = "".join(("/norm_act/", self.sitename, "/", self.file, "@cmsFile.doc"))
 
 
+class VacancyFile(File):
+    def __init__(self, config, data):
+        super().__init__(config, data)
+        # TODO проверить правильность ссылок
+        # TODO подумать могут ли быть в разлинчных директориях файлы с одинаковым именем
+        self.new_link = "".join(("files/vacancies/", self.sitename, "/", self.file))
+        self.str_new_link = "".join(("/vacancies/", self.sitename, "/", self.file, "@cmsFile.doc"))
+
 class AuctionFile(File):
     def __init__(self, config, data):
         super().__init__(config, data)
