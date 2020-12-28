@@ -1,7 +1,8 @@
 import re
-from utils import time_test, get_config, get_csv_path, save_csv
-from csv_objects import Npa, NpaFile
-from utils_db_local import DatabaseBitrix as Database
+from utils.util import time_test, get_config, get_csv_path, save_csv
+from core.Npa import Npa
+from core.File import NpaFile
+from utils.Bitrix import DatabaseBitrix as Database
 
 
 # Перенос НПА
