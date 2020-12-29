@@ -8,10 +8,7 @@ from utils.Bitrix import DatabaseBitrix as Database
 # Перенос НПА
 def transfer_npa(config):
     npa_list = []
-    filenames = []
     npa_files = []
-    files_from_text = []
-    files_from_table = []
     null_npa = []
     query_list = []
 
@@ -21,32 +18,35 @@ def transfer_npa(config):
     db_local = Database(db_type_local, db_name_local)       # Объект подключения к бд со старыми данными
 
     npa_types = list(config["npa_type"].keys())
-    data = db_local.get_npa_list(npa_types)                 # Получение списка НПА из старой таблицы
+    data = db_local.get_obj_list(npa_types)                 # Получение списка НПА из старой таблицы
     for row in data:
         params = {
-            "old_id": row[0],
-            "structure": config["npa_type"][row[1]],
-            "title": row[2],
-            "date": row[3],
-            "body": str(row[4]).replace("^", "#").replace("\r", "").replace("\n", "").replace('<p style="text-align: justify;"></p>', '').replace('<p style="text-align: justify;">	 &nbsp;</p>', '').replace('<p style="text-align: justify;">	<br></p>', '').replace('<p style="text-align: justify;"> <b>', '<p style="text-align: justify;">').replace('<p style="text-align: center;"></p>', '').replace('<p style="text-align: center;"><b></b></p>', '').replace('<p style="text-align: center;"><b></b>', ''),
-            "publ_date": row[5],
-            "number": '',
+            "old_id":       row[0],
+            "structure":    config["npa_type"][row[1]],
+            "title":        row[2],
+            "date":         row[3],
+            "body":         row[4],
+            "publ_date":    row[5],
+            "number":       '',
         }
         npa = Npa(params, config)
         npa_list.append(npa)
         # # Получение медиафайлов из таблицы
-        files_from_table, empty_npa = npa.get_npafile_from_table(db_local)
+        files_raw = db_local.get_npa_files_list(npa.old_id)
+        files_from_table, empty_npa = npa.get_files_from_table(files_raw, NpaFile)
         # Добавление проблемных НПА
         null_npa.extend(empty_npa)
-        # Замена ссылок и записывание в атрибут файлы НПА
-        files_from_text = npa.get_npafile_from_body(NpaFile)
-        # Замена ссылок на файлы
-        # files_from_text = npa.update_body(NpaFile)
+        # Файлы из текста
+        files_from_text = npa.get_files_from_body(NpaFile)
+
+        # Запись в атрибут файлы НПА
+        npa.update_files(files_from_table)
+        npa.update_files(files_from_text)
 
         # # Удаление ссылок на страницы
-        npa.delete_links()
-        # # Обработка основного изображения
-        # # index_image_file = get_index_file(config, npa)
+        npa.delete_page_links()
+        # Замена ссылок на файлы из текста
+        npa.delete_file_link(files_from_text)
         row = {
                 'structure':        npa.structure,
                 'title':            npa.title,
