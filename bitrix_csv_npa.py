@@ -31,7 +31,7 @@ def transfer_npa(config):
         }
         npa = Npa(params, config)
         npa_list.append(npa)
-        # # Получение медиафайлов из таблицы
+        # Получение медиафайлов из таблицы
         files_raw = db_local.get_npa_files_list(npa.old_id)
         files_from_table, empty_npa = npa.get_files_from_table(files_raw, NpaFile)
         # Добавление проблемных НПА
@@ -43,9 +43,9 @@ def transfer_npa(config):
         npa.update_files(files_from_table)
         npa.update_files(files_from_text)
 
-        # # Удаление ссылок на страницы
+        # Удаление ссылок на страницы
         npa.delete_page_links()
-        # Замена ссылок на файлы из текста
+        # Удаление ссылок на файлы из текста
         npa.delete_file_link(files_from_text)
         row = {
                 'structure':        npa.structure,

@@ -72,7 +72,7 @@ imchel74:     # Уполномоченного по правам ребёнка 
         42: 9@auctionCategory       # Итоги                 https://imchel.ru/privatization/sale/
         101: 10@auctionCategory     # Аренда Аукционы       https://imchel.ru/rent/aukciony/
         102: 9@auctionCategory      # Аренда Итоги          https://imchel.ru/rent/itogi/
-    npa_type:
+    doc_type:
         # # TODO Управление земельных отношений   https://imchel.ru/departments/land_relations/
         # 76: 1   # TODO об управлении
         # 78: 1   # TODO документы
@@ -82,7 +82,7 @@ imchel74:     # Уполномоченного по правам ребёнка 
         # 84: 1   # TODO об управлении
         # 37: 1   # TODO документы
         # # TODO Управление кадастровой оценки            https://imchel.ru/departments/kadastr/
-        # 29: 1   # TODO документы
+        29: 10416516@cmsSitePage   # TODO документы
         # # TODO Корпоративное управление                 https://imchel.ru/departments/organizational/
         # 79: 1   # TODO объявления
         # # TODO Управление правовое                      https://imchel.ru/departments/law/
@@ -92,6 +92,9 @@ imchel74:     # Уполномоченного по правам ребёнка 
         # 94: 1   # TODO Результаты кадастровой оценки    https://imchel.ru/kadastr/results/
         # 131: 1  # TODO Результаты обработки перечня объектов, подлежащих государственной кадастровой оценке https://imchel.ru/kadastr/rezultaty-obrabotki/
         # 151: 1  # TODO Отчеты                https://imchel.ru/regulirovanie-v-sfere-zakupok/metodicheskie-materialy/otchety/
+        
+    npa_type:
+        
         # TODO Порядок деятельности    https://imchel.ru/officials/
         # ~100: 1  # TODO https://imchel.ru/officials/reglament/
         # 161: 1  # TODO форма документов      https://imchel.ru/regulirovanie-v-sfere-zakupok/metodicheskie-materialy/formy-dokumentov/

@@ -81,3 +81,11 @@ class PageFile(File):
         super().__init__(config, data)
         self.new_link = "".join(("files/upload/", self.sitename, "/", self.section_title, '/', self.file))
         self.str_new_link = "".join(("files/upload/", self.sitename, "/", self.section_title, '/', self.file))
+
+class DocFile(File):
+    def __init__(self, config, data):
+        super().__init__(config, data)
+        # TODO проверить правильность ссылок
+        # TODO подумать могут ли быть в разлинчных директориях файлы с одинаковым именем
+        self.new_link = "".join(("files/documents", self.sitename, "/", self.file))
+        self.str_new_link = "".join(("/documents/", self.sitename, "/", self.file, "@cmsFile.doc"))

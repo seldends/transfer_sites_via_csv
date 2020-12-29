@@ -19,7 +19,7 @@ class Obj():
         self.section_title = ''
 
     def clean_body(self, raw_text):
-        body = re.sub(r'(?:<p style=\"text-align: justify;\">\\s?(?:<[a-z]{1,2}>|\s?\&nbsp;|)</p>|\r|\n|<div>\\s{0,3}<br />\\s{0,3}</div>)','',str(raw_text).strip("").replace("^", "#"))
+        body = re.sub(r'(?:<p style=\"text-align: justify;\">\s?(?:<[a-z]{1,2}>|\s?\&nbsp;|)</p>|\r|\n|<div>\s{0,3}<br />\s{0,3}</div>)','',str(raw_text).strip("").replace("^", "#"))
         return body
 
     def get_patterns_file(self):
@@ -86,35 +86,7 @@ class Obj():
             self.body = str(self.body).replace(file.file_full_path, '')
 
     # TODO подумать как можно объединить общий функционал на функции обработки файлов
-    # Получение файла Новостей из описания Новостей
-    def update_body(self, FileClass):
-        pattern_list = self.get_patterns_file()
-        files = []
-        for link_type, pattern in pattern_list.items():
-            links = re.findall(pattern, self.body)
-            # Если есть совпадения
-            if len(links) > 0:
-                for link in links:
-                    # print(link)
-                    data = {
-                        "full_link":            link[0],    # Полная ссылка с a href и стилями. Пример:     <a href="http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx">
-                        "file_full_path":       link[1],    # Ссылка на файл.                   Пример:     http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
-                        "file_path":            link[2],    # Полный путь до файла.             Пример:     sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
-                        "file_relative_path":   link[3],    # Папка файла.                      Пример:     sites/default/files/imceFiles/user-333/
-                        "file":                 link[4],    # Имя файла с расширением.          Пример:     soglasie_rk_2020.docx
-                        "section_title":        self.section_title,
-                    }
-                    file = FileClass(self.config, data)
-                    files.append(file)
-                    # TODO разобраться
-                    # self.a_body = str(self.a_body).replace(file.file_full_path, file.str_new_link)     # Замены ссылки
-                    self.body = str(self.body).replace(file.file_full_path, file.new_link)
-                    # self.body = re.sub(r'[\n]{2,3}', r'', self.body)
-                    # temp_a_resume = re.sub(r'(?:<|)(?:\/|)[a-z]{1,5}>', r'', str(self.a_resume))
-                    # temp2_a_resume = re.sub(r'[\n]{2,3}', r'', temp_a_resume)
-                    # self.a_resume = temp2_a_resume
-        return files
-
+    # Получение файлов из описания
     def get_files_from_body(self, FileClass):
         pattern_list = self.get_patterns_file()
         files = []

@@ -36,9 +36,9 @@ class DatabaseBitrix(Database):
             FROM imchel_10_12.b_iblock_element
             WHERE ACTIVE = 'Y'
             AND DATE_CREATE > '2018-01-01 00:00:00'
-            -- AND IBLOCK_ID in (13)
+            AND IBLOCK_ID in (13)
             -- AND IBLOCK_ID in (153)
-            AND IBLOCK_ID in (39)
+            -- AND IBLOCK_ID in (39)
             -- AND IBLOCK_ID in (13)
             -- AND IBLOCK_ID in (13)
             -- AND IBLOCK_ID in (13)
@@ -80,3 +80,8 @@ class DatabaseBitrix(Database):
     def get_vacancy_files_list(self, id):
         vacancyfiles_list = self.get_obj_files_list(id)
         return vacancyfiles_list
+
+    def get_news_files_list(self, id):
+        newsfiles_list = self.get_obj_files_list(id)
+        return newsfiles_list
+
