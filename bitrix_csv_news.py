@@ -21,17 +21,18 @@ def transfer_news(config):
     db_local = Database(db_type_local, db_name_local)       # Объект подключения к бд со старыми данными
 
     news_types = tuple(config["news_type"].keys())
-    data = db_local.get_news_list(news_types)                 # Получение списка Новостей из старой таблицы
+    data = db_local.get_obj_list(news_types)                 # Получение списка Новостей из старой таблицы
     for row in data:
         params = {
             "old_id":       row[0],
             "structure":    config["news_type"][row[1]],
             "title":        row[2],
             "date":         row[3],
-            "image_index":  str(row[4]).replace("^", "#"),
-            "body":         str(row[5]).replace("^", "#").replace("\r", "").replace("\n", "").replace('<p style="text-align: justify;"></p>', '').replace('<p style="text-align: justify;">	 &nbsp;</p>', '').replace('<p style="text-align: justify;">	<br></p>', '').replace('<p style="text-align: justify;"> <b>', '<p style="text-align: justify;">'),
-            "publ_date":    row[6],
-            "resume":       str(row[7]).replace('<p style="text-align: justify;">', '').replace('<p>','').replace('<br>','').replace('p>','').replace('br>','').replace('<div>','').replace('div>','')
+            # "body":         str(row[4]).strip("").replace("^", "#").replace('<p style="text-align: justify;"></p>', '').replace('<p style="text-align: justify;">	 &nbsp;</p>', '').replace('<p style="text-align: justify;">	<br></p>', '').replace('<p style="text-align: justify;"> <b>', '<p style="text-align: justify;">'),
+            "body":         row[4],
+            "publ_date":    row[5],
+            "resume":       row[6],
+            "image_index":  row[7],
         }
         news = News(params, config)
         news_list.append(news)
@@ -42,19 +43,19 @@ def transfer_news(config):
         # Обратока ссылок на файлы
         files_from_text = news.update_body(NewsFile)
         # Удаление ссылок на страницы
-        news.delete_links()
+        news.delete_page_links()
         # Обработка основного изображения
         # index_image_file = get_index_file(config, news)
         row = {
                 'structure':        news.structure,
-                'title':            news.title,
-                'resume':           re.sub(r'[\n]{2,3}', r'', news.resume),
+                # 'title':            news.title,
+                # 'resume':           re.sub(r'[\n]{2,3}', r'', news.resume),
                 'body':             re.sub(r'[\n]{2,3}', r'', news.body),
-                'classification':   news.classification,
-                'isPublish':        news.isPublish,
-                'pubmain':          news.pubmain,
-                "publ_date":        news.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
-                "date":             news.date.strftime("%d.%m.%Y %H:%M:%S"),
+                # 'classification':   news.classification,
+                # 'isPublish':        news.isPublish,
+                # 'pubmain':          news.pubmain,
+                # "publ_date":        news.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
+                # "date":             news.date.strftime("%d.%m.%Y %H:%M:%S"),
                 # 'image_index':     news.a_image_index,
                 # 'mediaFiles':      news.objFiles
             }

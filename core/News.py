@@ -7,10 +7,14 @@ class News(Obj):
     def __init__(self, params, config):
         super().__init__(params, config)
         self.date = params["date"]
-        self.image_index = params["image_index"]
-        self.resume = params["resume"]
+        self.image_index = str(params["image_index"]).replace("^", "#")
+        self.resume = self.clean_resume(params["resume"])
         self.isPublish = 'Да'
         self.pubmain = 'Да'
+
+    def clean_resume(self, raw_text):
+        resume = re.sub(r'(?:</?[a-z]{1,3}\\s?(?:\/|style=\"text-align: justify;\"|)>|\r|\n|\t)','',str(raw_text).strip("").replace("^", "#"))
+        return resume
 
     def delete_links2(self):
         # TODO сделать передачу имени в регулярку
