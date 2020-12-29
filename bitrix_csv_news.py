@@ -1,7 +1,7 @@
 import re
 from utils.util import time_test, get_config, get_csv_path, save_csv
 from core.News import News
-from core.File import NewsIndexImgFile, NewsFile
+from core.File import NewsIndexImgFile, NewsFile, NewsMediaFile
 from utils.Bitrix import DatabaseBitrix as Database
 
 
@@ -28,7 +28,6 @@ def transfer_news(config):
             "structure":    config["news_type"][row[1]],
             "title":        row[2],
             "date":         row[3],
-            # "body":         str(row[4]).strip("").replace("^", "#").replace('<p style="text-align: justify;"></p>', '').replace('<p style="text-align: justify;">	 &nbsp;</p>', '').replace('<p style="text-align: justify;">	<br></p>', '').replace('<p style="text-align: justify;"> <b>', '<p style="text-align: justify;">'),
             "body":         row[4],
             "publ_date":    row[5],
             "resume":       row[6],
@@ -37,42 +36,51 @@ def transfer_news(config):
         news = News(params, config)
         news_list.append(news)
         # Получение медиафайлов из таблицы
-        # files_from_table, empty_news = news.get_mediafile_from_table(db_local)
+        files_raw = db_local.get_news_files_list(news.old_id)
+        files_from_table, empty_news = news.get_files_from_table(files_raw, NewsMediaFile)
         # Добавление проблемных новостей
-        # null_news.extend(empty_news)
-        # Обратока ссылок на файлы
-        files_from_text = news.update_body(NewsFile)
+        null_news.extend(empty_news)
+
+        # Файлы из текста
+        files_from_text = news.get_files_from_body(NewsFile)
+
+        # Запись в атрибут файлы НПА
+        news.update_files(files_from_table)
+
         # Удаление ссылок на страницы
         news.delete_page_links()
+
+        # Замена ссылок на файлы из текста
+        news.replace_file_link(files_from_text)
         # Обработка основного изображения
         # index_image_file = get_index_file(config, news)
         row = {
                 'structure':        news.structure,
-                # 'title':            news.title,
-                # 'resume':           re.sub(r'[\n]{2,3}', r'', news.resume),
+                'title':            news.title,
+                'resume':           re.sub(r'[\n]{2,3}', r'', news.resume),
                 'body':             re.sub(r'[\n]{2,3}', r'', news.body),
-                # 'classification':   news.classification,
-                # 'isPublish':        news.isPublish,
-                # 'pubmain':          news.pubmain,
-                # "publ_date":        news.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
-                # "date":             news.date.strftime("%d.%m.%Y %H:%M:%S"),
-                # 'image_index':     news.a_image_index,
-                # 'mediaFiles':      news.objFiles
+                'classification':   news.classification,
+                'isPublish':        news.isPublish,
+                'pubmain':          news.pubmain,
+                "publ_date":        news.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
+                "date":             news.date.strftime("%d.%m.%Y %H:%M:%S"),
+                # 'image_index':      news.a_image_index,
+                # 'mediaFiles':       news.objFiles
             }
         fieldnames = row.keys()
         query_list.append(row)
         # TODO сделать полное описание или разделение на отдельные списки
         # news_files.extend(index_image_file)     # Основная картинка новости
         news_files.extend(files_from_text)      # Обычные файлы из новосте, сохраняются в
-        # news_files.extend(files_from_table)     # Медиафайлы из таблицы
+        news_files.extend(files_from_table)     # Медиафайлы из таблицы
 
     path_csv = get_csv_path(config, 'news')         # Получение пути для csv
     save_csv(path_csv, fieldnames, query_list)      # Сохранение словаря в csv
 
     # Копирование файлов
-    for file in news_files:
-        print(file.new_link)
-        file.copy_file()
+    # for file in news_files:
+    #     print(file.new_link)
+    #     file.copy_file()
     print(f'Количество пустых Новостей : {len(null_news)}')
     print(f'Количество Новостей : {len(news_list)}')
     print(f'Количество файлов Новостей из таблицы : {len(files_from_table)}')

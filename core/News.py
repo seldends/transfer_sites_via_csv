@@ -13,7 +13,8 @@ class News(Obj):
         self.pubmain = 'Да'
 
     def clean_resume(self, raw_text):
-        resume = re.sub(r'(?:</?[a-z]{1,3}\\s?(?:\/|style=\"text-align: justify;\"|)>|\r|\n|\t)','',str(raw_text).strip("").replace("^", "#"))
+        # TODO проверить почему не полностью работает strip
+        resume = re.sub(r'(?:</?[a-z]{1,3}\s?(?:\/|style=\"text-align: justify;\"|)>|\r|\n|\t)','',str(raw_text).strip("").replace("^", "#"))
         return resume
 
     def delete_links2(self):
