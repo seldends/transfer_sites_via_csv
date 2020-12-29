@@ -69,8 +69,9 @@ def transfer_news(config):
     save_csv(path_csv, fieldnames, query_list)      # Сохранение словаря в csv
 
     # Копирование файлов
-    # for file in news_files:
-    #     file.copy_news_file()
+    for file in news_files:
+        print(file.new_link)
+        file.copy_file()
     print(f'Количество пустых Новостей : {len(null_news)}')
     print(f'Количество Новостей : {len(news_list)}')
     print(f'Количество файлов Новостей из таблицы : {len(files_from_table)}')

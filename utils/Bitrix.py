@@ -36,8 +36,9 @@ class DatabaseBitrix(Database):
             PREVIEW_TEXT as resume,
             XML_ID
             FROM imchel_10_12.b_iblock_element
-            WHERE DATE_CREATE > '2018-01-01 00:00:00'
-            AND IBLOCK_ID = 13
+            -- WHERE DATE_CREATE > '2018-01-01 00:00:00'
+            WHERE IBLOCK_ID = 152
+            -- AND IBLOCK_ID = 13
             AND ACTIVE = 'Y'
             order by ID DESC
             ;
@@ -60,8 +61,7 @@ class DatabaseBitrix(Database):
             XML_ID
             FROM imchel_10_12.b_iblock_element
             WHERE ACTIVE = 'Y'
-            AND IBLOCK_ID in (20)
-            -- and NAME like '%регламент предоставления государственной услуги "Предоставление%'
+            AND IBLOCK_ID in (145)
             order by ID DESC
             ;
             '''
@@ -94,8 +94,7 @@ class DatabaseBitrix(Database):
             XML_ID
             FROM imchel_10_12.b_iblock_element
             WHERE ACTIVE = 'Y'
-            AND IBLOCK_ID in (42)
-            -- AND IBLOCK_ID in (43)
+            AND IBLOCK_ID in (102)
             order by ID DESC
             ;
             '''

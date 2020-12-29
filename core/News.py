@@ -1,6 +1,6 @@
 import re
 from core.Obj import Obj
-from core.File import NewsMediaFile
+from core.File import NewsMediaFile, NewsIndexImgFile
 
 
 class News(Obj):
@@ -52,6 +52,7 @@ class News(Obj):
                                     "file_full_path":       link[0],    # Ссылка на файл.                   Пример:     /PublicationItemImage/Image/src/178/IMG_2038.JPG
                                     "file_relative_path":   link[1],    # Папка файла.                      Пример:     /PublicationItemImage/Image/src/178/
                                     "file":                 link[2],    # Имя файла с расширением.          Пример:     IMG_2038.JPG
+                                    "section_title":        '',    # Имя файла с расширением.          Пример:     IMG_2038.JPG
                                 }
                                 file = NewsMediaFile(self.config, data)
                                 mediafiles.append(file)
@@ -66,3 +67,31 @@ class News(Obj):
                 null_news.append(self.old_id)
                 print(f'Отсутствует имя файла ид старой новости : {self.old_id}')
         return mediafiles, null_news
+
+    def get_index_file(self):
+        pattern_file_1 = r'(\\(PublicationItem\\Image\\src\\[0-9]{1,5}\\)([^>\\]{1,75}))'
+        pattern_list = {
+            "indeximage": pattern_file_1,         # паттерн 1
+        }
+        old_path = self.image_index
+        index_file = []
+        # print(old_path)
+        # Проверка пустой ли путь у файлв Новостей (запись есть, но значение пустое, то добавлять в список пуcтых)
+        for link_type, pattern in pattern_list.items():
+            try:
+                links = re.findall(pattern, str(old_path))
+                # Если есть совпадения
+                if len(links) > 0:
+                    for link in links:
+                        data = {
+                            "file_full_path":       link[0],    # Ссылка на файл.                   Пример:     \PublicationItem\Image\src\10836\images (24).jpg
+                            "file_relative_path":   link[1],    # Папка файла.                      Пример:     PublicationItem\Image\src\10836\
+                            "file":                 link[2],    # Имя файла с расширением.          Пример:     images (24).jpg
+                            "section_title":        '',    # Имя файла с расширением.          Пример:     IMG_2038.JPG
+                        }
+                        file = NewsIndexImgFile(self.config, data)
+                        self.image_index = file.str_new_link
+                        index_file.append(file)
+            except AttributeError as e:
+                print('Ошибка в создании файла Новостей', e)
+        return index_file

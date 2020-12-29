@@ -1,34 +1,5 @@
 from pathlib import Path
-import re
-from os import fspath
-import urllib.parse
-import shutil
-from datetime import datetime
 from utils.util import save_file
-from core.Obj import Obj
-
-
-class Text(Obj):
-    def __init__(self, data, config, page_path):
-        super().__init__(config)
-        self.body = data.replace("\n\n\n", "\n").replace("\n\n", "\n")
-        self.section_title = self.split_path(page_path)
-        self.page_path = page_path
-        self.updated_data = self.body
-
-    def split_path(self, path):
-        # Пути могут быть как виндовые так и линуксовые, поэтому нужна проверка
-        split_linux = path.split('/')
-        split_windows = path.split('\\')
-        section_title = ''
-        if len(split_linux) > 1:
-            section_title = split_linux[0]
-        elif len(split_windows) > 1:
-            section_title = split_windows[0]
-        return section_title
-
-    def get_data(self):
-        return self.body
 
 
 class Page:

@@ -56,27 +56,23 @@ pravmin74:     # Уполномоченного по правам ребёнка
         105: 1  # Новости
 
 imchel74:     # Уполномоченного по правам ребёнка в Челябинской области
-    old_name: imchel
+    old_name: imchel.ru
     new_name: im
     db_type: mariadb
     db_name: imchel_10_12
     #classification: 16@egClassification # test
     classification: 33@egClassification # prod
     news_type:
-        13: 1  # Новости
+        13: 1   # Новости
+        152: 1  # новое в сфере закупок (рубрика регулирование ..)  https://imchel.ru/regulirovanie-v-sfere-zakupok/novosti-v-sfere-zakupok/
     vacancy_type:
-        12: 1  # Аукционы имущество
+        12: 1  # Конкурсы и вакансии                    https://imchel.ru/gosservice/contests/
     auction_type:
-        43: 2@auctionCategory  # Аукционы имущество
-        42: 9@auctionCategory  # Итоги
+        43: 2@auctionCategory       # Аукционы имущество    https://imchel.ru/privatization/results/
+        42: 9@auctionCategory       # Итоги                 https://imchel.ru/privatization/sale/
+        101: 10@auctionCategory     # Аренда Аукционы       https://imchel.ru/rent/aukciony/
+        102: 9@auctionCategory      # Аренда Итоги          https://imchel.ru/rent/itogi/
     npa_type:
-        # # TODO госсужба     https://imchel.ru/privatization
-        # 12: 1   # TODO конкурсы и вакансии      https://imchel.ru/gosservice/contests/
-        20: 41   # TODO госсужба НПА             https://imchel.ru/gosservice/acts/
-        # # TODO Приватизация     https://imchel.ru/privatization
-        39: 41   # программа приватизации   https://imchel.ru/privatization/programm/
-        # 42: 1   # TODO итоги                    https://imchel.ru/privatization/results/
-        # 43: 1   # TODO продажа имущества        https://imchel.ru/privatization/sale/
         # # TODO Управление земельных отношений   https://imchel.ru/departments/land_relations/
         # 76: 1   # TODO об управлении
         # 78: 1   # TODO документы
@@ -93,22 +89,37 @@ imchel74:     # Уполномоченного по правам ребёнка 
         # 88: 1   # TODO об управлении
         # # TODO Организационно-контрольное управление    https://imchel.ru/departments/ogup/
         # 92: 1   # TODO об управлении
-
         # 94: 1   # TODO Результаты кадастровой оценки    https://imchel.ru/kadastr/results/
-        
-        # 101: 1  # TODO Аукционы         https://imchel.ru/rent/aukciony/
-        # 102: 1  # TODO Итоги            https://imchel.ru/rent/itogi/
         # 131: 1  # TODO Результаты обработки перечня объектов, подлежащих государственной кадастровой оценке https://imchel.ru/kadastr/rezultaty-obrabotki/
         # 151: 1  # TODO Отчеты                https://imchel.ru/regulirovanie-v-sfere-zakupok/metodicheskie-materialy/otchety/
-        # 152: 1  # TODO новое в сфере закупок? новости или нпа?   https://imchel.ru/regulirovanie-v-sfere-zakupok/novosti-v-sfere-zakupok/
         # TODO Порядок деятельности    https://imchel.ru/officials/
         # ~100: 1  # TODO https://imchel.ru/officials/reglament/
+        # 161: 1  # TODO форма документов      https://imchel.ru/regulirovanie-v-sfere-zakupok/metodicheskie-materialy/formy-dokumentov/
+        20: 41   #  госсужба НПА             https://imchel.ru/gosservice/acts/
+        39: 41   # программа приватизации   https://imchel.ru/privatization/programm/
         97: 23   # Локальные акты Министерства в сфере противодействия коррупции    https://imchel.ru/gosservice/anticorrupt/npa/
-        # # TODO Регулирование в сфере закупок https://imchel.ru/regulirovanie-v-sfere-zakupok/
         153: 39  # федеральные акты      https://imchel.ru/regulirovanie-v-sfere-zakupok/normativno-pravovye-akty/federalnoe-zakonodatelstvo/
         154: 40  # региональные акты     https://imchel.ru/regulirovanie-v-sfere-zakupok/normativno-pravovye-akty/regionalnoe-zakonodatelstvo/
         100: 11  # Нормативно-правовые акты Министерства    https://imchel.ru/officials/npa-ministerstva/
-        # 161: 1  # TODO форма документов      https://imchel.ru/regulirovanie-v-sfere-zakupok/metodicheskie-materialy/formy-dokumentov/
-
         145: 39  # Федеральное законодательство https://imchel.ru/regulatory/federalnoe/         https://im.gov74.ru/im/regulatory/federalnoe.htm
         146: 40  # Региональное законодательство https://imchel.ru/regulatory/regionalnoe/       https://im.gov74.ru/im/regulatory/regionalnoe.htm
+        157: 22@sprNPAStructure  # Письма федеральных органов власти   https://imchel.ru/regulirovanie-v-sfere-zakupok/novosti-v-sfere-zakupok/
+        158: 42@sprNPAStructure  # Письма министерства                 https://imchel.ru/regulirovanie-v-sfere-zakupok/novosti-v-sfere-zakupok/
+
+# TODO
+mincult74:
+    old_name: culture-chel.ru
+    new_name: mincult
+    db_type: pg_local
+    db_name: mincult74_28_12
+    # db_name: mincult
+    classification: 29@egClassification # prod
+    news_type: # TODO
+        102: 15@sprNewsStructure # Новости областных государственных учреждений культуры
+        103: 5@sprNewsStructure  # Выступления
+        120: 11@sprNewsStructure # Новости муниципальных районов и городских округов
+        122: 15@sprNewsStructure # Областные государственные учреждения
+        128: 12@sprNewsStructure # Обзор СМИ (СМИ о нас)
+        132: 10@sprNewsStructure # Новости Министерства культуры
+        140: 5@sprNewsStructure  # Прямая речь
+    npa_type: # НПА в таблицах нет

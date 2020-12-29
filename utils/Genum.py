@@ -54,6 +54,7 @@ class DatabaseGenum(Database):
                 WHERE "IsHidden"=False
                 AND "CreationDate" > '2018-01-01 00:00:00'
                 AND "Group_id" IN %s
+                AND id > 28585
                 ORDER BY id DESC
                 --LIMIT 3
                 '''
