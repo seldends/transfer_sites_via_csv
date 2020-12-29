@@ -13,16 +13,7 @@ class Vacancy(Obj):
         self.objFiles = ''
 
     def get_vacancyfile_from_body(self, FileClass):
-        old_sitename = self.old_sitename
-        # TODO сделать передачу имени в регулярку
-        bitrix_pattern_file_1 = r'(<img\s(?:width=\"[0-9]{1,4}\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)src=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:medialibrary\/[^\/]{1,5}\/|))([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
-        bitrix_pattern_file_2 = r'(<a\s(?:(?:class|alt|target|id)=\"[^\"]{1,50}\"\s|){0,5}href=\"((?:http:\/\/imchel\.ru|)\/((upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
-        bitrix_pattern_file_3 = r'(<a\s(?:(?:class|alt|target|id)=\"[^\"]{1,50}\"\s|){0,5}href=\"((?:http:\/\/imchel\.ru|)\/(?:bitrix\/redirect\.php\?event1=download&amp;event2=update&amp;event3=[^\/\"]{1,100};goto=\/|)((upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
-        pattern_list = {
-            "bitrix_file_1":   bitrix_pattern_file_1,         # паттерн 1
-            "bitrix_file_2":   bitrix_pattern_file_2,         # паттерн 2
-            "bitrix_file_3":   bitrix_pattern_file_3,         # паттерн 3
-        }
+        pattern_list = self.get_patterns_file()
         files = []
         for link_type, pattern in pattern_list.items():
             links = re.findall(pattern, self.body)

@@ -21,7 +21,7 @@ def transfer_vacancy(config):
     db_local = Database(db_type_local, db_name_local)       # Объект подключения к бд со старыми данными
 
     vacancy_types = list(config["vacancy_type"].keys())
-    data = db_local.get_vacancy_list(vacancy_types)                 # Получение списка НПА из старой таблицы
+    data = db_local.get_obj_list(vacancy_types)                 # Получение списка НПА из старой таблицы
     for row in data:
         params = {
             "old_id":           row[0],
