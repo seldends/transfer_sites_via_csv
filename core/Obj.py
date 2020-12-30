@@ -27,10 +27,10 @@ class Obj():
         # TODO сделать передачу имени в регулярку
         genum_pattern_file_1 = fr'(<a href=\"((?:http:\/\/(?:www\.|){old_sitename}|)\/(((?:dokumentydok\/[^\/]{{1,75}}|upload\/iblock\/[^\/]{{0,4}}|Upload\/files|Files\/DiskFile\/(?:|[0-9]{{4}}\/)[a-zA-Z]{{1,10}}|opendata|Storage\/Image\/PublicationItem\/Image\/src\/[0-9]{{1,5}})\/)([^>]{{1,450}}\.[a-zA-Z]{{3,5}})))\s?\"[^>]{{0,250}}>)'
         genum_pattern_file_2 = fr'(<(?:img|input)\s(?:(?:id|class|alt)=\"[^\"]{{0,50}}\"\s|)(?:class=\"[^\/]{{0,50}}\"\s|)src=\"((?:https?:\/\/(?:www\.|){old_sitename}|)\/(((?:Upload\/(?:files|images)\/|Storage\/Image\/PublicationItem\/(?:Article|Image)\/src\/[0-9]{{1,5}}\/))([^>\/]{{1,450}}\.[a-zA-Z]{{3,5}})))\"[^>]{{0,550}}>)'
-        genum_pattern_file_3 = r'(<a href=\"((?:http:\/\/(?:www\.|)szn74.ru|)\/((Files\/VideoFiles\/)([^>]{1,450}\.[a-zA-Z]{3,5})))\s?\"[^>]{0,250}>)'
-        sinta_pattern_file_1 = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)\/((sites\/default\/files\/imceFiles\/user-[0-9]{1,4}\/)([^>]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
-        bitrix_pattern_file_1 = r'(<img\s(?:width=\"[0-9]{1,4}\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)src=\"((?:https?:\/\/imchel\.ru|)\/(([^\"\/]{1,40}\/(?:medialibrary\/[^\/]{1,5}\/|))([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
-        bitrix_pattern_file_2 = r'(<a\s(?:(?:class|alt|target|id)=\"[^\"]{1,50}\"\s|){0,5}href=\"((?:https?:\/\/imchel\.ru|)\/(?:bitrix\/redirect\.php\?event1=download&amp;event2=update&amp;event3=[^\/\"]{1,100};goto=\/|)(([^\"\/]{1,40}\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z]{3,5})))\"[^>]{0,550}>)'
+        genum_pattern_file_3 = r'(<a href=\"((?:http:\/\/(?:www\.|)szn74.ru|)\/((Files\/VideoFiles\/)([^>]{1,450}\.[a-zA-Z0-9]{2,5})))\s?\"[^>]{0,250}>)'
+        sinta_pattern_file_1 = r'(<a href=\"((?:http:\/\/(?:ruk\.|)pravmin74.ru|)\/((sites\/default\/files\/imceFiles\/user-[0-9]{1,4}\/)([^>]{1,450}\.[a-zA-Z0-9]{2,5})))\"[^>]{0,550}>)'
+        bitrix_pattern_file_1 = r'(<img\s(?:width=\"[0-9]{1,4}\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)src=\"((?:https?:\/\/imchel\.ru|)\/(([^\"\/]{1,40}\/(?:medialibrary\/[^\/]{1,5}\/|))([^>\"]{1,450}\.[a-zA-Z0-9]{2,5})))\"[^>]{0,550}>)'
+        bitrix_pattern_file_2 = r'(<a\s(?:(?:class|alt|target|id)=\"[^\"]{1,50}\"\s|){0,5}href=\"((?:https?:\/\/imchel\.ru|)\/(?:bitrix\/redirect\.php\?event1=download&amp;event2=update&amp;event3=[^\/\"]{1,100};goto=\/|)(([^\"\/]{1,40}\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z0-9]{2,5})))\"[^>]{0,550}>)'
         pattern_list = {
             "genum_file_1":    genum_pattern_file_1,         # паттерн 1 файлы
             "genum_file_2":    genum_pattern_file_2,         # паттерн 2 img
@@ -111,7 +111,7 @@ class Obj():
         null_files = []
         files = []
         pattern_file_genum = r'(\/(PublicationItemImage\/Image\/src\/[0-9]{1,5}\/)([^>]{1,75}))'
-        pattern_file_bitrix = r'(\/?(upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z]{3,5}))'
+        pattern_file_bitrix = r'(\/?(upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z0-9]{2,5}))'
         pattern_list = {
             "files_genum":   pattern_file_genum,         # паттерн 1
             "files_bitrix":  pattern_file_bitrix,         # паттерн 1

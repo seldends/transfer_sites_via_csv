@@ -44,8 +44,10 @@ def read_pages(config):
             }
             text = Text(params, config)
             # Заменяются ссылки на новые, фозвращается список ссылок
-            files = text.update_body(PageFile)
-            text.delete_links()
+            files = text.get_files_from_body(PageFile)
+                    # Замена ссылок на файлы из текста
+            text.replace_file_link(files)
+            # text.delete_page_links()
             # Копируются файлы
             for link in files:
                 print(link.new_link)
