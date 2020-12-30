@@ -8,7 +8,6 @@ from utils.Bitrix import DatabaseBitrix as Database
 # Перенос НПА
 def transfer_doc(config):
     doc_list = []
-    filenames = []
     doc_files = []
     files_from_text = []
     files_from_table = []
@@ -20,7 +19,7 @@ def transfer_doc(config):
 
     db_local = Database(db_type_local, db_name_local)       # Объект подключения к бд со старыми данными
 
-    doc_types = list(config["doc_type"].keys())
+    doc_types = config["doc_type"].keys()
     data = db_local.get_obj_list(doc_types)                 # Получение списка НПА из старой таблицы
     for row in data:
         params = {
@@ -30,7 +29,6 @@ def transfer_doc(config):
             "date":         row[3],
             "body":         row[4],
             "publ_date":    row[5],
-            "number":       '',
         }
         doc = Doc(params, config)
         doc_list.append(doc)
@@ -46,20 +44,20 @@ def transfer_doc(config):
         files_from_text = doc.get_files_from_body(DocFile)
         # Замена ссылок на файлы из текста
         doc.replace_file_link(files_from_text)
-        # # Удаление ссылок на файлы
+        # Удаление ссылок на файлы
         # doc.delete_file_links(files_from_text)
         # Удаление ссылок на страницы
         doc.delete_page_links()
-        row = {
-                'page':        doc.structure,
+        obj = {
+                'page':             doc.structure,
                 'classification':   doc.classification,
                 'title':            doc.title,
                 'description':      re.sub(r'[\n]{2,3}', r'', doc.body),
                 "publ_date":        doc.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
-                'docFiles':         doc.objFiles,
+                'file':             doc.objFiles,
             }
-        fieldnames = row.keys()
-        query_list.append(row)
+        fieldnames = obj.keys()
+        query_list.append(obj)
         # TODO сделать полное описание или разделение на отдельные списки
         doc_files.extend(files_from_text)      # Файлы из текста описания НПА
         doc_files.extend(files_from_table)     # Файлы из таблицы файлов, связанные с текущим НПА
@@ -69,7 +67,7 @@ def transfer_doc(config):
 
     # Копирование файлов
     for file in doc_files:
-        print(file.new_link)
+        # print(file.new_link)
         file.copy_file()
     # TODO
     print(f'Количество пустых НПА : {len(null_doc)}')

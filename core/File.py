@@ -87,5 +87,5 @@ class DocFile(File):
         super().__init__(config, data)
         # TODO проверить правильность ссылок
         # TODO подумать могут ли быть в разлинчных директориях файлы с одинаковым именем
-        self.new_link = "".join(("files/documents", self.sitename, "/", self.file))
+        self.new_link = "".join(("files/documents/", self.sitename, "/", self.file))
         self.str_new_link = "".join(("/documents/", self.sitename, "/", self.file, "@cmsFile.doc"))

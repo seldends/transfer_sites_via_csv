@@ -22,8 +22,13 @@ class DatabaseBitrix(Database):
                     print('MariaDB Connection opened successfully.')
 
     def get_obj_list(self, params):
+        # sql = """SELECT avg(downloadtime) FROM tb_npp where date(date) = %s 
+        #  and substring(host,6,3) in ({c})""".format(
+        #     c=', '.join(['%s']*len(dc)))
         # MariaDB
-        select_obj_local = '''
+        # test = ', '.join(['%s']*len(params))
+        # print(test, params, len(params))
+        select_obj_local = f'''
             SELECT
             ID as id,
             IBLOCK_ID,
@@ -35,21 +40,13 @@ class DatabaseBitrix(Database):
             PREVIEW_PICTURE as index_img
             FROM imchel_10_12.b_iblock_element
             WHERE ACTIVE = 'Y'
-            AND DATE_CREATE > '2018-01-01 00:00:00'
-            AND IBLOCK_ID in (13)
-            -- AND IBLOCK_ID in (153)
-            -- AND IBLOCK_ID in (39)
-            -- AND IBLOCK_ID in (13)
-            -- AND IBLOCK_ID in (13)
-            -- AND IBLOCK_ID in (13)
-            -- AND IBLOCK_ID in (13)
-            -- AND IBLOCK_ID in (13)
-            -- AND IBLOCK_ID in (13)
-            -- AND IBLOCK_ID in (13)
+            AND IBLOCK_ID in (29)
             order by ID DESC
             ;
             '''
+        # print(select_obj_local)
         # news_list = self.select_rows(select_news_local, params)
+        # obj_list = self.select_rows(select_obj_local, test)
         obj_list = self.select_rows(select_obj_local)
         return obj_list
 
@@ -82,6 +79,24 @@ class DatabaseBitrix(Database):
         return vacancyfiles_list
 
     def get_news_files_list(self, id):
-        newsfiles_list = self.get_obj_files_list(id)
-        return newsfiles_list
+        select_obj_local = '''
+            SELECT
+            ID as id,
+            IBLOCK_ID,
+            NAME as title,
+            DATE_CREATE as date_create,
+            DETAIL_TEXT as body,
+            TIMESTAMP_X as date_publ,
+            PREVIEW_TEXT as resume,
+            PREVIEW_PICTURE as index_img
+            FROM imchel_10_12.b_iblock_element
+            WHERE ACTIVE = 'Y'
+            AND DATE_CREATE > '2018-01-01 00:00:00'
+            AND IBLOCK_ID in (13)
+            order by ID DESC
+            ;
+            '''
+        # news_list = self.select_rows(select_news_local, params)
+        obj_list = self.select_rows(select_obj_local)
+        return obj_list
 
