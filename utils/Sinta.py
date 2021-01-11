@@ -31,13 +31,13 @@ class DatabaseSinta(Database):
             node.title as title,
             field_data_body.body_value as body,
             field_data_field_teaser.field_teaser_value as resume,
-            node.created as date_created, 
+            node.created as date_created,
             node.changed as date_edit,
-            file_managed.uri as image_url,
+            REPLACE(file_managed.uri, 'hash://','') as image_url,
             field_data_field_image.field_image_alt as image_alt,
             file_managed.origname as image_name,
             node.vid, node.uid, node.status
-            FROM pravmin74_12_11.node 
+            FROM pravmin74_12_11.node
             LEFT JOIN pravmin74_12_11.field_data_field_image
             ON field_data_field_image.entity_id=node.nid
             LEFT JOIN pravmin74_12_11.file_managed
@@ -52,13 +52,14 @@ class DatabaseSinta(Database):
             AND node.created > 1514746800
             AND field_data_field_news_cat.field_news_cat_tid IN (104, 105)
             ORDER BY node.nid DESC
+            LIMIT 50
             ;
             '''
         # news_list = self.select_rows(select_news_local, params)
         news_list = self.select_rows(select_news_local)
         return news_list
-    # TODO
-    # Функция для получения медиафайлов
+
+    # TODO Функция для получения медиафайлов
     def get_news_files_list(self, id):
         select_mediafiles_local = """
             SELECT
@@ -72,10 +73,5 @@ class DatabaseSinta(Database):
             AND file_managed.filemime LIKE '%image%'
             AND field_data_field_gallery.entity_id=?;
         """
-        select_newsfiles_local = '''
-                SELECT "Image", "Title"
-                FROM public."sd4_PublicationItemImage"
-                WHERE "Item_id"=%s;
-                '''
         newsfiles_list = self.select_rows(select_mediafiles_local, id)
         return newsfiles_list

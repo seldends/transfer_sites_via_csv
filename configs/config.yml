@@ -44,24 +44,22 @@ deti74:     # Уполномоченного по правам ребёнка в
         102: 1  # Новости|194
     npa_title: deti74npa
 
-pravmin74:     # Уполномоченного по правам ребёнка в Челябинской области
+pravmin74:     # Сайт правительства ЧО
     old_name: pravmin74
     new_name: pravmin
     db_type: mariadb
     db_name: pravmin74_12_11
-    classification: 16@egClassification # prod
-    # classification: 16@egClassification # test
+    classification: 16@egClassification
     news_type:
         104: 1  # Новости
         105: 1  # Новости
 
-imchel74:     # Уполномоченного по правам ребёнка в Челябинской области
+imchel74:     # Минимущества
     old_name: imchel.ru
     new_name: im
     db_type: mariadb
     db_name: imchel_10_12
-    #classification: 16@egClassification # test
-    classification: 33@egClassification # prod
+    classification: 33@egClassification
     news_type:
         13: 1   # Новости
         152: 1  # новое в сфере закупок (рубрика регулирование ..)  https://imchel.ru/regulirovanie-v-sfere-zakupok/novosti-v-sfere-zakupok/
@@ -92,9 +90,7 @@ imchel74:     # Уполномоченного по правам ребёнка 
         # 94: 1   # TODO Результаты кадастровой оценки    https://imchel.ru/kadastr/results/
         # 131: 1  # TODO Результаты обработки перечня объектов, подлежащих государственной кадастровой оценке https://imchel.ru/kadastr/rezultaty-obrabotki/
         # 151: 1  # TODO Отчеты                https://imchel.ru/regulirovanie-v-sfere-zakupok/metodicheskie-materialy/otchety/
-        
     npa_type:
-        
         # TODO Порядок деятельности    https://imchel.ru/officials/
         # ~100: 1  # TODO https://imchel.ru/officials/reglament/
         # 161: 1  # TODO форма документов      https://imchel.ru/regulirovanie-v-sfere-zakupok/metodicheskie-materialy/formy-dokumentov/
