@@ -21,7 +21,7 @@ class DatabaseSinta(Database):
                 finally:
                     print('MariaDB Connection opened successfully.')
 
-        # Функция для получения новостей
+    # Функция для получения новостей
     def get_news_list(self, params):
         # MariaDB
         select_news_local = '''
@@ -75,3 +75,53 @@ class DatabaseSinta(Database):
         """
         newsfiles_list = self.select_rows(select_mediafiles_local, id)
         return newsfiles_list
+
+    # Функция для получения НПА
+    def get_npa_list(self, params):
+        # MariaDB
+        select_npa_local = '''
+            SELECT
+            node.nid as id,
+            field_data_field_legal_acts.field_legal_acts_tid as category,
+            node.title as title,
+            field_data_body.body_value as body,
+            node.created as date_created,
+            node.changed as date_edit,
+            field_data_field_npa_accept_date.field_npa_accept_date_value as accept_date,
+            field_data_field_npa_number.field_npa_number_value as npa_number
+            FROM pravmin74_12_11.node
+            LEFT JOIN pravmin74_12_11.field_data_field_legal_acts
+            ON field_data_field_legal_acts.entity_id=node.nid
+            LEFT JOIN pravmin74_12_11.field_data_field_npa_accept_date
+            ON field_data_field_npa_accept_date.entity_id=node.nid
+            LEFT JOIN pravmin74_12_11.field_data_field_npa_number
+            ON field_data_field_npa_number.entity_id=node.nid
+            LEFT JOIN pravmin74_12_11.field_data_body
+            ON field_data_body.entity_id=node.nid
+            WHERE node.type='legal_acts'
+            AND field_data_field_legal_acts.field_legal_acts_tid IN (3, 4, 5, 6)
+            ORDER BY node.nid DESC
+            LIMIT 50
+            ;
+            '''
+        # npa_list = self.select_rows(select_npa_local, params)
+        npa_list = self.select_rows(select_npa_local)
+        return npa_list
+
+        # TODO Функция для получения медиафайлов
+    def get_npa_files_list(self, id):
+        select_npafiles_local = """
+            SELECT
+            file_managed.uri as file_url,
+            -- field_data_field_upload.entity_id,
+            -- field_data_field_upload.revision_id,
+            field_data_field_upload.field_upload_description
+            -- REPLACE(file_managed.uri, 'public://','') as file_url
+            FROM pravmin74_12_11.field_data_field_upload
+            LEFT JOIN pravmin74_12_11.file_managed
+            ON file_managed.fid=field_data_field_upload.field_upload_fid
+            where field_data_field_upload.bundle ='legal_acts'
+            AND field_data_field_upload.entity_id=?
+        """
+        npafiles_list = self.select_rows(select_npafiles_local, id)
+        return npafiles_list

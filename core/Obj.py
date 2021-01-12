@@ -113,11 +113,15 @@ class Obj():
     def get_files_from_table(self, files_raw, FileClass):
         null_files = []
         files = []
+        file = r'[^>\"\.]{1,450}\.[a-zA-Z0-9]{2,5}'
         pattern_file_genum = r'(\/(PublicationItemImage\/Image\/src\/[0-9]{1,5}\/)([^>]{1,75}))'
-        pattern_file_bitrix = r'(\/?(upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"]{1,450}\.[a-zA-Z0-9]{2,5}))'
+        pattern_file_bitrix = r'(\/?(upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"\.]{1,450}\.[a-zA-Z0-9]{2,5}))'
+        pattern_file_sinta = r'(\/?(public:\/\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"\.]{1,450}\.[a-zA-Z0-9]{2,5}))'
+        
         pattern_list = {
-            "files_genum":   pattern_file_genum,         # паттерн 1
-            "files_bitrix":  pattern_file_bitrix,         # паттерн 1
+            "files_genum":      pattern_file_genum,         # паттерн 1
+            "files_bitrix":     pattern_file_bitrix,         # паттерн 1
+            "files_sinta":      pattern_file_sinta,         # паттерн 1
         }
         for file in files_raw:
             old_path = file[0]
@@ -134,7 +138,7 @@ class Obj():
                                     "file_full_path":       link[0],    # Ссылка на файл.                   Пример:     /PublicationItemImage/Image/src/178/IMG_2038.JPG
                                     "file_relative_path":   link[1],    # Папка файла.                      Пример:     PublicationItemImage/Image/src/178/
                                     "file":                 link[2],    # Имя файла с расширением.          Пример:     IMG_2038.JPG
-                                    "section_title":        '',    # Имя файла с расширением.          Пример:     IMG_2038.JPG
+                                    "section_title":        '',         # Для имени раздела
                                 }
                                 file = FileClass(self.config, data)
                                 files.append(file)

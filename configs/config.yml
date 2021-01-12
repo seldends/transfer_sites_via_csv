@@ -44,15 +44,7 @@ deti74:     # Уполномоченного по правам ребёнка в
         102: 1  # Новости|194
     npa_title: deti74npa
 
-pravmin74:     # Сайт правительства ЧО
-    old_name: pravmin74
-    new_name: pravmin
-    db_type: mariadb
-    db_name: pravmin74_12_11
-    classification: 16@egClassification
-    news_type:
-        104: 1  # Новости
-        105: 1  # Новости
+
 
 imchel74:     # Минимущества
     old_name: imchel.ru
@@ -105,15 +97,13 @@ imchel74:     # Минимущества
         157: 22@sprNPAStructure  # Письма федеральных органов власти   https://imchel.ru/regulirovanie-v-sfere-zakupok/novosti-v-sfere-zakupok/
         158: 42@sprNPAStructure  # Письма министерства                 https://imchel.ru/regulirovanie-v-sfere-zakupok/novosti-v-sfere-zakupok/
 
-# TODO
 mincult74:
     old_name: culture-chel.ru
     new_name: mincult
     db_type: pg_local
     db_name: mincult74_28_12
-    # db_name: mincult
-    classification: 29@egClassification # prod
-    news_type: # TODO
+    classification: 29@egClassification
+    news_type:
         102: 15@sprNewsStructure # Новости областных государственных учреждений культуры
         103: 5@sprNewsStructure  # Выступления
         120: 11@sprNewsStructure # Новости муниципальных районов и городских округов
@@ -122,3 +112,19 @@ mincult74:
         132: 10@sprNewsStructure # Новости Министерства культуры
         140: 5@sprNewsStructure  # Прямая речь
     npa_type: # НПА в таблицах нет
+
+
+pravmin74:     # Сайт правительства ЧО
+    old_name: pravmin74.ru
+    new_name: pravmin
+    db_type: mariadb
+    db_name: pravmin74_12_11
+    classification: 16@egClassification
+    news_type: # TODO
+        104: 1@sprNewsStructure  # Новости
+        105: 1@sprNewsStructure  # Новости
+    npa_type:
+        3: 6@sprNPAStructure    # Постановления Губернатора Челябинской области
+        4: 8@sprNPAStructure    # Постановления Правительства Челябинской области
+        5: 12@sprNPAStructure   # Распоряжения Губернатора Челябинской области
+        6: 7@sprNPAStructure    # Распоряжения Правительства Челябинской области

@@ -2,7 +2,8 @@ import re
 from utils.util import time_test, get_config, get_csv_path, save_csv
 from core.Npa import Npa
 from core.File import NpaFile
-from utils.Bitrix import DatabaseBitrix as Database
+from utils.Sinta import DatabaseSinta as Database
+from datetime import datetime
 
 
 # Перенос НПА
@@ -18,22 +19,23 @@ def transfer_npa(config):
     db_local = Database(db_type_local, db_name_local)       # Объект подключения к бд со старыми данными
 
     npa_types = list(config["npa_type"].keys())
-    data = db_local.get_obj_list(npa_types)                 # Получение списка НПА из старой таблицы
+    data = db_local.get_npa_list(npa_types)                 # Получение списка НПА из старой таблицы
     for row in data:
         params = {
             "old_id":       row[0],
             "structure":    config["npa_type"][row[1]],
             "title":        row[2],
-            "date":         row[3],
-            "body":         row[4],
-            "publ_date":    row[5],
-            "number":       '',
+            "body":         row[3],
+            "date":         datetime.fromtimestamp(int(row[4])),
+            "publ_date":    row[6],
+            "number":       row[7],
         }
         npa = Npa(params, config)
         npa_list.append(npa)
         # Получение медиафайлов из таблицы
         files_raw = db_local.get_npa_files_list(npa.old_id)
         files_from_table, empty_npa = npa.get_files_from_table(files_raw, NpaFile)
+        print(files_raw)
         # Добавление проблемных НПА
         null_npa.extend(empty_npa)
         # Файлы из текста
@@ -76,7 +78,7 @@ def transfer_npa(config):
 def main():
     # Список конфигураций сайтов
     sites = [
-        "imchel74",
+        "pravmin74",
     ]
     for site in sites:
         # Получение конфигурации
