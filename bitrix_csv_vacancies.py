@@ -28,7 +28,7 @@ def transfer_vacancy(config):
             "structure":        config["vacancy_type"][row[1]],
             "title":            row[2],
             "date":             row[3],
-            "body":             str(row[4]).replace("^", "#").replace("\r", "").replace("\n", "").replace('<p style="text-align: justify;"></p>', '').replace('<p style="text-align: justify;">	 &nbsp;</p>', '').replace('<p style="text-align: justify;">	<br></p>', '').replace('<p style="text-align: justify;"> <b>', '<p style="text-align: justify;">').replace('<p style="text-align: center;"></p>', '').replace('<p style="text-align: center;"><b></b></p>', '').replace('<p style="text-align: center;"><b></b>', ''),
+            "body":             row[4],
             "publ_date":        row[5],
             "stageDate1":       row[5],
             "stageDate2":       row[5],

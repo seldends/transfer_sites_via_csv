@@ -31,7 +31,7 @@ def transfer_news(config):
             "title":        row[2],
             "date":         row[9],
             "image_index":  str(row[7]).replace("^", "#"),
-            "body":         str(row[4]).replace("^", "#").replace("\r", "").replace("\n", ""),
+            "body":         row[4],
             "publ_date":    row[5],
             "resume":       row[3]
         }

@@ -35,7 +35,7 @@ class Obj():
 
     def clean_body(self, raw_text):
         if raw_text:
-            body = re.sub(r'(?:<p style=\"text-align: justify;\">\s?(?:<[a-z]{1,2}>|\s?\&nbsp;|)</p>|\r|\n|<div>\s{0,3}<br />\s{0,3}</div>)','',str(raw_text).strip("").replace("^", "#"))
+            body = re.sub(r'(?:<p style=\"text-align: justify;\">\s?(?:<[a-z]{1,2}>|\s?\&nbsp;|)</p>|\r|\n|<div>\s{0,3}<br />\s{0,3}</div>)', '', str(raw_text).strip("").replace("^", "#"))
         else:
             body = ''
         return body
@@ -134,7 +134,8 @@ class Obj():
         file = r'[^>\"\.]{1,450}\.[a-zA-Z0-9]{2,5}'
         pattern_file_genum = r'(\/(PublicationItemImage\/Image\/src\/[0-9]{1,5}\/)([^>]{1,75}))'
         pattern_file_bitrix = r'(\/?(upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"\.]{1,450}\.[a-zA-Z0-9]{2,5}))'
-        pattern_file_sinta = r'(\/?(public:\/\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"\.]{1,450}\.[a-zA-Z0-9]{2,5}))'
+        # pattern_file_sinta = r'(\/?(public:\/\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"\.]{1,450}\.[a-zA-Z0-9]{2,5}))'
+        pattern_file_sinta = r'(\/?(sites\/default\/files\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"\.]{1,450}\.[a-zA-Z0-9]{2,5}))'
 
         pattern_list = {
             "files_genum":      pattern_file_genum,         # паттерн 1

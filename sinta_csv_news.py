@@ -27,10 +27,10 @@ def transfer_news(config):
             "old_id":       row[0],
             "structure":    config["news_type"][row[1]],
             "title":        row[2],
-            "body":         str(row[3]).replace("^", "#").replace("\r", "").replace("\n", ""),
+            "body":         row[3],
             "resume":       row[4],
-            "date":         datetime.fromtimestamp(int(row[5])),
-            "publ_date":    datetime.fromtimestamp(int(row[6])),
+            "date":         row[5],
+            "publ_date":    row[6],
             "image_index":  str(row[7]).replace("^", "#"),
         }
         news = News(params, config)

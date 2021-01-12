@@ -100,9 +100,13 @@ class DatabaseSinta(Database):
             LEFT JOIN pravmin74_12_11.field_data_body
             ON field_data_body.entity_id=node.nid
             WHERE node.type='legal_acts'
-            AND field_data_field_legal_acts.field_legal_acts_tid IN (3, 4, 5, 6)
+            -- AND field_data_field_legal_acts.field_legal_acts_tid IN (3, 4, 5, 6)
+            AND field_data_field_legal_acts.field_legal_acts_tid IN (3)
+            -- AND field_data_field_legal_acts.field_legal_acts_tid IN (4)
+            -- AND field_data_field_legal_acts.field_legal_acts_tid IN (5)
+            -- AND field_data_field_legal_acts.field_legal_acts_tid IN (6)
             ORDER BY node.nid DESC
-            LIMIT 50
+            -- LIMIT 50
             ;
             '''
         # npa_list = self.select_rows(select_npa_local, params)
@@ -113,11 +117,11 @@ class DatabaseSinta(Database):
     def get_npa_files_list(self, id):
         select_npafiles_local = """
             SELECT
-            file_managed.uri as file_url,
+            -- file_managed.uri as file_url,
+            REPLACE(file_managed.uri, 'public://','sites/default/files/') as file_url,
             -- field_data_field_upload.entity_id,
             -- field_data_field_upload.revision_id,
             field_data_field_upload.field_upload_description
-            -- REPLACE(file_managed.uri, 'public://','') as file_url
             FROM pravmin74_12_11.field_data_field_upload
             LEFT JOIN pravmin74_12_11.file_managed
             ON file_managed.fid=field_data_field_upload.field_upload_fid
@@ -126,3 +130,20 @@ class DatabaseSinta(Database):
         """
         npafiles_list = self.select_rows(select_npafiles_local, id)
         return npafiles_list
+
+    def npa_info(self):
+        select_npa_info = """
+            SELECT
+            field_data_field_legal_acts.field_legal_acts_tid as npa_type, 
+            COUNT(node.nid) as npa_counts
+            FROM pravmin74_12_11.node
+            LEFT JOIN pravmin74_12_11.field_data_field_legal_acts
+            ON field_data_field_legal_acts.entity_id=node.nid
+            WHERE node.type='legal_acts'
+            GROUP BY field_data_field_legal_acts.field_legal_acts_tid
+            ORDER BY field_data_field_legal_acts.field_legal_acts_tid;
+        """
+        npa_info = self.select_rows(select_npa_info)
+        for npa_type in npa_info:
+            print(f'тип {npa_type[0]} количество {npa_type[1]}')
+        # return npa_info

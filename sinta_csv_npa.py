@@ -17,21 +17,29 @@ def transfer_npa(config):
     db_name_local = config["db_name"]
 
     db_local = Database(db_type_local, db_name_local)       # Объект подключения к бд со старыми данными
-
+    db_local.npa_info()
     npa_types = list(config["npa_type"].keys())
     data = db_local.get_npa_list(npa_types)                 # Получение списка НПА из старой таблицы
     for row in data:
+        if row[4]:  # На сайте отображается дата создания
+            date_publ = row[4]  # 4 - дата создания
+        else:
+            date_publ = row[5]  # 5 - дата изменения
+        if row[6]:  # Если пустая дата принятия, то подставить дату публикации
+            date_accept = row[6]
+        else:
+            date_accept = date_publ
         params = {
             "old_id":       row[0],
             "structure":    config["npa_type"][row[1]],
             "title":        row[2],
             "body":         row[3],
-            "date":         row[6],
-            "publ_date":    row[5],
+            "date":         date_accept,
+            "publ_date":    date_publ,
             "number":       row[7],
-            "date_created": row[4],
-            "date_edit":    row[5],
-            "date_accept":  row[6],
+            # "date_created": row[4],
+            # "date_edit":    row[5],
+            # "date_accept":  row[6],
         }
         npa = Npa(params, config)
         npa_list.append(npa)

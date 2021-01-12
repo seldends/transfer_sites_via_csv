@@ -6,7 +6,7 @@ from core.File import NewsMediaFile, NewsIndexImgFile
 class News(Obj):
     def __init__(self, params, config):
         super().__init__(params, config)
-        self.date = params["date"]
+        self.date = self.transform_date(params["date"])
         self.image_index = str(params["image_index"]).replace("^", "#")
         self.resume = self.clean_resume(params["resume"])
         self.isPublish = 'Да'
@@ -110,8 +110,8 @@ class News(Obj):
             'classification':   self.classification,
             'isPublish':        self.isPublish,
             'pubmain':          self.pubmain,
-            "publ_date":        self.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
-            "date":             self.date.strftime("%d.%m.%Y %H:%M:%S"),
+            "publ_date":        self.date_publication,
+            "date":             self.date,
             'image_index':      self.image_index,
             'mediaFiles':       self.objFiles
         }
