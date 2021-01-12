@@ -1,4 +1,3 @@
-import re
 from utils.util import time_test, get_config, get_csv_path, save_csv
 from core.Documents import Doc
 from core.File import DocFile
@@ -48,14 +47,9 @@ def transfer_doc(config):
         # doc.delete_file_links(files_from_text)
         # Удаление ссылок на страницы
         doc.delete_page_links()
-        obj = {
-                'page':             doc.structure,
-                'classification':   doc.classification,
-                'title':            doc.title,
-                'description':      re.sub(r'[\n]{2,3}', r'', doc.body),
-                "publ_date":        doc.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
-                'file':             doc.objFiles,
-            }
+        # Получение данных объекта
+        obj = doc.get_data()
+
         fieldnames = obj.keys()
         query_list.append(obj)
         # TODO сделать полное описание или разделение на отдельные списки
