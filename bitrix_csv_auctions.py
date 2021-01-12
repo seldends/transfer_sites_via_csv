@@ -50,26 +50,12 @@ def transfer_auction(config):
         # Замена ссылок на файлы
         # files_from_text = auction.update_body(auctionFile)
 
-        # # Удаление ссылок на страницы
+        # Удаление ссылок на страницы
         auction.delete_links()
-        # # Обработка основного изображения
-        # # index_image_file = get_index_file(config, auction)
-        row = {
-                'category':         auction.structure,
-                'title':            auction.title,
-                "publ_date":        auction.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
-                "expirationDate":   auction.date_expiration.strftime("%d.%m.%Y %H:%M:%S"),
-                "tradingDate":      auction.date_trading.strftime("%d.%m.%Y %H:%M:%S"),
-                'text':             re.sub(r'[\n]{2,3}', r'', auction.body),
-                "linkTorg":         auction.linkTorg,
-                "linkMap":          auction.linkMap,
-                "linkUTP":          auction.linkUTP,
-                "numberUTP":        auction.numberUTP,
-                'classification':   auction.classification,
-                'auctionFiles':     auction.objFiles,
-            }
-        fieldnames = row.keys()
-        query_list.append(row)
+        # Получение данных объекта
+        obj = auction.get_data()
+        fieldnames = obj.keys()
+        query_list.append(obj)
         # TODO сделать полное описание или разделение на отдельные списки
         auction_files.extend(files_from_text)      # Файлы из текста описания НПА
         auction_files.extend(files_from_table)     # Файлы из таблицы файлов, связанные с текущим НПА

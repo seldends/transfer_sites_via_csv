@@ -47,17 +47,10 @@ def transfer_npa(config):
         npa.delete_page_links()
         # Удаление ссылок на файлы из текста
         npa.delete_file_link(files_from_text)
-        row = {
-                'structure':        npa.structure,
-                'title':            npa.title,
-                'text':             re.sub(r'[\n]{2,3}', r'', npa.body),
-                'classification':   npa.classification,
-                "publ_date":        npa.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
-                "date":             npa.date.strftime("%d.%m.%Y %H:%M:%S"),
-                "number":           npa.number,
-                'npaFiles':         npa.objFiles,
-            }
-        fieldnames = row.keys()
+
+        # Получение данных объекта
+        obj = npa.get_data()
+        fieldnames = obj.keys()
         query_list.append(row)
         # TODO сделать полное описание или разделение на отдельные списки
         npa_files.extend(files_from_text)      # Файлы из текста описания НПА

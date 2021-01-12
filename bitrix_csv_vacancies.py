@@ -46,22 +46,13 @@ def transfer_vacancy(config):
         # Замена ссылок на файлы
         # files_from_text = vacancy.update_body(vacancyFile)
 
-        # # Удаление ссылок на страницы
+        # Удаление ссылок на страницы
         vacancy.delete_links()
-        # # Обработка основного изображения
-        # # index_image_file = get_index_file(config, vacancy)
-        row = {
-                # 'category':         vacancy.structure,
-                'title':            vacancy.title,
-                "publ_date":        vacancy.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
-                # "stageDate1":   vacancy.date_expiration.strftime("%d.%m.%Y %H:%M:%S"),
-                # "stageDate1":      vacancy.date_trading.strftime("%d.%m.%Y %H:%M:%S"),
-                'text':             re.sub(r'[\n]{2,3}', r'', vacancy.body),
-                'classification':   vacancy.classification,
-                'vacancyFiles':     vacancy.objFiles,
-            }
-        fieldnames = row.keys()
-        query_list.append(row)
+
+        # Получение данных объекта
+        obj = vacancy.get_data()
+        fieldnames = obj.keys()
+        query_list.append(obj)
         # TODO сделать полное описание или разделение на отдельные списки
         vacancy_files.extend(files_from_text)      # Файлы из текста описания НПА
         vacancy_files.extend(files_from_table)     # Файлы из таблицы файлов, связанные с текущим НПА

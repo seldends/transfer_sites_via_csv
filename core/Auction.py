@@ -2,6 +2,7 @@ import re
 from core.Obj import Obj
 from core.File import AuctionFile
 
+
 class Auction(Obj):
     def __init__(self, params, config):
         super().__init__(params, config)
@@ -50,8 +51,6 @@ class Auction(Obj):
 
     # Bitrix получение атрибутов ссылки и номер универсальной торговой площадки
     def bitrix_get_utp_from_body(self):
-        old_sitename = self.old_sitename
-        # TODO сделать передачу имени в регулярку
         bitrix_pattern_file_1 = r'(<a\s(?:(?:class|alt|target|id)=\"[^\"]{1,50}\"\s|){0,5}href=\"(http:\/\/utp\.sberbank-ast\.ru\/AP\/NBT\/PurchaseView\/[0-9]{1,3}\/[0-9]{1,3}\/[0-9]{1,3}\/[0-9]{1,10})\"[^>]{0,550}>([^<]{1,50})<\/a>)'
         pattern_list = {
             "bitrix_file_1":   bitrix_pattern_file_1,         # паттерн 2
@@ -110,3 +109,20 @@ class Auction(Obj):
                 null_auction.append(self.old_id)
                 print(f'Отсутствует имя файла ид старой новости : {self.old_id}')
         return auctionfiles, null_auction
+
+    def get_data(self):
+        data = {
+                'category':         self.structure,
+                'title':            self.title,
+                "publ_date":        self.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
+                "expirationDate":   self.date_expiration.strftime("%d.%m.%Y %H:%M:%S"),
+                "tradingDate":      self.date_trading.strftime("%d.%m.%Y %H:%M:%S"),
+                'text':             re.sub(r'[\n]{2,3}', r'', self.body),
+                "linkTorg":         self.linkTorg,
+                "linkMap":          self.linkMap,
+                "linkUTP":          self.linkUTP,
+                "numberUTP":        self.numberUTP,
+                'classification':   self.classification,
+                'auctionFiles':     self.objFiles,
+            }
+        return data

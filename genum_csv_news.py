@@ -49,9 +49,9 @@ def transfer_news(config):
         # Удаление ссылок на страницы
         news.delete_links()
         # Получение данных объекта
-        row = news.get_data()
-        fieldnames = row.keys()
-        query_list.append(row)
+        obj = news.get_data()
+        fieldnames = obj.keys()
+        query_list.append(obj)
         # TODO сделать полное описание или разделение на отдельные списки
         news_files.extend(index_image_file)     # Основная картинка новости
         news_files.extend(files_from_text)      # Обычные файлы из новосте, сохраняются в

@@ -100,3 +100,16 @@ class Vacancy(Obj):
                 null_auction.append(self.old_id)
                 print(f'Отсутствует имя файла ид старой новости : {self.old_id}')
         return auctionfiles, null_auction
+
+    def get_data(self):
+        data = {
+            # 'category':         self.structure,
+            'title':            self.title,
+            "publ_date":        self.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
+            # "stageDate1":   self.date_expiration.strftime("%d.%m.%Y %H:%M:%S"),
+            # "stageDate1":      self.date_trading.strftime("%d.%m.%Y %H:%M:%S"),
+            'text':             re.sub(r'[\n]{2,3}', r'', self.body),
+            'classification':   self.classification,
+            'vacancyFiles':     self.objFiles,
+        }
+        return data
