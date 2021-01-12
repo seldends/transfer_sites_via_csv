@@ -78,6 +78,12 @@ def copy_file(old_path, new_path):
         print(f'{e} Нет файла "{old_path}" {new_path}')
 
 
+def copy_files(files):
+    for file in files:
+        print(file.new_link)
+        file.copy_file()
+
+
 # TODO
 def save_file(path, data):
     # with open(path, 'w', encoding='utf-8') as file:

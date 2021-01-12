@@ -1,9 +1,7 @@
-import re
-from utils.util import time_test, get_config, get_csv_path, save_csv
+from utils.util import time_test, get_config, get_csv_path, save_csv, copy_files
 from core.Npa import Npa
 from core.File import NpaFile
 from utils.Sinta import DatabaseSinta as Database
-from datetime import datetime
 
 
 # Перенос НПА
@@ -37,9 +35,6 @@ def transfer_npa(config):
             "date":         date_accept,
             "publ_date":    date_publ,
             "number":       row[7],
-            # "date_created": row[4],
-            # "date_edit":    row[5],
-            # "date_accept":  row[6],
         }
         npa = Npa(params, config)
         npa_list.append(npa)
@@ -72,10 +67,14 @@ def transfer_npa(config):
     save_csv(path_csv, fieldnames, query_list)      # Сохранение словаря в csv
 
     # Копирование файлов
-    # for file in npa_files:
-    #     print(file.new_link)
-    #     file.copy_file()
+    copy_files(npa_files)
+
     # TODO
+    report_date = {
+        "element_list": npa_list,
+        "files_from_table": files_from_table,
+        "files_from_table": files_from_table,
+    }
     print(f'Количество пустых НПА : {len(null_npa)}')
     print(f'Количество НПА : {len(npa_list)}')
     print(f'Количество файлов НПА из таблицы : {len(files_from_table)}')

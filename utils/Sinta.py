@@ -106,7 +106,7 @@ class DatabaseSinta(Database):
             -- AND field_data_field_legal_acts.field_legal_acts_tid IN (5)
             -- AND field_data_field_legal_acts.field_legal_acts_tid IN (6)
             ORDER BY node.nid DESC
-            -- LIMIT 50
+            LIMIT 50
             ;
             '''
         # npa_list = self.select_rows(select_npa_local, params)
@@ -134,7 +134,7 @@ class DatabaseSinta(Database):
     def npa_info(self):
         select_npa_info = """
             SELECT
-            field_data_field_legal_acts.field_legal_acts_tid as npa_type, 
+            field_data_field_legal_acts.field_legal_acts_tid as npa_type,
             COUNT(node.nid) as npa_counts
             FROM pravmin74_12_11.node
             LEFT JOIN pravmin74_12_11.field_data_field_legal_acts
@@ -146,4 +146,4 @@ class DatabaseSinta(Database):
         npa_info = self.select_rows(select_npa_info)
         for npa_type in npa_info:
             print(f'тип {npa_type[0]} количество {npa_type[1]}')
-        # return npa_info
+
