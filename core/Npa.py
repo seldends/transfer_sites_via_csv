@@ -6,17 +6,18 @@ from core.File import NpaFile
 class Npa(Obj):
     def __init__(self, params, config):
         super().__init__(params, config)
-        self.date = params["date"]
+        self.date = self.transform_date(params["date"])
         self.number = params["number"]
 
     def get_data(self):
         data = {
                 'structure':        self.structure,
                 'title':            self.title,
-                'text':             re.sub(r'[\n]{2,3}', r'', self.body),
+                # 'text':             re.sub(r'[\n]{2,3}', r'', self.body),
+                'text':             self.body,
                 'classification':   self.classification,
-                "publ_date":        self.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
-                "date":             self.date.strftime("%d.%m.%Y %H:%M:%S"),
+                "publ_date":        self.date_publication,
+                "date":             self.date,
                 "number":           self.number,
                 'npaFiles':         self.objFiles,
             }

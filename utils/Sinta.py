@@ -84,6 +84,7 @@ class DatabaseSinta(Database):
             node.nid as id,
             field_data_field_legal_acts.field_legal_acts_tid as category,
             node.title as title,
+            -- REPLACE(field_data_body.body_value, 'None','') as body
             field_data_body.body_value as body,
             node.created as date_created,
             node.changed as date_edit,

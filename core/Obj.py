@@ -1,6 +1,7 @@
 from pathlib import Path
 import re
 import urllib.parse
+from datetime import datetime
 
 
 class Obj():
@@ -13,13 +14,30 @@ class Obj():
         self.structure = params["structure"]
         self.old_id = params["old_id"]
         self.title = params["title"]
-        self.date_publication = params["publ_date"]
+        self.date_publication = self.transform_date(params["publ_date"])
         self.objFiles = ''
         # TODO Подумать можно ли сделать лучше, нужен
         self.section_title = ''
 
+    # TODO
+    def transform_date(self, raw_date):
+        date = []
+        if type(raw_date) == int:
+            date = datetime.fromtimestamp(raw_date).strftime("%d.%m.%Y %H:%M:%S")
+        elif raw_date is None:
+            date = ''
+            print(f'Пустая дата в объекте id {self.old_id}')
+        elif isinstance(raw_date, datetime):
+            date = raw_date.strftime("%d.%m.%Y %H:%M:%S")
+        else:
+            print(f'error date {date} {type(raw_date)}')
+        return date
+
     def clean_body(self, raw_text):
-        body = re.sub(r'(?:<p style=\"text-align: justify;\">\s?(?:<[a-z]{1,2}>|\s?\&nbsp;|)</p>|\r|\n|<div>\s{0,3}<br />\s{0,3}</div>)','',str(raw_text).strip("").replace("^", "#"))
+        if raw_text:
+            body = re.sub(r'(?:<p style=\"text-align: justify;\">\s?(?:<[a-z]{1,2}>|\s?\&nbsp;|)</p>|\r|\n|<div>\s{0,3}<br />\s{0,3}</div>)','',str(raw_text).strip("").replace("^", "#"))
+        else:
+            body = ''
         return body
 
     def get_patterns_file(self):
@@ -117,7 +135,7 @@ class Obj():
         pattern_file_genum = r'(\/(PublicationItemImage\/Image\/src\/[0-9]{1,5}\/)([^>]{1,75}))'
         pattern_file_bitrix = r'(\/?(upload\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"\.]{1,450}\.[a-zA-Z0-9]{2,5}))'
         pattern_file_sinta = r'(\/?(public:\/\/(?:[^\"\/]{1,100}\/|){0,4})([^>\"\.]{1,450}\.[a-zA-Z0-9]{2,5}))'
-        
+
         pattern_list = {
             "files_genum":      pattern_file_genum,         # паттерн 1
             "files_bitrix":     pattern_file_bitrix,         # паттерн 1

@@ -119,7 +119,7 @@ pravmin74:     # Сайт правительства ЧО
     new_name: pravmin
     db_type: mariadb
     db_name: pravmin74_12_11
-    classification: 16@egClassification
+    classification: 47@egClassification
     news_type: # TODO
         104: 1@sprNewsStructure  # Новости
         105: 1@sprNewsStructure  # Новости

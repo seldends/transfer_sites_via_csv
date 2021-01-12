@@ -26,16 +26,18 @@ def transfer_npa(config):
             "structure":    config["npa_type"][row[1]],
             "title":        row[2],
             "body":         row[3],
-            "date":         datetime.fromtimestamp(int(row[4])),
-            "publ_date":    row[6],
+            "date":         row[6],
+            "publ_date":    row[5],
             "number":       row[7],
+            "date_created": row[4],
+            "date_edit":    row[5],
+            "date_accept":  row[6],
         }
         npa = Npa(params, config)
         npa_list.append(npa)
         # Получение медиафайлов из таблицы
         files_raw = db_local.get_npa_files_list(npa.old_id)
         files_from_table, empty_npa = npa.get_files_from_table(files_raw, NpaFile)
-        print(files_raw)
         # Добавление проблемных НПА
         null_npa.extend(empty_npa)
         # Файлы из текста
@@ -62,9 +64,9 @@ def transfer_npa(config):
     save_csv(path_csv, fieldnames, query_list)      # Сохранение словаря в csv
 
     # Копирование файлов
-    for file in npa_files:
-        print(file.new_link)
-        file.copy_file()
+    # for file in npa_files:
+    #     print(file.new_link)
+    #     file.copy_file()
     # TODO
     print(f'Количество пустых НПА : {len(null_npa)}')
     print(f'Количество НПА : {len(npa_list)}')
