@@ -21,7 +21,7 @@ def transfer_auction(config):
     db_local = Database(db_type_local, db_name_local)       # Объект подключения к бд со старыми данными
 
     auction_types = list(config["auction_type"].keys())
-    data = db_local.get_auction_list(auction_types)                 # Получение списка НПА из старой таблицы
+    data = db_local.get_obj_list(auction_types)                 # Получение списка НПА из старой таблицы
     for row in data:
         params = {
             "old_id":           row[0],
@@ -51,7 +51,7 @@ def transfer_auction(config):
         # files_from_text = auction.update_body(auctionFile)
 
         # Удаление ссылок на страницы
-        auction.delete_links()
+        auction.delete_page_links()
         # Получение данных объекта
         obj = auction.get_data()
         fieldnames = obj.keys()

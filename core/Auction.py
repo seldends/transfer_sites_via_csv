@@ -6,8 +6,8 @@ from core.File import AuctionFile
 class Auction(Obj):
     def __init__(self, params, config):
         super().__init__(params, config)
-        self.date_expiration = params["expirationDate"]
-        self.date_trading = params["tradingDate"]
+        self.date_expiration = self.transform_date(params["expirationDate"])
+        self.date_trading = self.transform_date(params["tradingDate"])
         self.linkTorg = params["linkTorg"]
         self.linkMap = params["linkMap"]
         self.linkUTP = params["linkUTP"]
@@ -30,7 +30,7 @@ class Auction(Obj):
             links = re.findall(pattern, self.body)
             if len(links) > 0:
                 for link in links:
-                    print(link)
+                    # print(link)
                     data = {
                         "full_link":            link[0],    # Полная ссылка с a href и стилями. Пример:     <a href="http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx">
                         "file_full_path":       link[1],    # Ссылка на файл.                   Пример:     http://ruk.pravmin74.ru/sites/default/files/imceFiles/user-333/soglasie_rk_2020.docx
@@ -114,9 +114,9 @@ class Auction(Obj):
         data = {
                 'category':         self.structure,
                 'title':            self.title,
-                "publ_date":        self.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
-                "expirationDate":   self.date_expiration.strftime("%d.%m.%Y %H:%M:%S"),
-                "tradingDate":      self.date_trading.strftime("%d.%m.%Y %H:%M:%S"),
+                "publ_date":        self.date_publication,
+                "expirationDate":   self.date_expiration,
+                "tradingDate":      self.date_trading,
                 'text':             re.sub(r'[\n]{2,3}', r'', self.body),
                 "linkTorg":         self.linkTorg,
                 "linkMap":          self.linkMap,

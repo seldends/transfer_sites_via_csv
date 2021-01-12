@@ -40,7 +40,7 @@ class DatabaseBitrix(Database):
             PREVIEW_PICTURE as index_img
             FROM imchel_10_12.b_iblock_element
             WHERE ACTIVE = 'Y'
-            AND IBLOCK_ID in (29)
+            AND IBLOCK_ID in (43, 42)
             order by ID DESC
             ;
             '''
