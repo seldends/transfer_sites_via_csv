@@ -3,7 +3,7 @@ from utils import time_test, get_config
 from objects_page import Page, Text
 from os import fspath
 import urllib.parse
-from utils_db_local import DatabaseGenum as Database
+from utils.Genum import DatabaseGenum as Database
 from datetime import datetime
 from csv_objects import PageFile
 

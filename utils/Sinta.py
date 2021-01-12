@@ -52,7 +52,7 @@ class DatabaseSinta(Database):
             AND node.created > 1514746800
             AND field_data_field_news_cat.field_news_cat_tid IN (104, 105)
             ORDER BY node.nid DESC
-            LIMIT 50
+            -- LIMIT 50
             ;
             '''
         # news_list = self.select_rows(select_news_local, params)

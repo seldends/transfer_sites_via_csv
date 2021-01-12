@@ -100,3 +100,19 @@ class News(Obj):
             except AttributeError as e:
                 print('Ошибка в создании файла Новостей', e)
         return index_file
+
+    def get_data(self):
+        row = {
+            'structure':        self.structure,
+            'title':            self.title,
+            'resume':           re.sub(r'[\n]{2,3}', r'', self.resume),
+            'body':             re.sub(r'[\n]{2,3}', r'', self.body),
+            'classification':   self.classification,
+            'isPublish':        self.isPublish,
+            'pubmain':          self.pubmain,
+            "publ_date":        self.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
+            "date":             self.date.strftime("%d.%m.%Y %H:%M:%S"),
+            'image_index':      self.image_index,
+            'mediaFiles':       self.objFiles
+        }
+        return row

@@ -5,20 +5,20 @@ from core.File import NewsIndexImgFile, NewsFile, NewsMediaFile
 from utils.Sinta import DatabaseSinta as Database
 from datetime import datetime
 
+
 # Перенос Новостей
 def transfer_news(config):
     news_list = []
-    filenames = []
     news_files = []
     files_from_text = []
     files_from_table = []
     null_news = []
     query_list = []
 
-    db_type_local = config["db_type"]
-    db_name_local = config["db_name"]
+    # db_type_local = config["db_type"]
+    # db_name_local = config["db_name"]
 
-    db_local = Database(db_type_local, db_name_local)       # Объект подключения к бд со старыми данными
+    db_local = Database(config["db_type"], config["db_name"])       # Объект подключения к бд со старыми данными
 
     news_types = tuple(config["news_type"].keys())
     data = db_local.get_news_list(news_types)                 # Получение списка Новостей из старой таблицы
@@ -53,26 +53,14 @@ def transfer_news(config):
         # Замена ссылок на файлы из текста
         news.replace_file_link(files_from_text)
         # Обработка основного изображения
-        # index_image_file = get_index_file(config, news)
-        row = {
-                'structure':        news.structure,
-                # 'title':            news.title,
-                # 'resume':           re.sub(r'[\n]{2,3}', r'', news.resume),
-                # 'body':             re.sub(r'[\n]{2,3}', r'', news.body),
-                # 'classification':   news.classification,
-                # 'isPublish':        news.isPublish,
-                # 'pubmain':          news.pubmain,
-                # "publ_date":        news.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
-                # "date":             news.date.strftime("%d.%m.%Y %H:%M:%S"),
-                'image_index':      news.image_index,
-                # 'mediaFiles':       news.objFiles
-            }
-        # print(row)
+        index_image_file = news.get_index_file()
+        # Получение данных объекта
+        row = news.get_data()
         fieldnames = row.keys()
         query_list.append(row)
         # TODO сделать полное описание или разделение на отдельные списки
-        # news_files.extend(index_image_file)     # Основная картинка новости
-        news_files.extend(files_from_text)      # Обычные файлы из новосте, сохраняются в
+        news_files.extend(index_image_file)     # Основная картинка новости
+        news_files.extend(files_from_text)      # Обычные файлы из новости
         news_files.extend(files_from_table)     # Медиафайлы из таблицы
 
     path_csv = get_csv_path(config, 'news')         # Получение пути для csv

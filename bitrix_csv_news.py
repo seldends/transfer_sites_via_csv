@@ -54,24 +54,13 @@ def transfer_news(config):
         news.replace_file_link(files_from_text)
         # Обработка основного изображения
         # index_image_file = get_index_file(config, news)
-        row = {
-                'structure':        news.structure,
-                'title':            news.title,
-                'resume':           re.sub(r'[\n]{2,3}', r'', news.resume),
-                'body':             re.sub(r'[\n]{2,3}', r'', news.body),
-                'classification':   news.classification,
-                'isPublish':        news.isPublish,
-                'pubmain':          news.pubmain,
-                "publ_date":        news.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
-                "date":             news.date.strftime("%d.%m.%Y %H:%M:%S"),
-                # 'image_index':      news.a_image_index,
-                # 'mediaFiles':       news.objFiles
-            }
+        # Получение данных объекта
+        row = news.get_data()
         fieldnames = row.keys()
         query_list.append(row)
         # TODO сделать полное описание или разделение на отдельные списки
         # news_files.extend(index_image_file)     # Основная картинка новости
-        news_files.extend(files_from_text)      # Обычные файлы из новосте, сохраняются в
+        news_files.extend(files_from_text)      # Обычные файлы из новости
         news_files.extend(files_from_table)     # Медиафайлы из таблицы
 
     path_csv = get_csv_path(config, 'news')         # Получение пути для csv

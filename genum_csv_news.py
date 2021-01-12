@@ -48,19 +48,8 @@ def transfer_news(config):
         index_image_file = news.get_index_file()
         # Удаление ссылок на страницы
         news.delete_links()
-        row = {
-                'structure':        news.structure,
-                'title':            news.title,
-                'resume':           news.resume,
-                'body':             news.body,
-                'classification':   news.classification,
-                'isPublish':        news.isPublish,
-                'pubmain':          news.pubmain,
-                "publ_date":        news.date_publication.strftime("%d.%m.%Y %H:%M:%S"),
-                "date":             news.date.strftime("%d.%m.%Y %H:%M:%S"),
-                'image_index':      news.image_index,
-                'mediaFiles':       news.objFiles
-            }
+        # Получение данных объекта
+        row = news.get_data()
         fieldnames = row.keys()
         query_list.append(row)
         # TODO сделать полное описание или разделение на отдельные списки
