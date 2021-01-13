@@ -7,7 +7,7 @@ class DatabaseGenum(Database):
     def connect(self):
         """Connect to a Postgres database."""
         if self.conn is None:
-            db_pg_list = ['pg_local', 'pg_test47', 'pg_test51', 'pg_mytest', 'pg_local_sitex_47']
+            db_pg_list = ['pg_local']
             if self.dbtype in db_pg_list:
                 try:
                     self.conn = psycopg2.connect(
@@ -36,14 +36,14 @@ class DatabaseGenum(Database):
     # Функция для получения нпа
     def get_npa_list(self, params):
         select_npa_local = '''
-            SELECT "id", "AdoptionDate", "Title", "Article","ModificationDate", "Number", "Type_id"
+            SELECT "id", "Type_id", "Title", "Article", "CreationDate", "ModificationDate", "AdoptionDate", "Number"
             FROM "sd4_LegalAct"
             WHERE "IsHidden"=False
             AND "Type_id" IN %s
             ORDER BY id DESC
             ;
             '''
-        npa_list = self.select_rows(select_npa_local, params)
+        npa_list = self.select_rows(select_npa_local, tuple(params))
         return npa_list
 
     # Функция для получения новостей
@@ -54,11 +54,11 @@ class DatabaseGenum(Database):
                 WHERE "IsHidden"=False
                 AND "CreationDate" > '2018-01-01 00:00:00'
                 AND "Group_id" IN %s
-                AND id > 28585
+                -- AND id > 28585
                 ORDER BY id DESC
-                --LIMIT 3
+                -- LIMIT 1
                 '''
-        news_list = self.select_rows(select_news_local, params)
+        news_list = self.select_rows(select_news_local, tuple(params))
         return news_list
 
     # Функция для получения медиафайлов
@@ -91,3 +91,32 @@ class DatabaseGenum(Database):
             records = cur.fetchall()
             cur.close()
             return records
+
+    def npa_info(self):
+        query_info = """
+            SELECT "sd4_LegalActType".id, "sd4_LegalActType"."Title", COUNT("sd4_LegalAct".id)
+            FROM "sd4_LegalAct"
+            LEFT JOIN "sd4_LegalActType"
+            ON "sd4_LegalAct"."Type_id" = "sd4_LegalActType".id
+            WHERE "sd4_LegalAct"."IsHidden"=False
+            GROUP BY "sd4_LegalActType".id, "sd4_LegalActType"."Title"
+            ORDER BY "sd4_LegalActType".id;
+        """
+        info = self.select_rows(query_info)
+        for obj in info:
+            print(f'тип {obj[0]} {obj[1]} количество {obj[2]}')
+
+    def news_info(self):
+        query_info = """
+            SELECT "sd4_PublicationGroup".id, "sd4_PublicationGroup"."Title", COUNT("sd4_PublicationItem".id) 
+            FROM "sd4_PublicationItem"
+            LEFT JOIN "sd4_PublicationGroup"
+            ON "sd4_PublicationItem"."Group_id" = "sd4_PublicationGroup".id
+            WHERE "sd4_PublicationItem"."CreationDate" > '2018-01-01 00:00:00'
+            AND "sd4_PublicationItem"."IsHidden"=False
+            GROUP BY "sd4_PublicationGroup".id, "sd4_PublicationGroup"."Title"
+            ORDER BY "sd4_PublicationGroup".id;
+        """
+        info = self.select_rows(query_info)
+        for obj in info:
+            print(f'тип {obj[0]} {obj[1]} количество {obj[2]}')

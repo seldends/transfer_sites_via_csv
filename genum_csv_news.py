@@ -8,21 +8,15 @@ from utils.Genum import DatabaseGenum as Database
 # Перенос Новостей
 def transfer_news(config):
     news_list = []
-    filenames = []
     news_files = []
     files_from_text = []
     files_from_table = []
     null_news = []
     query_list = []
 
-    db_type_local = config["db_type"]
-    db_name_local = config["db_name"]
-
-    db_local = Database(db_type_local, db_name_local)       # Объект подключения к бд со старыми данными
-
-    news_types = tuple(config["news_type"].keys())
-
-    data = db_local.get_news_list(news_types)                 # Получение списка Новостей из старой таблицы
+    db_local = Database(config["db_type"], config["db_name"])       # Объект подключения к бд со старыми данными
+    db_local.news_info()
+    data = db_local.get_news_list(config["news_type"].keys())       # Получение списка Новостей из старой таблицы
     print(len(data))
     for row in data:
         params = {
@@ -43,13 +37,14 @@ def transfer_news(config):
         # Добавление проблемных новостей
         null_news.extend(empty_news)
         # Обратока ссылок на файлы
-        files_from_text = news.update_body(NewsFile)
+        files_from_text = news.get_files_from_body(NewsFile)
         # Обработка основного изображения
         index_image_file = news.get_index_file()
         # Удаление ссылок на страницы
-        news.delete_links()
+        news.delete_page_links()
         # Получение данных объекта
         obj = news.get_data()
+        # print(obj)
         fieldnames = obj.keys()
         query_list.append(obj)
         # TODO сделать полное описание или разделение на отдельные списки
@@ -61,9 +56,9 @@ def transfer_news(config):
     save_csv(path_csv, fieldnames, query_list)      # Сохранение словаря в csv
 
     # Копирование файлов
-    for file in news_files:
-        print(file.new_link)
-        file.copy_file()
+    # for file in news_files:
+    #     print(file.new_link)
+    #     file.copy_file()
     # TODO
     print(f'Количество пустых Новостей : {len(null_news)}')
     print(f'Количество Новостей : {len(news_list)}')
@@ -80,11 +75,11 @@ def main():
         # "deti74",
         # "mindortrans74"
         # "mininform74"
-        "mincult74",
+        # "mincult74",
         # "forest74",
         # "chelarhiv74",
         # "ugzhi",
-        # "szn74",
+        "szn74",
         # "minstroy74",
         # "gk74",
         # "chelarhiv74",

@@ -146,4 +146,3 @@ class DatabaseSinta(Database):
         npa_info = self.select_rows(select_npa_info)
         for npa_type in npa_info:
             print(f'тип {npa_type[0]} количество {npa_type[1]}')
-
