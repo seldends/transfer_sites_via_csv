@@ -7,10 +7,17 @@ class News(Obj):
     def __init__(self, params, config):
         super().__init__(params, config)
         self.date = self.transform_date(params["date"])
-        self.image_index = str(params["image_index"]).replace("^", "#")
+        self.image_index = self.transform_index_image(params["image_index"])
         self.resume = self.clean_resume(params["resume"])
         self.isPublish = 'Да'
         self.pubmain = 'Да'
+
+    def transform_index_image(self, raw_path):
+        if raw_path:
+            path = str(raw_path).replace("^", "#")
+        else:
+            path = None
+        return path
 
     def clean_resume(self, raw_text):
         # TODO проверить почему не полностью работает strip
@@ -42,6 +49,9 @@ class News(Obj):
         index_file = []
         # print(old_path)
         # Проверка пустой ли путь у файлв Новостей (запись есть, но значение пустое, то добавлять в список пуcтых)
+
+        # if self.image_index:
+        #     print(f'test {self.image_index}')
         for link_type, pattern in pattern_list.items():
             try:
                 links = re.findall(pattern, str(old_path))

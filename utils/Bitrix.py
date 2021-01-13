@@ -79,15 +79,19 @@ class DatabaseBitrix(Database):
         return vacancyfiles_list
 
     def get_news_files_list(self, id):
+        vacancyfiles_list = self.get_obj_files_list(id)
+        return vacancyfiles_list
+
+    def get_news_list(self, id):
         select_obj_local = '''
             SELECT
             ID as id,
-            IBLOCK_ID,
+            IBLOCK_ID as category,
             NAME as title,
-            DATE_CREATE as date_create,
             DETAIL_TEXT as body,
-            TIMESTAMP_X as date_publ,
             PREVIEW_TEXT as resume,
+            DATE_CREATE as date_create,
+            TIMESTAMP_X as date_publ,
             PREVIEW_PICTURE as index_img
             FROM imchel_10_12.b_iblock_element
             WHERE ACTIVE = 'Y'
@@ -96,7 +100,22 @@ class DatabaseBitrix(Database):
             order by ID DESC
             ;
             '''
-        # news_list = self.select_rows(select_news_local, params)
+        # news_list = self.select_rows(select_news_local, tuple(params))
         obj_list = self.select_rows(select_obj_local)
         return obj_list
 
+    def news_info(self):
+        query = """
+            SELECT
+            IBLOCK_ID as news_type,
+            COUNT(ID) as news_counts
+            FROM imchel_10_12.b_iblock_element
+            WHERE ACTIVE = 'Y'
+            AND IBLOCK_ID in (13)
+            AND DATE_CREATE > '2018-01-01 00:00:00'
+            GROUP BY IBLOCK_ID
+            ORDER BY IBLOCK_ID;
+        """
+        npa_info = self.select_rows(query)
+        for npa_type in npa_info:
+            print(f'тип {npa_type[0]} количество {npa_type[1]}')

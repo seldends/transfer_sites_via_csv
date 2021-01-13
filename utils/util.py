@@ -6,6 +6,17 @@ from pathlib import Path
 import shutil
 
 
+def connection(config):
+    if config["type"] == 'genum':
+        from utils.Genum import DatabaseGenum as Database
+    elif config["type"] == 'bitrix':
+        from utils.Bitrix import DatabaseBitrix as Database
+    elif config["type"] == 'sinta':
+        from utils.Sinta import DatabaseSinta as Database
+    db_local = Database(config["db_type"], config["db_name"])
+    return db_local
+
+
 # Декоратор для подсчета времени выполнения
 def time_test(func):
     def wrapper(*args, **kwargs):

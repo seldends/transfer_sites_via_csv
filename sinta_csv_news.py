@@ -81,6 +81,18 @@ def transfer_news(config):
 def main():
     # Список конфигураций сайтов
     sites = [
+        # "deti74",
+        # "mindortrans74"
+        # "mininform74"
+        # "mincult74",
+        # "forest74",
+        # "chelarhiv74",
+        # "ugzhi",
+        # "szn74",
+        # "minstroy74",
+        # "gk74",
+        # "chelarhiv74",
+        # "okn74"
         "pravmin74",
     ]
     for site in sites:

@@ -1,4 +1,5 @@
 szn74:
+    type: genum
     old_name: szn74.ru
     new_name: szn
     db_type: pg_local
@@ -39,6 +40,7 @@ deti74:     # Уполномоченного по правам ребёнка в
 
 
 imchel74:     # Минимущества
+    type: bitrix
     old_name: imchel.ru
     new_name: im
     db_type: mariadb
@@ -107,6 +109,7 @@ mincult74:
 
 
 pravmin74:     # Сайт правительства ЧО
+    type: sinta
     old_name: pravmin74.ru
     new_name: pravmin
     db_type: mariadb
