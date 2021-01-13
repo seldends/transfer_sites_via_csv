@@ -1,7 +1,6 @@
-from utils.util import time_test, get_config, get_csv_path, save_csv, copy_files
+from utils.util import time_test, get_config, get_csv_path, save_csv, copy_files, connection
 from core.News import News
 from core.File import NewsIndexImgFile, NewsFile, NewsMediaFile
-from utils.Sinta import DatabaseSinta as Database
 
 
 # Перенос Новостей
@@ -14,7 +13,7 @@ def transfer_news(config):
     null_news = []
     query_list = []
 
-    db_local = Database(config["db_type"], config["db_name"])       # Объект подключения к бд со старыми данными
+    db_local = connection(config)       # Объект подключения к бд со старыми данными
     db_local.news_info()
     data = db_local.get_news_list(config["news_type"].keys())       # Получение списка Новостей из старой таблицы
     for row in data:
@@ -26,7 +25,7 @@ def transfer_news(config):
             "resume":       row[4],
             "date":         row[5],
             "publ_date":    row[6],
-            "image_index":  str(row[7]).replace("^", "#"),
+            "image_index":  row[7],
         }
         news = News(params, config)
         objects.append(news)
@@ -40,7 +39,6 @@ def transfer_news(config):
         index_image_file = news.get_index_file()
         # Добавление проблемных новостей
         null_news.extend(empty_news)
-
         # Запись в атрибут файлы
         news.update_files(files_from_table)
 
@@ -66,8 +64,7 @@ def transfer_news(config):
     files.extend(all_index_image_file)     # Основная картинка новости
     files.extend(all_files_from_text)      # Обычные файлы из новости
     files.extend(all_files_from_table)     # Медиафайлы из таблицы
-
-    copy_files(files)
+    # copy_files(files)
 
     print(f'Количество пустых Новостей : {len(null_news)}')
     print(f'Количество Новостей : {len(query_list)}')
@@ -81,19 +78,9 @@ def transfer_news(config):
 def main():
     # Список конфигураций сайтов
     sites = [
-        # "deti74",
-        # "mindortrans74"
-        # "mininform74"
-        # "mincult74",
-        # "forest74",
-        # "chelarhiv74",
-        # "ugzhi",
         # "szn74",
-        # "minstroy74",
-        # "gk74",
-        # "chelarhiv74",
-        # "okn74"
         "pravmin74",
+        # "imchel74",
     ]
     for site in sites:
         # Получение конфигурации
