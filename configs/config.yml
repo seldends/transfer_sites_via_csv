@@ -34,11 +34,8 @@ deti74:     # Уполномоченного по правам ребёнка в
     db_type: pg_local
     db_name: deti74
     classification: 94@egClassification # prod
-    # classification: 16@egClassification # test
-    news_title: deti74news
     news_type:
-        102: 1  # Новости|194
-    npa_title: deti74npa
+        102: 1ewsStructure  # Новости|194
 
 
 imchel74:     # Минимущества
@@ -48,8 +45,8 @@ imchel74:     # Минимущества
     db_name: imchel_10_12
     classification: 33@egClassification
     news_type:
-        13: 1   # Новости
-        152: 1  # новое в сфере закупок (рубрика регулирование ..)  https://imchel.ru/regulirovanie-v-sfere-zakupok/novosti-v-sfere-zakupok/
+        13: 1@sprNewsStructure   # Новости
+        152: 1@sprNewsStructure  # новое в сфере закупок (рубрика регулирование ..)  https://imchel.ru/regulirovanie-v-sfere-zakupok/novosti-v-sfere-zakupok/
     vacancy_type:
         12: 1  # Конкурсы и вакансии                    https://imchel.ru/gosservice/contests/
     auction_type:
@@ -81,14 +78,14 @@ imchel74:     # Минимущества
         # TODO Порядок деятельности    https://imchel.ru/officials/
         # ~100: 1  # TODO https://imchel.ru/officials/reglament/
         # 161: 1  # TODO форма документов      https://imchel.ru/regulirovanie-v-sfere-zakupok/metodicheskie-materialy/formy-dokumentov/
-        20: 41   #  госсужба НПА             https://imchel.ru/gosservice/acts/
-        39: 41   # программа приватизации   https://imchel.ru/privatization/programm/
-        97: 23   # Локальные акты Министерства в сфере противодействия коррупции    https://imchel.ru/gosservice/anticorrupt/npa/
-        153: 39  # федеральные акты      https://imchel.ru/regulirovanie-v-sfere-zakupok/normativno-pravovye-akty/federalnoe-zakonodatelstvo/
-        154: 40  # региональные акты     https://imchel.ru/regulirovanie-v-sfere-zakupok/normativno-pravovye-akty/regionalnoe-zakonodatelstvo/
-        100: 11  # Нормативно-правовые акты Министерства    https://imchel.ru/officials/npa-ministerstva/
-        145: 39  # Федеральное законодательство https://imchel.ru/regulatory/federalnoe/         https://im.gov74.ru/im/regulatory/federalnoe.htm
-        146: 40  # Региональное законодательство https://imchel.ru/regulatory/regionalnoe/       https://im.gov74.ru/im/regulatory/regionalnoe.htm
+        20: 41@sprNPAStructure   # госсужба НПА             https://imchel.ru/gosservice/acts/
+        39: 41@sprNPAStructure   # программа приватизации   https://imchel.ru/privatization/programm/
+        97: 23@sprNPAStructure   # Локальные акты Министерства в сфере противодействия коррупции    https://imchel.ru/gosservice/anticorrupt/npa/
+        153: 39@sprNPAStructure  # федеральные акты      https://imchel.ru/regulirovanie-v-sfere-zakupok/normativno-pravovye-akty/federalnoe-zakonodatelstvo/
+        154: 40@sprNPAStructure  # региональные акты     https://imchel.ru/regulirovanie-v-sfere-zakupok/normativno-pravovye-akty/regionalnoe-zakonodatelstvo/
+        100: 11@sprNPAStructure  # Нормативно-правовые акты Министерства    https://imchel.ru/officials/npa-ministerstva/
+        145: 39@sprNPAStructure  # Федеральное законодательство https://imchel.ru/regulatory/federalnoe/         https://im.gov74.ru/im/regulatory/federalnoe.htm
+        146: 40@sprNPAStructure  # Региональное законодательство https://imchel.ru/regulatory/regionalnoe/       https://im.gov74.ru/im/regulatory/regionalnoe.htm
         157: 22@sprNPAStructure  # Письма федеральных органов власти   https://imchel.ru/regulirovanie-v-sfere-zakupok/novosti-v-sfere-zakupok/
         158: 42@sprNPAStructure  # Письма министерства                 https://imchel.ru/regulirovanie-v-sfere-zakupok/novosti-v-sfere-zakupok/
 
