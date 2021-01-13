@@ -52,10 +52,10 @@ class DatabaseSinta(Database):
             AND node.created > 1514746800
             AND field_data_field_news_cat.field_news_cat_tid IN (104, 105)
             ORDER BY node.nid DESC
-            -- LIMIT 50
+            LIMIT 500
             ;
             '''
-        # news_list = self.select_rows(select_news_local, params)
+        # news_list = self.select_rows(select_news_local, tuple(params))
         news_list = self.select_rows(select_news_local)
         return news_list
 
@@ -132,7 +132,7 @@ class DatabaseSinta(Database):
         return npafiles_list
 
     def npa_info(self):
-        select_npa_info = """
+        query = """
             SELECT
             field_data_field_legal_acts.field_legal_acts_tid as npa_type,
             COUNT(node.nid) as npa_counts
@@ -143,6 +143,22 @@ class DatabaseSinta(Database):
             GROUP BY field_data_field_legal_acts.field_legal_acts_tid
             ORDER BY field_data_field_legal_acts.field_legal_acts_tid;
         """
-        npa_info = self.select_rows(select_npa_info)
+        npa_info = self.select_rows(query)
+        for npa_type in npa_info:
+            print(f'тип {npa_type[0]} количество {npa_type[1]}')
+
+    def news_info(self):
+        query = """
+            SELECT
+            field_data_field_news_cat.field_news_cat_tid as news_type,
+            COUNT(node.nid) as news_counts
+            FROM pravmin74_12_11.node
+            LEFT JOIN pravmin74_12_11.field_data_field_news_cat
+            ON field_data_field_news_cat.entity_id=node.nid
+            WHERE node.type='news'
+            GROUP BY field_data_field_news_cat.field_news_cat_tid
+            ORDER BY field_data_field_news_cat.field_news_cat_tid;
+        """
+        npa_info = self.select_rows(query)
         for npa_type in npa_info:
             print(f'тип {npa_type[0]} количество {npa_type[1]}')

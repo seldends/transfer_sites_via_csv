@@ -49,7 +49,7 @@ class DatabaseGenum(Database):
     # Функция для получения новостей
     def get_news_list(self, params):
         select_news_local = '''
-                SELECT *
+                SELECT "id", "Group_id", "Title", "Article", "Summary", "CreationDate", "PublicationDate", "Image"
                 FROM public."sd4_PublicationItem"
                 WHERE "IsHidden"=False
                 AND "CreationDate" > '2018-01-01 00:00:00'
@@ -93,7 +93,7 @@ class DatabaseGenum(Database):
             return records
 
     def npa_info(self):
-        query_info = """
+        query = """
             SELECT "sd4_LegalActType".id, "sd4_LegalActType"."Title", COUNT("sd4_LegalAct".id)
             FROM "sd4_LegalAct"
             LEFT JOIN "sd4_LegalActType"
@@ -102,12 +102,12 @@ class DatabaseGenum(Database):
             GROUP BY "sd4_LegalActType".id, "sd4_LegalActType"."Title"
             ORDER BY "sd4_LegalActType".id;
         """
-        info = self.select_rows(query_info)
+        info = self.select_rows(query)
         for obj in info:
             print(f'тип {obj[0]} {obj[1]} количество {obj[2]}')
 
     def news_info(self):
-        query_info = """
+        query = """
             SELECT "sd4_PublicationGroup".id, "sd4_PublicationGroup"."Title", COUNT("sd4_PublicationItem".id) 
             FROM "sd4_PublicationItem"
             LEFT JOIN "sd4_PublicationGroup"
@@ -117,6 +117,6 @@ class DatabaseGenum(Database):
             GROUP BY "sd4_PublicationGroup".id, "sd4_PublicationGroup"."Title"
             ORDER BY "sd4_PublicationGroup".id;
         """
-        info = self.select_rows(query_info)
+        info = self.select_rows(query)
         for obj in info:
             print(f'тип {obj[0]} {obj[1]} количество {obj[2]}')

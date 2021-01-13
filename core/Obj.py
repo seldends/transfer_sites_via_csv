@@ -62,6 +62,17 @@ class Obj():
         }
         return pattern_list
 
+    def get_patterns_image(self):
+        old_sitename = self.old_sitename
+        # TODO сделать передачу имени в регулярку
+        genum_pattern_file_1 = fr'(<(?:img|input)\s(?:(?:id|class|alt)=\"[^\"]{{0,50}}\"\s|)(?:class=\"[^\/]{{0,50}}\"\s|)src=\"((?:https?:\/\/(?:www\.|){old_sitename}|)\/(((?:Upload\/(?:files|images)\/|Storage\/Image\/PublicationItem\/(?:Article|Image)\/src\/[0-9]{{1,5}}\/))([^>\/]{{1,450}}\.[a-zA-Z]{{3,5}})))\"[^>]{{0,550}}>)'
+        bitrix_pattern_file_1 = r'(<img\s(?:width=\"[0-9]{1,4}\"\s|)(?:alt=\"[^\"]{1,50}\"\s|)src=\"((?:https?:\/\/imchel\.ru|)\/(([^\"\/]{1,40}\/(?:medialibrary\/[^\/]{1,5}\/|))([^>\"]{1,450}\.[a-zA-Z0-9]{2,5})))\"[^>]{0,550}>)'
+        pattern_list = {
+            "genum_file_1":    genum_pattern_file_1,         # паттерн 1 img
+            "bitrix_file_1":   bitrix_pattern_file_1,        # паттерн 1 img
+        }
+        return pattern_list
+
     def get_patterns_link(self):
         # TODO сделать передачу имени в регулярку
         old_sitename = self.config["old_name"]

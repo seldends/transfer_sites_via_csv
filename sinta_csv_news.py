@@ -6,7 +6,7 @@ from utils.Sinta import DatabaseSinta as Database
 
 # Перенос Новостей
 def transfer_news(config):
-    news_list = []
+    objects = []
     files = []
     all_files_from_text = []
     all_files_from_table = []
@@ -14,13 +14,9 @@ def transfer_news(config):
     null_news = []
     query_list = []
 
-    # db_type_local = config["db_type"]
-    # db_name_local = config["db_name"]
-
     db_local = Database(config["db_type"], config["db_name"])       # Объект подключения к бд со старыми данными
-
-    news_types = tuple(config["news_type"].keys())
-    data = db_local.get_news_list(news_types)                 # Получение списка Новостей из старой таблицы
+    db_local.news_info()
+    data = db_local.get_news_list(config["news_type"].keys())       # Получение списка Новостей из старой таблицы
     for row in data:
         params = {
             "old_id":       row[0],
@@ -33,17 +29,19 @@ def transfer_news(config):
             "image_index":  str(row[7]).replace("^", "#"),
         }
         news = News(params, config)
-        news_list.append(news)
+        objects.append(news)
         # Получение медиафайлов из таблицы
         files_raw = db_local.get_news_files_list(news.old_id)
         # Обработка файлов из таблицы
         files_from_table, empty_news = news.get_files_from_table(files_raw, NewsMediaFile)
         # Файлы из текста
         files_from_text = news.get_files_from_body(NewsFile)
+        # Обработка основного изображения
+        index_image_file = news.get_index_file()
         # Добавление проблемных новостей
         null_news.extend(empty_news)
 
-        # Запись в атрибут файлы НПА
+        # Запись в атрибут файлы
         news.update_files(files_from_table)
 
         # Удаление ссылок на страницы
@@ -51,8 +49,7 @@ def transfer_news(config):
 
         # Замена ссылок на файлы из текста
         news.replace_file_link(files_from_text)
-        # Обработка основного изображения
-        index_image_file = news.get_index_file()
+
         # Получение данных объекта
         obj = news.get_data()
         fieldnames = obj.keys()
