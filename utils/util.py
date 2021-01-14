@@ -91,7 +91,7 @@ def copy_file(old_path, new_path):
 
 def copy_files(files):
     for file in files:
-        print(file.new_link)
+        # print(file.new_link)
         file.copy_file()
 
 

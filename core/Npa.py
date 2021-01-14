@@ -13,8 +13,8 @@ class Npa(Obj):
         data = {
                 'structure':        self.structure,
                 'title':            self.title,
-                # 'text':             re.sub(r'[\n]{2,3}', r'', self.body),
-                'text':             self.body,
+                'text':             re.sub(r'[\n]{2,3}', r'', self.body),
+                # 'text':             self.body,
                 'classification':   self.classification,
                 "publ_date":        self.date_publication,
                 "date":             self.date,
