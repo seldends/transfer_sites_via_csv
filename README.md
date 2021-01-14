@@ -50,14 +50,44 @@
 | Поле             | Таблица и поле                                 |
 | ---------------- | ---------------------------------------------- |
 | Идентификатор    | `node.nid`                                     |
-| Название новости | `node.title`                                   |
-| Текст новости    | `field_data_body.body_value`                   |
+| Название         | `node.title`                                   |
+| Текст            | `field_data_body.body_value`                   |
 | Путь до картинки | `file_managed.uri`                             |
 | Дата создания    | `node.created`                                 |
 | Дата изменения   | `node.changed`                                 |
 | Дата публикации  |                                                |
 | Структура        | `field_data_field_news_cat.field_news_cat_tid` |
 | Резюме новости   | `field_data_field_teaser.field_teaser_value`   |
+
+### Параметры файлов новостей:
+
+| Поле                   | Таблица и поле                                    |
+| ---------------------- | ------------------------------------------------- |
+| Путь до файла          | `file_managed.uri`                                |
+| Описание файла         | `field_data_field_gallery.field_gallery_alt`      |
+| Связь файла с новостью | `field_data_field_gallery.entity_id` > `node.nid` |
+
+### Параметры НПА:
+
+| Поле           | Таблица и поле                                                 |
+| -------------- | -------------------------------------------------------------- |
+| Идентификатор  | `node.nid`                                                     |
+| Категория      | `field_data_field_legal_acts.field_legal_acts_tid`             |
+| Название       | `node.title`                                                   |
+| Текст          | `field_data_body.body_value`                                   |
+| Дата создания  | `node.created`                                                 |
+| Дата изменения | `node.changed`                                                 |
+| Дата принятия  | `field_data_field_npa_accept_date.field_npa_accept_date_value` |
+| Номер          | `field_data_field_npa_number.field_npa_number_value`           |
+
+### Параметры файлов НПА:
+
+| Поле              | Таблица и поле                                     |
+| ----------------- | -------------------------------------------------- |
+| Путь до файла     | `file_managed.uri`                                 |
+| Описание файла    | `field_data_field_upload.field_upload_description` |
+| Связь файла с НПА | `field_data_field_upload.entity_id` > `node.nid`   |
+
 
 ## Genum
 
@@ -91,3 +121,22 @@
 | Ссылка на файл                     | `sd4_PublicationItemImage.Image`   |
 | Новость в которой опубликован файл | `sd4_PublicationItemImage.Item_id` |
 | Описание                           | `sd4_PublicationItemImage.Title`   |
+
+### Параметры файлов НПА:
+
+| Поле              | Таблица и поле                                     |
+| ----------------- | -------------------------------------------------- |
+| Путь до файла     | `sd4_LegalActFile.File`                            |
+| Связь файла с НПА | `sd4_LegalActFile.LegalAct_id` > `sd4_LegalAct.id` |
+
+### Параметры страницы:
+
+| Поле                                                           | Таблица и поле           |
+| -------------------------------------------------------------- | ------------------------ |
+| Идентификатор                                                  | `sd4_HtmlPage.id`        |
+| Идентификатор родительской страницы                            | `sd4_HtmlPage.Parent_id` |
+| Название                                                       | `sd4_HtmlPage.Title`     |
+| Текст                                                          | `sd4_HtmlPage.Article`   |
+| Имя страницы в url                                             | `sd4_HtmlPage.Alias`     |
+| Полный путь url                                                | `sd4_HtmlPage.Path`      |
+| Глубина вложенности текущей страницы относительно родительской | `sd4_HtmlPage.Level`     |

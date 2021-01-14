@@ -16,8 +16,8 @@ def scanning_site(config):
 def main():
     # Список конфигураций сайтов
     sites = [
-        "szn74",
-        # "pravmin74",
+        # "szn74",
+        "pravmin74",
         # "imchel74",
     ]
     for site in sites:
