@@ -59,6 +59,8 @@ def transfer_npa(config):
         # Удаление ссылок на файлы из текста
         npa.delete_file_link(files_from_text)
 
+        npa.delete_empty()
+
         # Получение данных объекта
         obj = npa.get_data()
         fieldnames = obj.keys()
@@ -73,7 +75,7 @@ def transfer_npa(config):
     # Копирование файлов
     files.extend(all_files_from_text)      # Файлы из текста описания НПА
     files.extend(all_files_from_table)     # Файлы из таблицы файлов, связанные с текущим НПА
-    copy_files(files)
+    # copy_files(files)
 
     print(f'Количество пустых НПА : {len(null_npa)}')
     print(f'Количество НПА : {len(objects)}')

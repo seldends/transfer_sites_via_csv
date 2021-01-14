@@ -35,6 +35,4 @@ class Npa(Obj):
             links = re.findall(pattern, self.body)
             if len(links) > 0:
                 for link in links:
-                    print(link)
-                    # print(link,self.a_body)
                     self.body = str(self.body).replace(link, '')

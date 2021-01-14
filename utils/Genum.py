@@ -49,15 +49,15 @@ class DatabaseGenum(Database):
     # Функция для получения новостей
     def get_news_list(self, params):
         select_news_local = '''
-                SELECT "id", "Group_id", "Title", "Article", "Summary", "CreationDate", "PublicationDate", "Image"
-                FROM public."sd4_PublicationItem"
-                WHERE "IsHidden"=False
-                AND "CreationDate" > '2018-01-01 00:00:00'
-                AND "Group_id" IN %s
-                -- AND id > 28585
-                ORDER BY id DESC
-                -- LIMIT 1
-                '''
+            SELECT "id", "Group_id", "Title", "Article", "Summary", "CreationDate", "PublicationDate", "Image"
+            FROM public."sd4_PublicationItem"
+            WHERE "IsHidden"=False
+            AND "CreationDate" > '2018-01-01 00:00:00'
+            AND "Group_id" IN %s
+            -- AND id > 28585
+            ORDER BY id DESC
+            -- LIMIT 1
+            '''
         news_list = self.select_rows(select_news_local, tuple(params))
         return news_list
 
