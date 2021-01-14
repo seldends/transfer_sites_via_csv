@@ -103,8 +103,14 @@ class DatabaseGenum(Database):
             ORDER BY "sd4_LegalActType".id;
         """
         info = self.select_rows(query)
+        data = '## Таблица НПА\n| Название |Категория в старой системе | Количество объектов |\n| --- | --- | --- |\n'
+        count = 0
         for obj in info:
+            data += f'|{obj[1]}|{obj[0]}|{obj[2]}|\n'
+            count += obj[2]
             print(f'тип {obj[0]} {obj[1]} количество {obj[2]}')
+        data += f'|Всего|{len(info)}|{count}|\n'
+        return data
 
     def news_info(self):
         query = """
@@ -118,5 +124,11 @@ class DatabaseGenum(Database):
             ORDER BY "sd4_PublicationGroup".id;
         """
         info = self.select_rows(query)
+        data = '## Таблица Новостей начиная с 2018-01-01 00:00:00\n| Название |Категория в старой системе | Количество объектов |\n| --- | --- | --- |\n'
+        count = 0
         for obj in info:
+            data += f'|{obj[1]}|{obj[0]}|{obj[2]}|\n'
+            count += obj[2]
             print(f'тип {obj[0]} {obj[1]} количество {obj[2]}')
+        data += f'|Всего|{len(info)}|{count}|\n'
+        return data

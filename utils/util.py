@@ -62,9 +62,17 @@ def save_csv(path_csv, fieldnames, query_list):
     print("writing complete")
 
 
+# Сохранение отчета
+def save_report(path, data):
+    with open(path, 'a+', encoding="utf-8") as file:
+        file.write(str(data))
+        file.write("\n")
+    print("writing complete")
+
+
 def get_csv_path(config, type):
     new_sitename = config["new_name"]
-    now = datetime.now() # current date and time
+    now = datetime.now()    # current date and time
     time_now = now.strftime("%m-%d-%Y %H-%M-%S")
     root_path = Path.cwd()
     file_name = new_sitename + '_' + type + '_' + time_now + '.csv'
@@ -73,6 +81,18 @@ def get_csv_path(config, type):
     path_csv = path_csv_folder / file_name
 
     return path_csv
+
+
+def get_report_path(config):
+    new_sitename = config["new_name"]
+    now = datetime.now()    # current date and time
+    time_now = now.strftime("%m-%d-%Y %H-%M-%S")
+    root_path = Path.cwd()
+    file_name = new_sitename + '_' + 'report_' + time_now + '.md'
+    path_folder = root_path / 'reports' / new_sitename
+    path_folder.mkdir(parents=True, exist_ok=True)
+    path = path_folder / file_name
+    return path
 
 
 # TODO Доделать проверку на длину файла
