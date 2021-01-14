@@ -113,6 +113,19 @@
 | Резюме новости                 | `sd4_PublicationItem.Summary`         |
 | Важное                         |                                       |
 
+### Параметры НПА:
+
+| Поле           | Таблица и поле                  |
+| -------------- | ------------------------------- |
+| Идентификатор  | `sd4_LegalAct.id`               |
+| Категория      | `sd4_LegalAct.Type_id`          |
+| Название       | `sd4_LegalAct.Title`            |
+| Текст          | `sd4_LegalAct.Article`          |
+| Дата создания  | `sd4_LegalAct.CreationDate`     |
+| Дата изменения | `sd4_LegalAct.ModificationDate` |
+| Дата принятия  | `sd4_LegalAct.AdoptionDate`     |
+| Номер          | `sd4_LegalAct.Number`           |
+
 ### Параметры медиа-файлов:
 
 | Поле                               | Таблица и поле                     |
@@ -140,3 +153,57 @@
 | Имя страницы в url                                             | `sd4_HtmlPage.Alias`     |
 | Полный путь url                                                | `sd4_HtmlPage.Path`      |
 | Глубина вложенности текущей страницы относительно родительской | `sd4_HtmlPage.Level`     |
+
+
+## Bitrix
+
+
+| Содержимое                      | Таблица                     |
+| ------------------------------- | --------------------------- |
+| Базовая информация об объекте   | `b_iblock_element`          |
+| Дополнительные свойства объекта | `b_iblock_element_property` |
+| Файлы                           | `b_file`                    |
+
+
+### Параметры новости:
+
+| Поле             | Таблица и поле                     |
+| ---------------- | ---------------------------------- |
+| Идентификатор    | `b_iblock_element.ID`              |
+| Название         | `b_iblock_element.NAME`            |
+| Текст            | `b_iblock_element.DETAIL_TEXT`     |
+| Путь до картинки | `b_iblock_element.PREVIEW_PICTURE` |
+| Дата создания    | `b_iblock_element.DATE_CREATE`     |
+| Дата изменения   | `b_iblock_element.TIMESTAMP_X`     |
+| Дата публикации  | `b_iblock_element.`                |
+| Структура        | `b_iblock_element.IBLOCK_ID`       |
+| Резюме новости   | `b_iblock_element.PREVIEW_TEXT`    |
+
+### Параметры файлов новостей:
+
+| Поле                   | Таблица и поле                                                                                                          |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Путь до файла          | `CONCAT('upload/',b_file.SUBDIR, '/', b_file.FILE_NAME)`                                                                |
+| Описание файла         | `field_data_field_upload.field_upload_description`                                                                      |
+| Связь файла с новостью | `b_file.ID`> `b_iblock_element_property.VALUE` > `fb_iblock_element_property.IBLOCK_ELEMENT_ID` > `b_iblock_element.ID` |
+
+### Параметры НПА:
+
+| Поле           | Таблица и поле                 |
+| -------------- | ------------------------------ |
+| Идентификатор  | `b_iblock_element.ID`          |
+| Категория      | `b_iblock_element.IBLOCK_ID`   |
+| Название       | `b_iblock_element.NAME`        |
+| Текст          | `b_iblock_element.DETAIL_TEXT` |
+| Дата создания  | `b_iblock_element.DATE_CREATE` |
+| Дата изменения | `b_iblock_element.TIMESTAMP_X` |
+| Дата принятия  | `b_iblock_element.`            |
+| Номер          | `b_iblock_element.`            |
+
+### Параметры файлов НПА:
+
+| Поле              | Таблица и поле                                                                                                          |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Путь до файла     | `CONCAT('upload/',b_file.SUBDIR, '/', b_file.FILE_NAME)`                                                                |
+| Описание файла    | `field_data_field_upload.field_upload_description`                                                                      |
+| Связь файла с НПА | `b_file.ID`> `b_iblock_element_property.VALUE` > `fb_iblock_element_property.IBLOCK_ELEMENT_ID` > `b_iblock_element.ID` |
