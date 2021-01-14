@@ -29,6 +29,65 @@
 
 1. В ссылках на файлы делается замена `^` на `#` , может возникнуть проблема что файла не будет по измененному пути и нужно будет переименовать путь\файл.
 ## Sinta
-В таблице `field_config_instance` хранятся связи таблиц и сущностей, может быть полезно для понимания связи таблиц
+
+| Содержимое                    | Таблица                            |
+| ----------------------------- | ---------------------------------- |
+| Базовая информация об объекте | `node`                             |
+| Связь сущностей и таблиц      | `field_config_instance`            |
+| Содержимое объекта (тело)     | `field_data_body`                  |
+| Резюме                        | `field_data_field_teaser`          |
+| Связь категорий и новостей    | `field_data_field_news_cat`        |
+| Файлы прикрепленные к новости | `field_data_field_gallery`         |
+| Картинки                      | `field_data_field_image`           |
+| Файлы                         | `file_managed`                     |
+| НПА, связь НПА и категорий    | `field_data_field_legal_acts`      |
+| Связь НПА и даты принятия     | `field_data_field_npa_accept_date` |
+| Связь НПА и номера            | `field_data_field_npa_number`      |
 
 
+### Параметры новости:
+
+| Поле             | Таблица и поле                                 |
+| ---------------- | ---------------------------------------------- |
+| Идентификатор    | `node.nid`                                     |
+| Название новости | `node.title`                                   |
+| Текст новости    | `field_data_body.body_value`                   |
+| Путь до картинки | `file_managed.uri`                             |
+| Дата создания    | `node.created`                                 |
+| Дата изменения   | `node.changed`                                 |
+| Дата публикации  |                                                |
+| Структура        | `field_data_field_news_cat.field_news_cat_tid` |
+| Резюме новости   | `field_data_field_teaser.field_teaser_value`   |
+
+## Genum
+
+| Сущность           | Таблица                    |
+| ------------------ | -------------------------- |
+| Новости            | `sd4_PublicationItem`      |
+| Медиа-Файлы        | `sd4_PublicationItemImage` |
+| Структура новостей | `sd4_PublicationGroup`     |
+
+### Параметры новости:
+
+| Поле                           | Таблица и поле                        |
+| ------------------------------ | ------------------------------------- |
+| Идентификатор                  | `sd4_PublicationItem.id`              |
+| Название новости               | `sd4_PublicationItem.Title`           |
+| Текст статьи с HTML            | `sd4_PublicationItem.Article`         |
+| Дата публикации                | `sd4_PublicationItem.PublicationDate` |
+| Путь до картинки               | `sd4_PublicationItem.Image`           |
+| Скрыта ли новость\опубликована | `sd4_PublicationItem.IsHidden`        |
+| Дата создания                  | `sd4_PublicationItem.CreationDate`    |
+| Публиковать на главной         | `sd4_PublicationItem.OnMain`          |
+| Структура                      | `sd4_PublicationItem.Group-id`        |
+| Резюме новости                 | `sd4_PublicationItem.Summary`         |
+| Важное                         |                                       |
+
+### Параметры медиа-файлов:
+
+| Поле                               | Таблица и поле                     |
+| ---------------------------------- | ---------------------------------- |
+| Идентификатор                      | `sd4_PublicationItemImage.id`      |
+| Ссылка на файл                     | `sd4_PublicationItemImage.Image`   |
+| Новость в которой опубликован файл | `sd4_PublicationItemImage.Item_id` |
+| Описание                           | `sd4_PublicationItemImage.Title`   |
