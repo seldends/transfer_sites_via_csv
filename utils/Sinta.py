@@ -143,9 +143,18 @@ class DatabaseSinta(Database):
             GROUP BY field_data_field_legal_acts.field_legal_acts_tid
             ORDER BY field_data_field_legal_acts.field_legal_acts_tid;
         """
-        npa_info = self.select_rows(query)
-        for npa_type in npa_info:
-            print(f'тип {npa_type[0]} количество {npa_type[1]}')
+
+        info = self.select_rows(query)
+        data = '## Таблица НПА\n| Название |Категория в старой системе | Количество объектов |\n| --- | --- | --- |\n'
+        count = 0
+        for obj in info:
+            data += f'| --- |{obj[0]}|{obj[1]}|\n'
+            count += obj[1]
+        data += f'|Всего|{len(info)}|{count}|\n'
+        return data
+
+        # for npa_type in npa_info:
+        #     print(f'тип {npa_type[0]} количество {npa_type[1]}')
 
     def news_info(self):
         query = """
@@ -162,3 +171,12 @@ class DatabaseSinta(Database):
         npa_info = self.select_rows(query)
         for npa_type in npa_info:
             print(f'тип {npa_type[0]} количество {npa_type[1]}')
+
+        info = self.select_rows(query)
+        data = '## Таблица Новостей начиная с 2018-01-01 00:00:00\n| Название |Категория в старой системе | Количество объектов |\n| --- | --- | --- |\n'
+        count = 0
+        for obj in info:
+            data += f'| --- |{obj[0]}|{obj[1]}|\n'
+            count += obj[1]
+        data += f'|Всего|{len(info)}|{count}|\n'
+        return data
