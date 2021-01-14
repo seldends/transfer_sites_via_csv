@@ -183,6 +183,8 @@ class Obj():
         # TODO запись в атрибут медиафайлы объектов через запятую
         for file in files:
             if self.objFiles != '':
-                self.objFiles = ','.join((self.objFiles, file.str_new_link))
+                if file.str_new_link not in self.objFiles:
+                    self.objFiles = ','.join((self.objFiles, file.str_new_link))
+                # self.objFiles = ','.join((self.objFiles, file.str_new_link))
             else:
                 self.objFiles = file.str_new_link
