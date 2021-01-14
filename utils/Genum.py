@@ -83,14 +83,14 @@ class DatabaseGenum(Database):
         pages_list = self.select_rows(select_page_local)
         return pages_list
 
-        self.connect()
-        with self.conn.cursor() as cur:
-            val = f'{code}%'
-            conent = f'{content}'
-            cur.execute(select_pages, (val, conent))
-            records = cur.fetchall()
-            cur.close()
-            return records
+        # self.connect()
+        # with self.conn.cursor() as cur:
+        #     val = f'{code}%'
+        #     conent = f'{content}'
+        #     cur.execute(select_pages, (val, conent))
+        #     records = cur.fetchall()
+        #     cur.close()
+        #     return records
 
     def npa_info(self):
         query = """

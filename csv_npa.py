@@ -1,32 +1,36 @@
-from utils.util import time_test, get_config, get_csv_path, save_csv, copy_files
+from utils.util import time_test, get_config, get_csv_path, save_csv, copy_files, connection
 from core.Npa import Npa
 from core.File import NpaFile
-from utils.Genum import DatabaseGenum as Database
 
 
 # Перенос НПА
 def transfer_npa(config):
-    npa_list = []
-    npa_files = []
+    objects = []
+    files = []
+    all_files_from_text = []
+    all_files_from_table = []
     null_npa = []
     query_list = []
 
-    db_type_local = config["db_type"]
-    db_name_local = config["db_name"]
-
-    db_local = Database(db_type_local, db_name_local)       # Объект подключения к бд со старыми данными
+    db_local = connection(config)       # Объект подключения к бд со старыми данными
     db_local.npa_info()
-    npa_types = tuple(config["npa_type"].keys())
-    data = db_local.get_npa_list(npa_types)                 # Получение списка НПА из старой таблицы
+    data = db_local.get_npa_list(config["npa_type"].keys())       # Получение списка НПА из старой таблицы
     for row in data:
-        if row[5]:  # На сайте отображается дата создания
-            date_publ = row[5]  # 4 - дата создания
+        # Sinta На сайте отображается дата создания
+        # if row[4]:
+        #     date_publ = row[4]  # 4 - дата создания
+        # else:
+        #     date_publ = row[5]  # 5 - дата изменения
+        # Genum На сайте отображается дата создания
+        if row[5]:
+            date_publ = row[5]  # 5 - дата изменения
         else:
-            date_publ = row[4]  # 5 - дата изменения
+            date_publ = row[4]  # 4 - дата создания
         if row[6]:  # Если пустая дата принятия, то подставить дату публикации
             date_accept = row[6]
         else:
             date_accept = date_publ
+
         params = {
             "old_id":       row[0],
             "structure":    config["npa_type"][row[1]],
@@ -37,7 +41,7 @@ def transfer_npa(config):
             "number":       row[7],
         }
         npa = Npa(params, config)
-        npa_list.append(npa)
+        objects.append(npa)
         # Получение медиафайлов из таблицы
         files_raw = db_local.get_npa_files_list(npa.old_id)
         files_from_table, empty_npa = npa.get_files_from_table(files_raw, NpaFile)
@@ -60,26 +64,22 @@ def transfer_npa(config):
         fieldnames = obj.keys()
         query_list.append(obj)
         # TODO сделать полное описание или разделение на отдельные списки
-        npa_files.extend(files_from_text)      # Файлы из текста описания НПА
-        npa_files.extend(files_from_table)     # Файлы из таблицы файлов, связанные с текущим НПА
+        all_files_from_text.extend(files_from_text)      # Файлы из текста описания НПА
+        all_files_from_table.extend(files_from_table)    # Файлы из таблицы файлов, связанные с текущим НПА
 
     path_csv = get_csv_path(config, 'npa')         # Получение пути для csv
     save_csv(path_csv, fieldnames, query_list)      # Сохранение словаря в csv
 
     # Копирование файлов
-    # copy_files(npa_files)
+    files.extend(all_files_from_text)      # Файлы из текста описания НПА
+    files.extend(all_files_from_table)     # Файлы из таблицы файлов, связанные с текущим НПА
+    # copy_files(files)
 
-    # TODO
-    # report_date = {
-    #     "element_list": npa_list,
-    #     "files_from_table": files_from_table,
-    #     "files_from_table": files_from_table,
-    # }
     print(f'Количество пустых НПА : {len(null_npa)}')
-    print(f'Количество НПА : {len(npa_list)}')
-    print(f'Количество файлов НПА из таблицы : {len(files_from_table)}')
-    print(f'Количество файлов НПА из текста НПА : {len(files_from_text)}')
-    print(f'Количество файлов НПА общее : {len(npa_files)}')
+    print(f'Количество НПА : {len(objects)}')
+    print(f'Количество файлов НПА из таблицы : {len(all_files_from_table)}')
+    print(f'Количество файлов НПА из текста НПА : {len(all_files_from_text)}')
+    print(f'Количество файлов НПА общее : {len(files)}')
     print(f"Количество НПА {str(len(data))}")
 
 
@@ -88,6 +88,7 @@ def main():
     # Список конфигураций сайтов
     sites = [
         "szn74",
+        # "pravmin74",
     ]
     for site in sites:
         # Получение конфигурации
