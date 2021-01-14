@@ -25,17 +25,17 @@ class DatabaseGenum(Database):
 
     # Функция для получения ouid нпа
     def get_npa_files_list(self, id):
-        select_npafiles_local = '''
+        query = '''
             SELECT "File"
             FROM public."sd4_LegalActFile"
             WHERE "LegalAct_id"=%s;
             '''
-        npafiles_list = self.select_rows(select_npafiles_local, id)
+        npafiles_list = self.select_rows(query, id)
         return npafiles_list
 
     # Функция для получения нпа
     def get_npa_list(self, params):
-        select_npa_local = '''
+        query = '''
             SELECT "id", "Type_id", "Title", "Article", "CreationDate", "ModificationDate", "AdoptionDate", "Number"
             FROM "sd4_LegalAct"
             WHERE "IsHidden"=False
@@ -43,12 +43,12 @@ class DatabaseGenum(Database):
             ORDER BY id DESC
             ;
             '''
-        npa_list = self.select_rows(select_npa_local, tuple(params))
+        npa_list = self.select_rows(query, tuple(params))
         return npa_list
 
     # Функция для получения новостей
     def get_news_list(self, params):
-        select_news_local = '''
+        query = '''
             SELECT "id", "Group_id", "Title", "Article", "Summary", "CreationDate", "PublicationDate", "Image"
             FROM public."sd4_PublicationItem"
             WHERE "IsHidden"=False
@@ -58,29 +58,29 @@ class DatabaseGenum(Database):
             ORDER BY id DESC
             -- LIMIT 1
             '''
-        news_list = self.select_rows(select_news_local, tuple(params))
+        news_list = self.select_rows(query, tuple(params))
         return news_list
 
     # Функция для получения медиафайлов
     def get_news_files_list(self, id):
-        select_newsfiles_local = '''
-                SELECT "Image", "Title"
-                FROM public."sd4_PublicationItemImage"
-                WHERE "Item_id"=%s;
-                '''
-        newsfiles_list = self.select_rows(select_newsfiles_local, id)
+        query = '''
+            SELECT "Image", "Title"
+            FROM public."sd4_PublicationItemImage"
+            WHERE "Item_id"=%s;
+            '''
+        newsfiles_list = self.select_rows(query, id)
         return newsfiles_list
 
     # Сохранение страниц
     def get_pages_list(self):
-        select_page_local = '''
+        query = '''
             SELECT "id","Parent_id","Title","Article", "Alias", "Path", "Level"
             FROM public."sd4_HtmlPage"
             WHERE "IsHidden"=false
             --AND "Alias"=%s
             ORDER BY id DESC;
             '''
-        pages_list = self.select_rows(select_page_local)
+        pages_list = self.select_rows(query)
         return pages_list
 
         # self.connect()

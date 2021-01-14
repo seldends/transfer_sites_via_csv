@@ -5,7 +5,8 @@ from os import fspath
 import urllib.parse
 from utils.Genum import DatabaseGenum as Database
 from datetime import datetime
-from csv_objects import PageFile
+from core.Page import Page
+from core.File import PageFile
 
 
 def get_folder_path(config):

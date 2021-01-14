@@ -34,7 +34,6 @@ class NewsIndexImgFile(File):
 class NewsFile(File):
     def __init__(self, config, data):
         super().__init__(config, data)
-        # TODO проверить правильность ссылок
         # TODO подумать могут ли быть в разлинчных директориях файлы с одинаковым именем
         self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
         self.str_new_link = "".join(("files/news_mediafiles/", self.sitename, "/", self.file))
@@ -43,7 +42,6 @@ class NewsFile(File):
 class NewsMediaFile(File):
     def __init__(self, config, data):
         super().__init__(config, data)
-        # TODO проверить правильность ссылок
         # TODO подумать могут ли быть в разлинчных директориях файлы с одинаковым именем
         folder_name = Path(self.file_relative_path).name
         self.new_link = "".join(("files/news_mediafiles/", self.sitename, "/", folder_name, "/", self.file))
@@ -53,7 +51,6 @@ class NewsMediaFile(File):
 class NpaFile(File):
     def __init__(self, config, data):
         super().__init__(config, data)
-        # TODO проверить правильность ссылок
         # TODO подумать могут ли быть в разлинчных директориях файлы с одинаковым именем
         self.new_link = "".join(("files/norm_act/", self.sitename, "/", self.file))
         self.str_new_link = "".join(("/norm_act/", self.sitename, "/", self.file, "@cmsFile.doc"))
@@ -62,15 +59,14 @@ class NpaFile(File):
 class VacancyFile(File):
     def __init__(self, config, data):
         super().__init__(config, data)
-        # TODO проверить правильность ссылок
         # TODO подумать могут ли быть в разлинчных директориях файлы с одинаковым именем
         self.new_link = "".join(("files/vacancies/", self.sitename, "/", self.file))
         self.str_new_link = "".join(("/vacancies/", self.sitename, "/", self.file, "@cmsFile.doc"))
 
+
 class AuctionFile(File):
     def __init__(self, config, data):
         super().__init__(config, data)
-        # TODO проверить правильность ссылок
         # TODO подумать могут ли быть в разлинчных директориях файлы с одинаковым именем
         self.new_link = "".join(("files/auctions/", self.sitename, "/", self.file))
         self.str_new_link = "".join(("/auctions/", self.sitename, "/", self.file, "@cmsFile.doc"))
@@ -79,13 +75,14 @@ class AuctionFile(File):
 class PageFile(File):
     def __init__(self, config, data):
         super().__init__(config, data)
+        # TODO проверить правильность ссылок
         self.new_link = "".join(("files/upload/", self.sitename, "/", self.section_title, '/', self.file))
         self.str_new_link = "".join(("files/upload/", self.sitename, "/", self.section_title, '/', self.file))
+
 
 class DocFile(File):
     def __init__(self, config, data):
         super().__init__(config, data)
-        # TODO проверить правильность ссылок
         # TODO подумать могут ли быть в разлинчных директориях файлы с одинаковым именем
         self.new_link = "".join(("files/documents/", self.sitename, "/", self.file))
         self.str_new_link = "".join(("/documents/", self.sitename, "/", self.file, "@cmsFile.doc"))
