@@ -3,7 +3,7 @@ import urllib.parse
 import logging
 import csv
 import re
-from utils import time_test, get_config, get_csv_path, save_csv
+from utils.util import time_test, get_config, get_csv_path, save_csv
 
 
 # Проверка есть ли файл txt в директории
