@@ -132,3 +132,44 @@ class DatabaseGenum(Database):
             print(f'тип {obj[0]} {obj[1]} количество {obj[2]}')
         data += f'|Всего|{len(info)}|{count}|\n'
         return data
+
+    def get_title_from_path(self, alias):
+        query = '''
+            SELECT "Title"
+            FROM public."sd4_HtmlPage"
+            WHERE "Alias"=%s
+            ORDER BY id DESC;
+            '''
+        title_list = self.select_rows(query, alias)
+        return title_list
+
+    # # TODO доделать замену
+    # def get_title_from_path(self, path):
+    #     path_titles = []
+    #     page_path = path.split('/')
+    #     query = '''
+    #         SELECT "Title"
+    #         FROM public."sd4_HtmlPage"
+    #         WHERE "Alias"=%s
+    #         ORDER BY id DESC;
+    #         '''
+    #     for parent_path in page_path:
+    #         # page_title = db_local.get_title_from_path(parent_path)
+    #         page_title = self.select_rows(query, parent_path)
+    #         if page_title is not None:
+    #             try:
+    #                 path_title = str(page_title[0][0]).replace('/', '.')
+    #                 # TODO
+    #                 # forest 134
+    #                 # ugzhi 125
+    #                 # Нужно делать обрезку количества символов в пути, т.к. есть ограницение на 255 символов в пути
+    #                 # опытным путем подбираю количество символов имени так, чтобы сумма с путем была меньше 255
+    #                 # path_titles.append(path_title[:125])
+    #                 # path_titles.append(path_title[:134])
+    #                 # .replace('«','').replace('»','')
+    #                 path_titles.append(path_title.replace('<a href=http..gk74.ru.Upload.prikazy.prikaz_34_03.03.20.pdf>', '').replace('?', '').replace('"', '').replace('\t','').replace("'", '').replace(":", '').replace('...','').strip())
+    #             except IndexError as e:
+    #                 print(f'У страниц с адресом состоящим из {page_path}, нет названий {page_title} Ошибка: {e}')
+    #                 print('Проверить соответствует ли в бд путь алиасам страниц')
+    #                 # print(e)
+    #     return (path_titles)

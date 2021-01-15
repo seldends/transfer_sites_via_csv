@@ -1,40 +1,32 @@
 from pathlib import Path
 from utils.util import save_file
+from core.Obj import Obj
 
 
-class Page:
-    def __init__(self, params, db_local, config):
-        self.id = params["old_id"]
+class Page(Obj):
+    def __init__(self, params, config):
+        super().__init__(params, config)
         self.parent_id = params["parent_id"]
-        self.title = params["title"]
-        self.article = params["article"]
         self.alias = params["alias"]
         self.path = params["path"]
         self.level = params["level"]
         self.folder_path = params["folder_path"]
-        self.sitename = config["old_name"]
-        self.path_from_titles = self.get_title_from_path(db_local)
+        self.path_from_titles = []
 
     def get_data(self):
         data = (
-            self.id, self.parent_id, self.title,
-            self.article, self.alias, self.path,
+            self.old_id, self.parent_id, self.title,
+            self.body, self.alias, self.path,
             self.level
         )
         return data
 
 # Возвращает путь составленный из заголовков страниц
     def get_title_from_path(self, db_local):
-        select_page_title = '''
-            SELECT "Title"
-            FROM public."sd4_HtmlPage"
-            WHERE "Alias"=%s
-            ORDER BY id DESC;
-            '''
         path_titles = []
         page_path = self.path.split('/')
         for parent_path in page_path:
-            page_title = db_local.select_rows(select_page_title, parent_path)
+            page_title = db_local.get_title_from_path(parent_path)
             if page_title is not None:
                 try:
                     path_title = str(page_title[0][0]).replace('/', '.')
@@ -61,8 +53,8 @@ class Page:
         full_path = self.folder_path / page_path
         try:
             Path(full_path).mkdir(parents=True, exist_ok=True)
-            save_file(full_path / page_name_txt, self.article)
-            save_file(full_path / page_name_html, self.article)
+            save_file(full_path / page_name_txt, self.body)
+            save_file(full_path / page_name_html, self.body)
         except OSError as e:
             print(e, self.path_from_titles)
             # print(f"{fspath(full_path)} len {len(fspath(full_path).encode('utf-8'))}")
