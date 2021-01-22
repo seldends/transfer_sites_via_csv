@@ -37,16 +37,16 @@ class DatabaseSinta(Database):
             field_data_field_image.field_image_alt as image_alt,
             file_managed.origname as image_name,
             node.vid, node.uid, node.status
-            FROM pravmin74_12_11.node
-            LEFT JOIN pravmin74_12_11.field_data_field_image
+            FROM node
+            LEFT JOIN field_data_field_image
             ON field_data_field_image.entity_id=node.nid
-            LEFT JOIN pravmin74_12_11.file_managed
+            LEFT JOIN file_managed
             ON file_managed.fid=field_data_field_image.field_image_fid
-            LEFT JOIN pravmin74_12_11.field_data_field_news_cat
+            LEFT JOIN field_data_field_news_cat
             ON field_data_field_news_cat.entity_id=node.nid
-            LEFT JOIN pravmin74_12_11.field_data_body
+            LEFT JOIN field_data_body
             ON field_data_body.entity_id=node.nid
-            LEFT JOIN pravmin74_12_11.field_data_field_teaser
+            LEFT JOIN field_data_field_teaser
             ON field_data_field_teaser.entity_id=node.nid
             WHERE node.type='news'
             AND node.created > 1514746800
@@ -90,14 +90,14 @@ class DatabaseSinta(Database):
             node.changed as date_edit,
             field_data_field_npa_accept_date.field_npa_accept_date_value as accept_date,
             field_data_field_npa_number.field_npa_number_value as npa_number
-            FROM pravmin74_12_11.node
-            LEFT JOIN pravmin74_12_11.field_data_field_legal_acts
+            FROM node
+            LEFT JOIN field_data_field_legal_acts
             ON field_data_field_legal_acts.entity_id=node.nid
-            LEFT JOIN pravmin74_12_11.field_data_field_npa_accept_date
+            LEFT JOIN field_data_field_npa_accept_date
             ON field_data_field_npa_accept_date.entity_id=node.nid
-            LEFT JOIN pravmin74_12_11.field_data_field_npa_number
+            LEFT JOIN field_data_field_npa_number
             ON field_data_field_npa_number.entity_id=node.nid
-            LEFT JOIN pravmin74_12_11.field_data_body
+            LEFT JOIN field_data_body
             ON field_data_body.entity_id=node.nid
             WHERE node.type='legal_acts'
             -- AND field_data_field_legal_acts.field_legal_acts_tid IN (3, 4, 5, 6)
@@ -122,8 +122,8 @@ class DatabaseSinta(Database):
             -- field_data_field_upload.entity_id,
             -- field_data_field_upload.revision_id,
             field_data_field_upload.field_upload_description
-            FROM pravmin74_12_11.field_data_field_upload
-            LEFT JOIN pravmin74_12_11.file_managed
+            FROM field_data_field_upload
+            LEFT JOIN file_managed
             ON file_managed.fid=field_data_field_upload.field_upload_fid
             where field_data_field_upload.bundle ='legal_acts'
             AND field_data_field_upload.entity_id=?
@@ -136,8 +136,8 @@ class DatabaseSinta(Database):
             SELECT
             field_data_field_legal_acts.field_legal_acts_tid as npa_type,
             COUNT(node.nid) as npa_counts
-            FROM pravmin74_12_11.node
-            LEFT JOIN pravmin74_12_11.field_data_field_legal_acts
+            FROM node
+            LEFT JOIN field_data_field_legal_acts
             ON field_data_field_legal_acts.entity_id=node.nid
             WHERE node.type='legal_acts'
             GROUP BY field_data_field_legal_acts.field_legal_acts_tid
@@ -161,8 +161,8 @@ class DatabaseSinta(Database):
             SELECT
             field_data_field_news_cat.field_news_cat_tid as news_type,
             COUNT(node.nid) as news_counts
-            FROM pravmin74_12_11.node
-            LEFT JOIN pravmin74_12_11.field_data_field_news_cat
+            FROM node
+            LEFT JOIN field_data_field_news_cat
             ON field_data_field_news_cat.entity_id=node.nid
             WHERE node.type='news'
             GROUP BY field_data_field_news_cat.field_news_cat_tid
