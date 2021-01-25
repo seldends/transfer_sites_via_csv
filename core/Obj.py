@@ -44,22 +44,25 @@ class Obj():
         old_sitename = self.old_sitename
         file = fr'([^>\"\/]{{1,450}}\.[a-zA-Z0-9]{{2,5}})'
         sitename = fr'(?:https?:\/\/(?:www\.|ruk\.|){old_sitename}|)'
-        prefix = fr'(?:(?:id|class|alt|height|target)=\"[^\"]{{0,50}}\"\s|){{0,5}}'
+        prefix = fr'(?:(?:id|class|alt|height|target|width)=\"[^\"]{{0,50}}\"\s|){{0,5}}'
         # TODO сделать передачу имени в регулярку
         genum_pattern_file_1 = fr'(<a href=\"({sitename}\/(((?:dokumentydok\/[^\/]{{1,75}}|upload\/iblock\/[^\/]{{0,4}}|Upload\/files|Files\/DiskFile\/(?:|[0-9]{{4}}\/)[a-zA-Z]{{1,10}}|opendata|Storage\/Image\/PublicationItem\/Image\/src\/[0-9]{{1,5}})\/){file}))\s?\"[^>]{{0,250}}>)'
         genum_pattern_file_2 = fr'(<(?:img|input)\s{prefix}src=\"({sitename}\/(((?:Upload\/(?:files|images)\/|Storage\/Image\/PublicationItem\/(?:Article|Image)\/src\/[0-9]{{1,5}}\/)){file}))\"[^>]{{0,550}}>)'
         genum_pattern_file_3 = fr'(<a href=\"({sitename}\/((Files\/VideoFiles\/){file}))\s?\"[^>]{{0,250}}>)'
 
+        # TODO проверить регулярки для битрикса по файлам
         bitrix_pattern_file_1 = fr'(<img\s{prefix}src=\"({sitename}\/(([^\"\/]{{1,40}}\/(?:medialibrary\/[^\/]{{1,5}}\/|))' + file + r'))\"[^>]{0,550}>)'
         bitrix_pattern_file_2 = fr'(<a\s{prefix}href=\"({sitename}\/(?:bitrix\/redirect\.php\?event1=download&amp;event2=update&amp;event3=[^\/\"]{{1,100}};goto=\/|)(([^\"\/]{{1,40}}\/(?:[^\"\/]{{1,100}}\/|){{0,4}})' + file + r'))\"[^>]{0,550}>)'
 
-        sinta_pattern_file_1 = fr'(<a href=\"({sitename}\/((sites\/default\/files\/imceFiles\/user-[0-9]{{1,4}}\/){file}))\"[^>]{{0,550}}>)'
+        drupal_pattern_file_1 = fr'(<a href=\"({sitename}\/((sites\/default\/files\/imceFiles\/user-[0-9]{{1,4}}\/){file}))\"[^>]{{0,550}}>)'
+
+        print(bitrix_pattern_file_1)
 
         pattern_list = {
             "genum_file_1":    genum_pattern_file_1,         # паттерн 1 файлы
             "genum_file_2":    genum_pattern_file_2,         # паттерн 2 img
             "genum_file_3":    genum_pattern_file_3,         # паттерн 2 видео
-            "sinta_file_1":    sinta_pattern_file_1,         # паттерн 2
+            "drupal_file_1":   drupal_pattern_file_1,         # паттерн 2
             "bitrix_file_1":   bitrix_pattern_file_1,         # паттерн 2
             "bitrix_file_2":   bitrix_pattern_file_2,         # паттерн 2
         }
@@ -70,7 +73,7 @@ class Obj():
         # TODO сделать передачу имени в регулярку
         file = r'([^>\"\/]{1,450}\.[a-zA-Z0-9]{2,5})'
         sitename = fr'(?:https?:\/\/(?:www\.|ruk\.|){old_sitename}|)'
-        prefix = fr'(?:(?:id|class|alt|height|target)=\"[^\"]{{0,50}}\"\s|){{0,5}}'
+        prefix = fr'(?:(?:id|class|alt|height|target|width)=\"[^\"]{{0,50}}\"\s|){{0,5}}'
 
         genum_pattern_file_1 = fr'(<(?:img|input)\s{prefix}src=\"((?:https?:\/\/(?:www\.|){old_sitename}|)\/(((?:Upload\/(?:files|images)\/|Storage\/Image\/PublicationItem\/(?:Article|Image)\/src\/[0-9]{{1,5}}\/))' + file + r'))\"[^>]{{0,550}}>)'
 
@@ -86,29 +89,29 @@ class Obj():
         # TODO сделать передачу имени в регулярку
         old_sitename = self.config["old_name"]
         sitename = fr'(?:https?:\/\/(?:www\.|ruk\.|){old_sitename}|)'
-        prefix = fr'(?:(?:id|class|alt|height|target)=\"[^\"]{{0,50}}\"\s|){{0,5}}'
+        prefix = fr'(?:(?:id|class|alt|height|target|width)=\"[^\"]{{0,50}}\"\s|){{0,5}}'
 
         genum_pattern_page = fr'(<a href=\"({sitename}\/(htmlpages\/(?:Show|CmsHtmlPageList)\/[^\"]{{1,75}}(?:\/[^\"]{{1,75}}\/[^\"]{{1,75}}|\/[^\"]{{1,75}}|)))\"[^>]{{0,250}}>)'
         genum_pattern_npa = fr'(<a href=\"({sitename}\/(LegalActs\/Show\/[^\/>]{{1,10}}))\"[^>]{{0,250}}>)'
         genum_pattern_single_page = fr'(<a href=\"({sitename}(?:|\/|\/(?:InternetReception|LegalActs)))\"[^>]{{0,250}}>)'
         genum_pattern_id = fr'(<a href=\"({sitename}\/Publications\/[a-zA-Z]{{1,15}}(?:\/Show\?id=[0-9]{{0,10}}|))\"[^>]{{0,250}}>)'
 
-        sinta_pattern_npa = fr'(<a href=\"({sitename}(\/normativnye-pravovye-akty\/[^\/]{{1,250}}\/[^\/\"]{{1,250}}))\"[^>]{{0,100}}>)'
-        sinta_pattern_news = fr'(<a href=\"({sitename}(\/novosti\/[^\/\"]{{1,250}}))\"[^>]{{0,100}}>)'
-        sinta_pattern_page = fr'(<a href=\"({sitename}(\/[^\/\"]{{1,100}}))\"[^>]{{0,100}}>)'
+        drupal_pattern_npa = fr'(<a href=\"({sitename}(\/normativnye-pravovye-akty\/[^\/]{{1,250}}\/[^\/\"]{{1,250}}))\"[^>]{{0,100}}>)'
+        drupal_pattern_news = fr'(<a href=\"({sitename}(\/novosti\/[^\/\"]{{1,250}}))\"[^>]{{0,100}}>)'
+        drupal_pattern_page = fr'(<a href=\"({sitename}(\/[^\/\"]{{1,100}}))\"[^>]{{0,100}}>)'
 
-        # TODO Протестировать
-        bitrix_pattern_page = r'(<a\s(?:(?:class|alt|target|id)=\"[^\"]{1,50}\"\s|){0,5}href=\"((?:https?:\/\/(?:www\.|)imchel\.ru|)(?:\/?(?:[^\/\"]{1,50}\/|)(?:[^\/\"]{1,50}\/|)(?:[^\/\"]{1,250}|)\/?)|)\"[^>]{0,100}>)'
-        # bitrix_pattern_page = fr'(<a\s{prefix}href=\"((?:https?:\/\/(?:www\.|)imchel\.ru|)(?:\/?(?:[^\/\"]{{1,50}}\/|)(?:[^\/\"]{{1,50}}\/|)(?:[^\/\"]{{1,250}}|)\/?)|)\"[^>]{{0,100}}>)'
+        # TODO Протестировать заменяются ссылки на файлы
+        bitrix_pattern_page = fr'(<a\s{prefix}href=\"({sitename}(?:\/?(?:[^\/\"]{{1,50}}\/|)(?:[^\/\"]{{1,50}}\/|)(?:[^\/\"]{{1,250}}|)\/?)|)\"[^>]{{0,100}}>)'
+
         pattern_list = {
             "genum_page":           genum_pattern_page,         # genum паттерн для поиска ссылок на страницы
             "genum_npa":            genum_pattern_npa,          # genum паттерн для поиска ссылок на НПА
             "genum_single_page":    genum_pattern_single_page,  # genum паттерн для поиска ссылок на приемнуюкорневые страницы
             "genum_news":           genum_pattern_id,           # genum паттерн для поиска ссылок на новости
-            "sinta_npa":            sinta_pattern_npa,          # sinta паттерн для поиска ссылок на НПА
-            "sinta_news":           sinta_pattern_news,         # sinta паттерн для поиска ссылок на новости
-            "sinta_page":           sinta_pattern_page,         # sinta паттерн для поиска ссылок на страницы
-            "bitrix_page":          bitrix_pattern_page,
+            "drupal_npa":           drupal_pattern_npa,          # drupal паттерн для поиска ссылок на НПА
+            "drupal_news":          drupal_pattern_news,         # drupal паттерн для поиска ссылок на новости
+            "drupal_page":          drupal_pattern_page,         # drupal паттерн для поиска ссылок на страницы
+            "bitrix_page":          bitrix_pattern_page,        # bitrix паттерн для поиска ссылок на страницы
         }
         return pattern_list
 
@@ -161,13 +164,13 @@ class Obj():
         file = r'([^>\"\/]{1,450}\.[a-zA-Z0-9]{2,5})'
         pattern_file_genum = r'(\/(PublicationItemImage\/Image\/src\/[0-9]{1,5}\/)([^>]{1,75}))'
         pattern_file_bitrix = r'(\/?(upload\/(?:[^\"\/]{1,100}\/|){0,4})' + file + r')'
-        # pattern_file_sinta = r'(\/?(public:\/\/(?:[^\"\/]{1,100}\/|){0,4})' + file + r')'
-        pattern_file_sinta = r'(\/?(sites\/default\/files\/(?:[^\"\/]{1,100}\/|){0,4}\/?)' + file + r')'
+        # pattern_file_drupal = r'(\/?(public:\/\/(?:[^\"\/]{1,100}\/|){0,4})' + file + r')'
+        pattern_file_drupal = r'(\/?(sites\/default\/files\/(?:[^\"\/]{1,100}\/|){0,4}\/?)' + file + r')'
 
         pattern_list = {
             # "files_genum":      pattern_file_genum,             # паттерн 1
             # "files_bitrix":     pattern_file_bitrix,            # паттерн 1
-            "files_sinta":      pattern_file_sinta,           # паттерн 1
+            "files_drupal":      pattern_file_drupal,           # паттерн 1
         }
         for file in files_raw:
             old_path = file[0]
