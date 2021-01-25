@@ -1,6 +1,7 @@
 from pathlib import Path
 import urllib.parse
-from utils.util import copy_file
+# from utils.util import copy_file
+import shutil
 
 
 class File:
@@ -20,7 +21,18 @@ class File:
         root = Path.cwd()
         self.path_root_new_file = root / 'new_files' / self.sitename / self.new_link
         self.path_root_new_folder = self.path_root_new_file.parent
-        copy_file(self.path_root_old_file,  self.path_root_new_folder)
+
+        # Длины новых путей файлов
+        # print(str(len(new_file_path_str.encode('utf-8'))) + ' - ' + new_file_path_str)
+        # if len(new_file_path_str.encode('utf-8')) > 250:
+        #     print(str(len(new_file_path_str.encode('utf-8'))) + ' - ' + new_file_path_str)
+        # Копирование файлов
+        self.path_root_new_folder.mkdir(parents=True, exist_ok=True)
+        try:
+            shutil.copy2(self.path_root_old_file, self.path_root_new_folder)
+        except IOError as e:
+            print(self.file_full_path, self.file, self.path_root_old_file)
+            print(f'{e} Нет файла "{self.path_root_old_file}" {self.path_root_new_folder}')
 
 
 class NewsIndexImgFile(File):
