@@ -38,8 +38,11 @@ class Obj():
         return date
 
     def clean_body(self, raw_text):
+        # print(raw_text)
+        updated_test = urllib.parse.unquote(raw_text).strip("").replace("^", "#")
+        print(updated_test)
         if raw_text:
-            body = re.sub(r'(?:<p style=\"text-align: justify;\">\s?(?:<[a-z]{1,2}>|\s?\&nbsp;|)</p>|\r|\n|<div>\s{0,3}<br />\s{0,3}</div>)', '', str(raw_text).strip("").replace("^", "#"))
+            body = re.sub(r'(?:<p style=\"text-align: justify;\">\s?(?:<[a-z]{1,2}>|\s?\&nbsp;|)<\/p>|\r|\n|<div>\s{0,3}<br \/>\s{0,3}<\/div>)', '', updated_test)
         else:
             body = ''
         return body
@@ -51,12 +54,10 @@ class Obj():
         genum_pattern_file_3 = fr'(<a href=\"({self.re_sitename}\/((Files\/VideoFiles\/){self.re_file}))\s?\"[^>]{{0,250}}>)'
 
         # TODO проверить регулярки для битрикса по файлам
-        bitrix_pattern_file_1 = fr'(<img\s{self.re_prefix}src=\"({self.re_sitename}\/(([^\"\/]{{1,40}}\/(?:medialibrary\/[^\/]{{1,5}}\/|))' + self.re_file + r'))\"[^>]{0,550}>)'
-        bitrix_pattern_file_2 = fr'(<a\s{self.re_prefix}href=\"({self.re_sitename}\/(?:bitrix\/redirect\.php\?event1=download&amp;event2=update&amp;event3=[^\/\"]{{1,100}};goto=\/|)(([^\"\/]{{1,40}}\/(?:[^\"\/]{{1,100}}\/|){{0,4}})' + self.re_file + r'))\"[^>]{0,550}>)'
+        bitrix_pattern_file_1 = fr'(<img\s{self.re_prefix}src=\"({self.re_sitename}\/(([^\"\/]{{1,40}}\/(?:medialibrary\/[^\/]{{1,5}}\/|)){self.re_file}))\"[^>]{{0,550}}>)'
+        bitrix_pattern_file_2 = fr'(<a\s{self.re_prefix}href=\"({self.re_sitename}\/(?:bitrix\/redirect\.php\?event1=download&amp;event2=update&amp;event3=[^\/\"]{{1,100}};goto=\/|)(([^\"\/]{{1,40}}\/(?:[^\"\/]{{1,100}}\/|){{0,4}}){self.re_file}))\"[^>]{{0,550}}>)'
 
         drupal_pattern_file_1 = fr'(<a href=\"({self.re_sitename}\/((sites\/default\/files\/imceFiles\/user-[0-9]{{1,4}}\/){self.re_file}))\"[^>]{{0,550}}>)'
-
-        print(bitrix_pattern_file_1)
 
         pattern_list = {
             "genum_file_1":    genum_pattern_file_1,         # паттерн 1 файлы
@@ -71,9 +72,9 @@ class Obj():
     def get_patterns_image(self):
         # TODO сделать передачу имени в регулярку
 
-        genum_pattern_file_1 = fr'(<(?:img|input)\s{self.re_prefix}src=\"((?:https?:\/\/(?:www\.|){old_sitename}|)\/(((?:Upload\/(?:files|images)\/|Storage\/Image\/PublicationItem\/(?:Article|Image)\/src\/[0-9]{{1,5}}\/))' + self.re_file + r'))\"[^>]{{0,550}}>)'
+        genum_pattern_file_1 = fr'(<(?:img|input)\s{self.re_prefix}src=\"({self.re_sitename}\/(((?:Upload\/(?:files|images)\/|Storage\/Image\/PublicationItem\/(?:Article|Image)\/src\/[0-9]{{1,5}}\/)){self.re_file}))\"[^>]{{0,550}}>)'
 
-        bitrix_pattern_file_1 = fr'(<img\s{self.re_prefix}src=\"({self.re_sitename}\/(([^\"\/]{{1,40}}\/(?:medialibrary\/[^\/]{{1,5}}\/|))' + self.re_file + r'))\"[^>]{0,550}>)'
+        bitrix_pattern_file_1 = fr'(<img\s{self.re_prefix}src=\"({self.re_sitename}\/(([^\"\/]{{1,40}}\/(?:medialibrary\/[^\/]{{1,5}}\/|)){self.re_file}))\"[^>]{{0,550}}>)'
 
         pattern_list = {
             "genum_file_1":    genum_pattern_file_1,         # паттерн 1 img
@@ -82,8 +83,6 @@ class Obj():
         return pattern_list
 
     def get_patterns_link(self):
-        # TODO сделать передачу имени в регулярку
-        
 
         genum_pattern_page = fr'(<a href=\"({self.re_sitename}\/(htmlpages\/(?:Show|CmsHtmlPageList)\/[^\"]{{1,75}}(?:\/[^\"]{{1,75}}\/[^\"]{{1,75}}|\/[^\"]{{1,75}}|)))\"[^>]{{0,250}}>)'
         genum_pattern_npa = fr'(<a href=\"({self.re_sitename}\/(LegalActs\/Show\/[^\/>]{{1,10}}))\"[^>]{{0,250}}>)'
@@ -95,7 +94,7 @@ class Obj():
         drupal_pattern_page = fr'(<a href=\"({self.re_sitename}(\/[^\/\"]{{1,100}}))\"[^>]{{0,100}}>)'
 
         # TODO Протестировать заменяются ссылки на файлы
-        bitrix_pattern_page = fr'(<a\s{self.re_prefix}href=\"({self.re_sitename}(?:\/?(?:[^\/\"]{{1,50}}\/|)(?:[^\/\"]{{1,50}}\/|)(?:[^\/\"]{{1,250}}|)\/?)|)\"[^>]{{0,100}}>)'
+        bitrix_pattern_page = fr'(<a\s{self.re_prefix}href=\"({self.re_sitename}(?:\/?(?:[^\/\"]{{1,50}}\/|){{2}}(?:[^\/\"]{{1,250}}|)\/?)|)\"[^>]{{0,100}}>)'
 
         pattern_list = {
             "genum_page":           genum_pattern_page,         # genum паттерн для поиска ссылок на страницы
@@ -156,14 +155,14 @@ class Obj():
         null_files = []
         files = []
         pattern_file_genum = r'(\/(PublicationItemImage\/Image\/src\/[0-9]{1,5}\/)([^>]{1,75}))'
-        pattern_file_bitrix = r'(\/?(upload\/(?:[^\"\/]{1,100}\/|){0,4})' + self.re_file + r')'
-        # pattern_file_drupal = r'(\/?(public:\/\/(?:[^\"\/]{1,100}\/|){0,4})' + self.re_file + r')'
-        pattern_file_drupal = r'(\/?(sites\/default\/files\/(?:[^\"\/]{1,100}\/|){0,4}\/?)' + self.re_file + r')'
+        pattern_file_bitrix = fr'(\/?(upload\/(?:[^\"\/]{{1,100}}\/|){{0,4}}){self.re_file})'
+        # pattern_file_drupal = fr'(\/?(public:\/\/(?:[^\"\/]{{1,100}}\/|){{0,4}}){self.re_file})'
+        pattern_file_drupal = fr'(\/?(sites\/default\/files\/(?:[^\"\/]{{1,100}}\/|){{0,4}}\/?){self.re_file})'
 
         pattern_list = {
-            # "files_genum":      pattern_file_genum,             # паттерн 1
-            # "files_bitrix":     pattern_file_bitrix,            # паттерн 1
-            "files_drupal":      pattern_file_drupal,           # паттерн 1
+            "files_genum":      pattern_file_genum,             # паттерн 1
+            "files_bitrix":     pattern_file_bitrix,            # паттерн 1
+            "files_drupal":     pattern_file_drupal,            # паттерн 1
         }
         for file in files_raw:
             old_path = file[0]
@@ -197,6 +196,5 @@ class Obj():
             if self.objFiles != '':
                 if file.str_new_link not in self.objFiles:
                     self.objFiles = ','.join((self.objFiles, file.str_new_link))
-                # self.objFiles = ','.join((self.objFiles, file.str_new_link))
             else:
                 self.objFiles = file.str_new_link
