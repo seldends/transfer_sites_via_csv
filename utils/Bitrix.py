@@ -40,8 +40,9 @@ class DatabaseBitrix(Database):
             PREVIEW_PICTURE as index_img
             FROM imchel_10_12.b_iblock_element
             WHERE ACTIVE = 'Y'
-            AND IBLOCK_ID in (43, 42)
+            AND IBLOCK_ID in (12)
             order by ID DESC
+            LIMIT 1
             ;
             '''
         # print(select_obj_local)

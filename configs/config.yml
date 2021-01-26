@@ -113,7 +113,7 @@ pravmin74:     # Сайт правительства ЧО
     old_name: pravmin74.ru
     new_name: pravmin
     db_type: mariadb
-    db_name: pravmin74_12_11
+    db_name: pravmin74_2020_12_11
     classification: 47@egClassification
     news_type: # TODO
         104: 1@sprNewsStructure  # Новости

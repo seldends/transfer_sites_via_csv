@@ -47,7 +47,7 @@ def transfer_vacancy(config):
         # files_from_text = vacancy.update_body(vacancyFile)
 
         # Удаление ссылок на страницы
-        vacancy.delete_links()
+        vacancy.delete_page_links()
 
         # Получение данных объекта
         obj = vacancy.get_data()
@@ -61,9 +61,9 @@ def transfer_vacancy(config):
     save_csv(path_csv, fieldnames, query_list)      # Сохранение словаря в csv
 
     # Копирование файлов
-    for file in vacancy_files:
-        print(file.new_link)
-        file.copy_file()
+    # for file in vacancy_files:
+    #     print(file.new_link)
+    #     file.copy_file()
     # TODO
     print(f'Количество пустых НПА : {len(null_vacancy)}')
     print(f'Количество НПА : {len(vacancy_list)}')

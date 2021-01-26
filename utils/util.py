@@ -55,7 +55,7 @@ def print_list(list):
 
 # Сохранение словаря в csv
 def save_csv(path_csv, fieldnames, query_list):
-    with open(path_csv, 'w', encoding="utf-8") as csvfile:
+    with open(path_csv, 'w', encoding="utf-8", newline='') as csvfile:
         writer = csv.DictWriter(csvfile, delimiter="^", fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(query_list)

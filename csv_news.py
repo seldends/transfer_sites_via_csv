@@ -42,11 +42,11 @@ def transfer_news(config):
         # Запись в атрибут файлы
         news.update_files(files_from_table)
 
-        # Удаление ссылок на страницы
-        news.delete_page_links()
-
         # Замена ссылок на файлы из текста
         news.replace_file_link(files_from_text)
+
+        # Удаление ссылок на страницы
+        news.delete_page_links()
 
         # Получение данных объекта
         obj = news.get_data()
@@ -79,8 +79,8 @@ def main():
     # Список конфигураций сайтов
     sites = [
         # "szn74",
-        "pravmin74",
-        # "imchel74",
+        # "pravmin74",
+        "imchel74",
     ]
     for site in sites:
         # Получение конфигурации

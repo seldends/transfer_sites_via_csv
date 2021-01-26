@@ -52,7 +52,7 @@ class DatabaseSinta(Database):
             AND node.created > 1514746800
             AND field_data_field_news_cat.field_news_cat_tid IN (104, 105)
             ORDER BY node.nid DESC
-            LIMIT 500
+            -- LIMIT 50
             ;
             '''
         # news_list = self.select_rows(select_news_local, tuple(params))
@@ -100,13 +100,13 @@ class DatabaseSinta(Database):
             LEFT JOIN field_data_body
             ON field_data_body.entity_id=node.nid
             WHERE node.type='legal_acts'
-            -- AND field_data_field_legal_acts.field_legal_acts_tid IN (3, 4, 5, 6)
-            AND field_data_field_legal_acts.field_legal_acts_tid IN (3)
+            AND field_data_field_legal_acts.field_legal_acts_tid IN (3, 4, 5, 6)
+            -- AND field_data_field_legal_acts.field_legal_acts_tid IN (3)
             -- AND field_data_field_legal_acts.field_legal_acts_tid IN (4)
             -- AND field_data_field_legal_acts.field_legal_acts_tid IN (5)
             -- AND field_data_field_legal_acts.field_legal_acts_tid IN (6)
             ORDER BY node.nid DESC
-            LIMIT 50
+            -- LIMIT 50
             ;
             '''
         # npa_list = self.select_rows(select_npa_local, params)
