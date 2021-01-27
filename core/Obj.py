@@ -39,9 +39,9 @@ class Obj():
 
     def clean_body(self, raw_text):
         # print(raw_text)
-        updated_test = urllib.parse.unquote(raw_text).strip("").replace("^", "#")
         # print(updated_test)
         if raw_text:
+            updated_test = urllib.parse.unquote(raw_text).strip("").replace("^", "#")
             body = re.sub(r'(?:<p style=\"text-align: justify;\">\s?(?:<[a-z]{1,2}>|\s?\&nbsp;|)<\/p>|\r|\n|<div>\s{0,3}<br \/>\s{0,3}<\/div>)', '', updated_test)
         else:
             body = ''
