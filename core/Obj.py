@@ -21,7 +21,7 @@ class Obj():
 
         self.re_file = r'([^>\"\/]{1,450}\.[a-zA-Z0-9]{2,5})'
         self.re_sitename = fr'(?:https?:\/\/(?:www\.|ruk\.|){self.old_sitename}|(?://|){self.old_sitename}|)'
-        self.re_prefix = r'(?:(?:id|class|alt|height|target|width|style)=\"[^\"]{0,50}\"\s|){0,5}'
+        self.re_prefix = r'(?:(?:id|class|alt|height|target|width|style|type)=\"[^\"]{0,50}\"\s|){0,5}'
 
     # TODO
     def transform_date(self, raw_date):
@@ -57,8 +57,8 @@ class Obj():
         bitrix_pattern_file_1 = fr'(<img\s{self.re_prefix}src=\"({self.re_sitename}\/(([^\"\/]{{1,40}}\/(?:medialibrary\/[^\/]{{1,5}}\/|)){self.re_file}))\"[^>]{{0,550}}>)'
         bitrix_pattern_file_2 = fr'(<a\s{self.re_prefix}href=\"({self.re_sitename}\/(?:bitrix\/redirect\.php\?event1=download&amp;event2=update&amp;event3=[^\/\"]{{1,100}};goto=\/|)(([^\"\/]{{1,40}}\/(?:[^\"\/]{{1,100}}\/|){{0,4}}){self.re_file}))\"[^>]{{0,550}}>)'
 
-        drupal_pattern_file_1 = fr'(<a\s{self.re_prefix}href=\"({self.re_sitename}\/((sites\/default\/files\/(?:imceFiles\/user-[0-9]{{1,4}}|imce)\/){self.re_file}))\"[^>]{{0,550}}>)'
-        drupal_pattern_file_2 = fr'(<img\s{self.re_prefix}src=\"({self.re_sitename}\/((sites\/default\/files\/(?:imceFiles\/user-[0-9]{{1,4}}|imce)\/){self.re_file}))\"[^>]{{0,550}}>)'
+        drupal_pattern_file_1 = fr'(<a\s{self.re_prefix}href=\"({self.re_sitename}\/((sites\/default\/files\/(?:imceFiles\/user-[0-9]{{1,4}}\/|imce\/|)){self.re_file}))\"[^>]{{0,550}}>)'
+        drupal_pattern_file_2 = fr'(<img\s{self.re_prefix}src=\"({self.re_sitename}\/((sites\/default\/files\/(?:imceFiles\/user-[0-9]{{1,4}}\/|imce\/|)){self.re_file}))\"[^>]{{0,550}}>)'
         # print(drupal_pattern_file_1)
 
         pattern_list = {
@@ -67,8 +67,8 @@ class Obj():
             "genum_file_3":    genum_pattern_file_3,        # паттерн 3 видео
             "drupal_file_1":   drupal_pattern_file_1,       # паттерн
             "drupal_file_2":   drupal_pattern_file_2,       # паттерн
-            "bitrix_file_1":   bitrix_pattern_file_1,       # паттерн
-            "bitrix_file_2":   bitrix_pattern_file_2,       # паттерн
+            # "bitrix_file_1":   bitrix_pattern_file_1,       # паттерн
+            # "bitrix_file_2":   bitrix_pattern_file_2,       # паттерн
         }
         return pattern_list
 
@@ -149,6 +149,7 @@ class Obj():
                         "file":                 link[4],    # Имя файла с расширением.          Пример:     soglasie_rk_2020.docx
                         "section_title":        self.section_title,
                     }
+                    print(link[0])
                     file = FileClass(self.config, data)
                     files.append(file)
         return files
