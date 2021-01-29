@@ -117,7 +117,7 @@ pravmin74:     # Сайт правительства ЧО
     classification: 47@egClassification
     news_type: # TODO
         104: 1@sprNewsStructure  # Новости
-        105: 1@sprNewsStructure  # Новости
+        105: 24@sprNewsStructure  # Новости
     npa_type: # TODO 19 нпа без категории. Всего 12912 с категориями +19 без категории
         3: 6@sprNPAStructure    # Постановления Губернатора Челябинской области     3661
         4: 8@sprNPAStructure    # Постановления Правительства Челябинской области   6595
