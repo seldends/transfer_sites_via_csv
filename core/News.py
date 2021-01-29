@@ -41,9 +41,12 @@ class News(Obj):
                 print(e, 'test')
 
     def get_index_file(self):
-        pattern_file_1 = r'(\\(PublicationItem\\Image\\src\\[0-9]{1,5}\\)([^>\\]{1,75}))'
+        re_file = r'([^>\"\/]{1,450}\.[a-zA-Z0-9]{2,5})'
+        pattern_file_genum = r'(\\(PublicationItem\\Image\\src\\[0-9]{1,5}\\)([^>\\]{1,75}))'
+        pattern_file_drupal = fr'(\/?(sites\/default\/files\/(?:[^\"\/]{{1,100}}\/|){{0,4}}\/?){re_file})'
         pattern_list = {
-            "indeximage": pattern_file_1,         # паттерн 1
+            "indeximage_genum": pattern_file_genum,         # паттерн 1
+            "indeximage_drupal": pattern_file_drupal,         # паттерн 1
         }
         old_path = self.image_index
         index_file = []
