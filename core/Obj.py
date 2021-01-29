@@ -160,7 +160,6 @@ class Obj():
         files = []
         pattern_file_genum = r'(\/(PublicationItemImage\/Image\/src\/[0-9]{1,5}\/)([^>]{1,75}))'
         pattern_file_bitrix = fr'(\/?(upload\/(?:[^\"\/]{{1,100}}\/|){{0,4}}){self.re_file})'
-        # pattern_file_drupal = fr'(\/?(public:\/\/(?:[^\"\/]{{1,100}}\/|){{0,4}}){self.re_file})'
         pattern_file_drupal = fr'(\/?(sites\/default\/files\/(?:[^\"\/]{{1,100}}\/|){{0,4}}\/?){self.re_file})'
 
         pattern_list = {
