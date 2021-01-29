@@ -12,7 +12,7 @@ def connection(config):
     elif config["type"] == 'bitrix':
         from utils.Bitrix import DatabaseBitrix as Database
     elif config["type"] == 'sinta':
-        from utils.Sinta import DatabaseSinta as Database
+        from utils.Drupal import DatabaseDrupal as Database
     db_local = Database(config["db_type"], config["db_name"])
     return db_local
 

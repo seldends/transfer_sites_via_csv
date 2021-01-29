@@ -3,7 +3,7 @@ from utils.Database import Database
 import sys
 
 
-class DatabaseSinta(Database):
+class DatabaseDrupal(Database):
     def connect(self):
         if self.conn is None:
             if self.dbtype == 'mariadb':
@@ -33,7 +33,7 @@ class DatabaseSinta(Database):
             field_data_field_teaser.field_teaser_value as resume,
             node.created as date_created,
             node.changed as date_edit,
-            REPLACE(file_managed.uri, 'hash://','') as image_url,
+            REPLACE(file_managed.uri, 'hash://','sites/default/files/') as image_url,
             field_data_field_image.field_image_alt as image_alt,
             file_managed.origname as image_name,
             node.vid, node.uid, node.status
@@ -52,7 +52,7 @@ class DatabaseSinta(Database):
             AND node.created > 1514746800
             AND field_data_field_news_cat.field_news_cat_tid IN (104, 105)
             ORDER BY node.nid DESC
-            -- LIMIT 50
+            LIMIT 500
             ;
             '''
         # news_list = self.select_rows(select_news_local, tuple(params))
@@ -63,7 +63,7 @@ class DatabaseSinta(Database):
     def get_news_files_list(self, id):
         select_mediafiles_local = """
             SELECT
-            file_managed.uri,
+            REPLACE(file_managed.uri, 'public://','sites/default/files/') as file_url,
             field_data_field_gallery.field_gallery_alt
             FROM file_managed
             LEFT JOIN field_data_field_gallery
