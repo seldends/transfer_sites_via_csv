@@ -27,13 +27,26 @@ class File:
             print(self.file_full_path, self.file, self.path_root_old_file)
             print(f'{e} Нет файла "{self.path_root_old_file}" {self.path_root_new_folder}')
 
+    def is_exist(self, path):
+        root = Path.cwd()
+        self.path_root_new_file = root / 'new_files' / self.sitename / path
+        return self.path_root_new_file.is_file()
+
 class NewsIndexImgFile(File):
     def __init__(self, config, data):
         super().__init__(config, data)
         folder_name = Path(self.file_relative_path).name
+        temp_link = "".join(("files/ogvspb/pictures/", self.sitename, "/", folder_name, "/", self.file))
+
         self.new_link = "".join(("files/ogvspb/pictures/", self.sitename, "/", folder_name, "/", self.file))
         self.str_new_link = "".join(("/ogvspb/pictures/", self.sitename, "/", folder_name, "/", self.file, "@cmsFile.doc"))
-
+        # ? если будет нужна проверка на наличие файла
+        # if self.is_exist(temp_link):
+        #     self.new_link = "".join(("files/ogvspb/pictures/", self.sitename, "/", folder_name, "/", self.file))
+        #     self.str_new_link = "".join(("/ogvspb/pictures/", self.sitename, "/", folder_name, "/", self.file, "@cmsFile.doc"))
+        # else:
+        #     self.new_link = temp_link
+        #     self.str_new_link = "".join(("/ogvspb/pictures/", self.sitename, "/", self.file, "@cmsFile.doc"))
 
 class NewsFile(File):
     def __init__(self, config, data):
